@@ -9,11 +9,12 @@
 /* Begin PBXBuildFile section */
 		9F79BB3726C2E49B00C5654F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3626C2E49B00C5654F /* AppDelegate.swift */; };
 		9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3826C2E49B00C5654F /* Shaders.metal */; };
-		9F79BB3C26C2E49B00C5654F /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3B26C2E49B00C5654F /* Renderer.swift */; };
-		9F79BB3E26C2E49B00C5654F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3D26C2E49B00C5654F /* ViewController.swift */; };
+		9F79BB3C26C2E49B00C5654F /* PointCloudRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3B26C2E49B00C5654F /* PointCloudRenderer.swift */; };
+		9F79BB3E26C2E49B00C5654F /* PointCloudVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3D26C2E49B00C5654F /* PointCloudVC.swift */; };
 		9F79BB4126C2E49B00C5654F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB3F26C2E49B00C5654F /* Main.storyboard */; };
 		9F79BB4326C2E49D00C5654F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB4226C2E49D00C5654F /* Assets.xcassets */; };
 		9F79BB4626C2E49D00C5654F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB4426C2E49D00C5654F /* LaunchScreen.storyboard */; };
+		9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB5026C2E56300C5654F /* MainMenuVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,13 +22,14 @@
 		9F79BB3626C2E49B00C5654F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9F79BB3826C2E49B00C5654F /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		9F79BB3A26C2E49B00C5654F /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
-		9F79BB3B26C2E49B00C5654F /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
-		9F79BB3D26C2E49B00C5654F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9F79BB3B26C2E49B00C5654F /* PointCloudRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCloudRenderer.swift; sourceTree = "<group>"; };
+		9F79BB3D26C2E49B00C5654F /* PointCloudVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCloudVC.swift; sourceTree = "<group>"; };
 		9F79BB4026C2E49B00C5654F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9F79BB4226C2E49D00C5654F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9F79BB4526C2E49D00C5654F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9F79BB4726C2E49D00C5654F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F79BB4826C2E49D00C5654F /* ScanKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ScanKit-Bridging-Header.h"; sourceTree = "<group>"; };
+		9F79BB5026C2E56300C5654F /* MainMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,13 +65,14 @@
 				9F79BB3626C2E49B00C5654F /* AppDelegate.swift */,
 				9F79BB3826C2E49B00C5654F /* Shaders.metal */,
 				9F79BB3A26C2E49B00C5654F /* ShaderTypes.h */,
-				9F79BB3B26C2E49B00C5654F /* Renderer.swift */,
-				9F79BB3D26C2E49B00C5654F /* ViewController.swift */,
+				9F79BB3B26C2E49B00C5654F /* PointCloudRenderer.swift */,
+				9F79BB3D26C2E49B00C5654F /* PointCloudVC.swift */,
 				9F79BB3F26C2E49B00C5654F /* Main.storyboard */,
 				9F79BB4226C2E49D00C5654F /* Assets.xcassets */,
 				9F79BB4426C2E49D00C5654F /* LaunchScreen.storyboard */,
 				9F79BB4726C2E49D00C5654F /* Info.plist */,
 				9F79BB4826C2E49D00C5654F /* ScanKit-Bridging-Header.h */,
+				9F79BB5026C2E56300C5654F /* MainMenuVC.swift */,
 			);
 			path = ScanKit;
 			sourceTree = "<group>";
@@ -145,8 +148,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */,
-				9F79BB3C26C2E49B00C5654F /* Renderer.swift in Sources */,
-				9F79BB3E26C2E49B00C5654F /* ViewController.swift in Sources */,
+				9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */,
+				9F79BB3C26C2E49B00C5654F /* PointCloudRenderer.swift in Sources */,
+				9F79BB3E26C2E49B00C5654F /* PointCloudVC.swift in Sources */,
 				9F79BB3726C2E49B00C5654F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

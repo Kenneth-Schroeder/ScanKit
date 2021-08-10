@@ -13,10 +13,10 @@ import ARKit
 extension MTKView : RenderDestinationProvider {
 }
 
-class ViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
+class PointCloudVC: UIViewController, MTKViewDelegate, ARSessionDelegate {
     
     var session: ARSession!
-    var renderer: Renderer!
+    var renderer: PointCloudRenderer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,12 +37,12 @@ class ViewController: UIViewController, MTKViewDelegate, ARSessionDelegate {
             }
             
             // Configure the renderer to draw to the view
-            renderer = Renderer(session: session, metalDevice: view.device!, renderDestination: view)
+            renderer = PointCloudRenderer(session: session, metalDevice: view.device!, renderDestination: view)
             
             renderer.drawRectResized(size: view.bounds.size)
         }
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ViewController.handleTap(gestureRecognize:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(PointCloudVC.handleTap(gestureRecognize:)))
         view.addGestureRecognizer(tapGesture)
     }
     
