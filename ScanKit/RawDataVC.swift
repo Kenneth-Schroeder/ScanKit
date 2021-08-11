@@ -1,8 +1,8 @@
 //
-//  ViewController.swift
+//  RawDataVC.swift
 //  ScanKit
 //
-//  Created by Kenneth Schröder on 10.08.21.
+//  Created by Kenneth Schröder on 11.08.21.
 //
 
 import UIKit
@@ -10,13 +10,10 @@ import Metal
 import MetalKit
 import ARKit
 
-extension MTKView : RenderDestinationProvider {
-}
-
-class PointCloudVC: UIViewController, MTKViewDelegate, ARSessionDelegate {
+class RawDataVC: UIViewController, MTKViewDelegate, ARSessionDelegate {
     
     var session: ARSession!
-    var renderer: PointCloudRenderer!
+    var renderer: RawDataRenderer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,12 +34,12 @@ class PointCloudVC: UIViewController, MTKViewDelegate, ARSessionDelegate {
             }
             
             // Configure the renderer to draw to the view
-            renderer = PointCloudRenderer(session: session, metalDevice: view.device!, renderDestination: view)
+            renderer = RawDataRenderer(session: session, metalDevice: view.device!, renderDestination: view)
             
             renderer.drawRectResized(size: view.bounds.size)
         }
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(PointCloudVC.handleTap(gestureRecognize:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(RawDataVC.handleTap(gestureRecognize:)))
         view.addGestureRecognizer(tapGesture)
     }
     

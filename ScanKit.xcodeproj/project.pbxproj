@@ -15,6 +15,11 @@
 		9F79BB4326C2E49D00C5654F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB4226C2E49D00C5654F /* Assets.xcassets */; };
 		9F79BB4626C2E49D00C5654F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB4426C2E49D00C5654F /* LaunchScreen.storyboard */; };
 		9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB5026C2E56300C5654F /* MainMenuVC.swift */; };
+		9FFDF84726C3D659001B6016 /* UIClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84626C3D659001B6016 /* UIClasses.swift */; };
+		9FFDF84926C3E474001B6016 /* RawDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84826C3E474001B6016 /* RawDataVC.swift */; };
+		9FFDF84B26C3E4A3001B6016 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84A26C3E4A3001B6016 /* Extensions.swift */; };
+		9FFDF84D26C3E50E001B6016 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84C26C3E50E001B6016 /* Globals.swift */; };
+		9FFDF84F26C3E562001B6016 /* RawDataRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84E26C3E562001B6016 /* RawDataRenderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +35,11 @@
 		9F79BB4726C2E49D00C5654F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F79BB4826C2E49D00C5654F /* ScanKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ScanKit-Bridging-Header.h"; sourceTree = "<group>"; };
 		9F79BB5026C2E56300C5654F /* MainMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuVC.swift; sourceTree = "<group>"; };
+		9FFDF84626C3D659001B6016 /* UIClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIClasses.swift; sourceTree = "<group>"; };
+		9FFDF84826C3E474001B6016 /* RawDataVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawDataVC.swift; sourceTree = "<group>"; };
+		9FFDF84A26C3E4A3001B6016 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		9FFDF84C26C3E50E001B6016 /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
+		9FFDF84E26C3E562001B6016 /* RawDataRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawDataRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,19 +72,48 @@
 		9F79BB3526C2E49B00C5654F /* ScanKit */ = {
 			isa = PBXGroup;
 			children = (
-				9F79BB3626C2E49B00C5654F /* AppDelegate.swift */,
+				9FFDF85526C3E7E0001B6016 /* PointCloud */,
+				9FFDF85426C3E7CC001B6016 /* RawData */,
+				9FFDF85326C3E797001B6016 /* General */,
 				9F79BB3826C2E49B00C5654F /* Shaders.metal */,
 				9F79BB3A26C2E49B00C5654F /* ShaderTypes.h */,
-				9F79BB3B26C2E49B00C5654F /* PointCloudRenderer.swift */,
-				9F79BB3D26C2E49B00C5654F /* PointCloudVC.swift */,
-				9F79BB3F26C2E49B00C5654F /* Main.storyboard */,
-				9F79BB4226C2E49D00C5654F /* Assets.xcassets */,
-				9F79BB4426C2E49D00C5654F /* LaunchScreen.storyboard */,
-				9F79BB4726C2E49D00C5654F /* Info.plist */,
-				9F79BB4826C2E49D00C5654F /* ScanKit-Bridging-Header.h */,
 				9F79BB5026C2E56300C5654F /* MainMenuVC.swift */,
 			);
 			path = ScanKit;
+			sourceTree = "<group>";
+		};
+		9FFDF85326C3E797001B6016 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				9F79BB4226C2E49D00C5654F /* Assets.xcassets */,
+				9F79BB3626C2E49B00C5654F /* AppDelegate.swift */,
+				9F79BB3F26C2E49B00C5654F /* Main.storyboard */,
+				9F79BB4426C2E49D00C5654F /* LaunchScreen.storyboard */,
+				9F79BB4726C2E49D00C5654F /* Info.plist */,
+				9F79BB4826C2E49D00C5654F /* ScanKit-Bridging-Header.h */,
+				9FFDF84626C3D659001B6016 /* UIClasses.swift */,
+				9FFDF84A26C3E4A3001B6016 /* Extensions.swift */,
+				9FFDF84C26C3E50E001B6016 /* Globals.swift */,
+			);
+			name = General;
+			sourceTree = "<group>";
+		};
+		9FFDF85426C3E7CC001B6016 /* RawData */ = {
+			isa = PBXGroup;
+			children = (
+				9FFDF84826C3E474001B6016 /* RawDataVC.swift */,
+				9FFDF84E26C3E562001B6016 /* RawDataRenderer.swift */,
+			);
+			name = RawData;
+			sourceTree = "<group>";
+		};
+		9FFDF85526C3E7E0001B6016 /* PointCloud */ = {
+			isa = PBXGroup;
+			children = (
+				9F79BB3B26C2E49B00C5654F /* PointCloudRenderer.swift */,
+				9F79BB3D26C2E49B00C5654F /* PointCloudVC.swift */,
+			);
+			path = PointCloud;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,10 +187,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */,
+				9FFDF84F26C3E562001B6016 /* RawDataRenderer.swift in Sources */,
 				9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */,
+				9FFDF84926C3E474001B6016 /* RawDataVC.swift in Sources */,
+				9FFDF84B26C3E4A3001B6016 /* Extensions.swift in Sources */,
 				9F79BB3C26C2E49B00C5654F /* PointCloudRenderer.swift in Sources */,
 				9F79BB3E26C2E49B00C5654F /* PointCloudVC.swift in Sources */,
+				9FFDF84726C3D659001B6016 /* UIClasses.swift in Sources */,
 				9F79BB3726C2E49B00C5654F /* AppDelegate.swift in Sources */,
+				9FFDF84D26C3E50E001B6016 /* Globals.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

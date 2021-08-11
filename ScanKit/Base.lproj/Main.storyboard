@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="VI7-fq-9kc">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
@@ -20,7 +20,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="20" y="94"/>
+            <point key="canvasLocation" x="26" y="94"/>
         </scene>
         <!--Main MenuVC-->
         <scene sceneID="bBH-cq-50P">
@@ -34,10 +34,22 @@
                                 <rect key="frame" x="133" y="420" width="149" height="56"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemGreenColor"/>
+                                <state key="normal" title="PC"/>
                                 <connections>
-                                    <action selector="point_cloud_recording_released_inside:" destination="VI7-fq-9kc" eventType="touchUpInside" id="kon-qN-GhZ"/>
-                                    <action selector="point_cloud_recording_released_outside:" destination="VI7-fq-9kc" eventType="touchUpOutside" id="xn8-wh-GXk"/>
-                                    <action selector="point_cloud_recording_touched:" destination="VI7-fq-9kc" eventType="touchDown" id="H94-Vu-nxo"/>
+                                    <action selector="point_cloud_button_released_inside:" destination="VI7-fq-9kc" eventType="touchUpInside" id="XVB-bb-Ufc"/>
+                                    <action selector="point_cloud_button_released_outside:" destination="VI7-fq-9kc" eventType="touchUpOutside" id="aUa-Wo-dW8"/>
+                                    <action selector="point_cloud_button_touched:" destination="VI7-fq-9kc" eventType="touchDown" id="lkT-Ra-GHf"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="RawDataButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
+                                <rect key="frame" x="133" y="537" width="149" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemGreenColor"/>
+                                <state key="normal" title="RAW"/>
+                                <connections>
+                                    <action selector="raw_data_button_released_inside:" destination="VI7-fq-9kc" eventType="touchUpInside" id="6kM-ES-LkB"/>
+                                    <action selector="raw_data_button_released_outside:" destination="VI7-fq-9kc" eventType="touchUpOutside" id="LGs-zg-pD7"/>
+                                    <action selector="raw_data_button_touched:" destination="VI7-fq-9kc" eventType="touchDown" id="cQB-Wm-0RC"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -46,11 +58,26 @@
                     </view>
                     <connections>
                         <outlet property="pointCloudButton" destination="JwH-b0-VHL" id="fXc-dT-pdF"/>
+                        <outlet property="rawDataButton" destination="WKt-xy-gTV" id="3Kw-qe-0D6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6g7-EG-MiG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="779.71014492753625" y="93.75"/>
+        </scene>
+        <!--Raw DataVC-->
+        <scene sceneID="x5d-eS-2Nd">
+            <objects>
+                <viewController storyboardIdentifier="raw_data_recording_vc" id="BX7-ox-Ehg" customClass="RawDataVC" customModule="ScanKit" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="VGZ-Eb-a9U" customClass="MTKView">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="KBp-8n-9bq"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uLc-k7-ys6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-712" y="94"/>
         </scene>
     </scenes>
     <resources>

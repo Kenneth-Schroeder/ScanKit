@@ -9,20 +9,23 @@ import UIKit
 
 class MainMenuVC: UIViewController {
     @IBOutlet var pointCloudButton: TileButton!
+    @IBOutlet var rawDataButton: TileButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
-    @IBAction func point_cloud_recording_touched(_ sender: TileButton) {
+    // MARK: - point cloud button actions
+    
+    @IBAction func point_cloud_button_touched(_ sender: TileButton) {
         sender.alpha = 0.5
     }
     
-    @IBAction func point_cloud_recording_released_outside(_ sender: TileButton) {
+    @IBAction func point_cloud_button_released_outside(_ sender: TileButton) {
         sender.alpha = 1.0
     }
     
-    @IBAction func point_cloud_recording_released_inside(_ sender: TileButton) {
+    @IBAction func point_cloud_button_released_inside(_ sender: TileButton) {
         sender.alpha = 1.0
         guard let next_vc = storyboard?.instantiateViewController(withIdentifier: "point_cloud_recording_vc") as? PointCloudVC else {
             return
@@ -30,14 +33,23 @@ class MainMenuVC: UIViewController {
         next_vc.modalPresentationStyle = .overFullScreen // formsheet, pageSheet, popover
         present(next_vc, animated: true)
     }
-}
-
-class TileButton: UIButton {
-    override func didMoveToWindow() {
-        self.layer.cornerRadius = 10
-        self.layer.shadowColor = UIColor.red.cgColor
-        self.layer.shadowRadius = 5
-        self.layer.shadowOpacity = 0.5
-        self.layer.shadowOffset = CGSize(width: 5, height: 5)
+    
+    // MARK: - raw data button actions
+    
+    @IBAction func raw_data_button_touched(_ sender: TileButton) {
+        sender.alpha = 0.5
+    }
+    
+    @IBAction func raw_data_button_released_outside(_ sender: TileButton) {
+        sender.alpha = 1.0
+    }
+    
+    @IBAction func raw_data_button_released_inside(_ sender: TileButton) {
+        sender.alpha = 1.0
+        guard let next_vc = storyboard?.instantiateViewController(withIdentifier: "raw_data_recording_vc") as? RawDataVC else {
+            return
+        }
+        next_vc.modalPresentationStyle = .overFullScreen
+        present(next_vc, animated: true)
     }
 }
