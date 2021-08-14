@@ -10,7 +10,7 @@ import Metal
 import MetalKit
 import ARKit
 
-class RawDataRenderer {
+class RecorderRenderer {
     let session: ARSession
     let device: MTLDevice
     let inFlightSemaphore = DispatchSemaphore(value: kMaxBuffersInFlight)
