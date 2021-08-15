@@ -333,7 +333,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = HPI.ScanKit;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -353,7 +353,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = HPI.ScanKit;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

@@ -20,10 +20,15 @@ class ScanRenderer {
     var commandQueue: MTLCommandQueue!
     var sharedUniformBuffer: MTLBuffer!
     var imagePlaneVertexBuffer: MTLBuffer!
+    
     var capturedImagePipelineState: MTLRenderPipelineState!
-    var capturedImageDepthState: MTLDepthStencilState!
+    var confidencePipelineState: MTLRenderPipelineState!
+    var float1DTexturePipelineState: MTLRenderPipelineState!
+    
     var capturedImageTextureY: CVMetalTexture?
     var capturedImageTextureCbCr: CVMetalTexture?
+    
+    var relaxedDepthState: MTLDepthStencilState!
     
     // Captured image texture cache
     var capturedImageTextureCache: CVMetalTextureCache!
@@ -89,7 +94,7 @@ class ScanRenderer {
                 
                 renderEncoder.label = "MyRenderEncoder"
                 
-                drawCapturedImage(renderEncoder: renderEncoder)
+                drawUnderlay(renderEncoder: renderEncoder)
                 
                 // We're done encoding commands
                 renderEncoder.endEncoding()
@@ -102,89 +107,47 @@ class ScanRenderer {
             commandBuffer.commit()
         }
     }
+}
+
+// MARK: - Drawing Functions
+
+private extension ScanRenderer {
     
-    // MARK: - Private
+    func drawUnderlay(renderEncoder: MTLRenderCommandEncoder) {
+        drawCapturedImage(renderEncoder: renderEncoder)
+    }
     
-    func loadMetal() {
-        // Create and load our basic Metal state objects
-        
-        // Set the default formats needed to render
-        renderDestination.depthStencilPixelFormat = .depth32Float_stencil8
-        renderDestination.colorPixelFormat = .bgra8Unorm
-        renderDestination.sampleCount = 1
-        
-        // Calculate our uniform buffer sizes. We allocate kMaxBuffersInFlight instances for uniform
-        //   storage in a single buffer. This allows us to update uniforms in a ring (i.e. triple
-        //   buffer the uniforms) so that the GPU reads from one slot in the ring wil the CPU writes
-        //   to another.
-        //   Also uniform storage must be aligned (to 256 bytes) to meet the requirements to be an
-        //   argument in the constant address space of our shading functions.
-        let sharedUniformBufferSize = kAlignedSharedUniformsSize * kMaxBuffersInFlight
-        
-        // Create and allocate our uniform buffer objects. Indicate shared storage so that both the
-        //   CPU can access the buffer
-        sharedUniformBuffer = device.makeBuffer(length: sharedUniformBufferSize, options: .storageModeShared)
-        sharedUniformBuffer.label = "SharedUniformBuffer"
-        
-        // Create a vertex buffer with our image plane vertex data.
-        let imagePlaneVertexDataCount = kImagePlaneVertexData.count * MemoryLayout<Float>.size
-        imagePlaneVertexBuffer = device.makeBuffer(bytes: kImagePlaneVertexData, length: imagePlaneVertexDataCount, options: [])
-        imagePlaneVertexBuffer.label = "ImagePlaneVertexBuffer"
-        
-        // Load all the shader files with a metal file extension in the project
-        let defaultLibrary = device.makeDefaultLibrary()!
-        
-        let capturedImageVertexFunction = defaultLibrary.makeFunction(name: "capturedImageVertexTransform")!
-        let capturedImageFragmentFunction = defaultLibrary.makeFunction(name: "capturedImageFragmentShader")!
-        
-        // Create a vertex descriptor for our image plane vertex buffer
-        let imagePlaneVertexDescriptor = MTLVertexDescriptor()
-        
-        // Positions
-        imagePlaneVertexDescriptor.attributes[0].format = .float2
-        imagePlaneVertexDescriptor.attributes[0].offset = 0
-        imagePlaneVertexDescriptor.attributes[0].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
-        
-        // Texture coordinates
-        imagePlaneVertexDescriptor.attributes[1].format = .float2
-        imagePlaneVertexDescriptor.attributes[1].offset = 8
-        imagePlaneVertexDescriptor.attributes[1].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
-        
-        // Buffer Layout
-        imagePlaneVertexDescriptor.layouts[0].stride = 16
-        imagePlaneVertexDescriptor.layouts[0].stepRate = 1
-        imagePlaneVertexDescriptor.layouts[0].stepFunction = .perVertex
-        
-        // Create a pipeline state for rendering the captured image
-        let capturedImagePipelineStateDescriptor = MTLRenderPipelineDescriptor()
-        capturedImagePipelineStateDescriptor.label = "MyCapturedImagePipeline"
-        capturedImagePipelineStateDescriptor.sampleCount = renderDestination.sampleCount
-        capturedImagePipelineStateDescriptor.vertexFunction = capturedImageVertexFunction
-        capturedImagePipelineStateDescriptor.fragmentFunction = capturedImageFragmentFunction
-        capturedImagePipelineStateDescriptor.vertexDescriptor = imagePlaneVertexDescriptor
-        capturedImagePipelineStateDescriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
-        capturedImagePipelineStateDescriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
-        capturedImagePipelineStateDescriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
-        
-        do {
-            try capturedImagePipelineState = device.makeRenderPipelineState(descriptor: capturedImagePipelineStateDescriptor)
-        } catch let error {
-            print("Failed to created captured image pipeline state, error \(error)")
+    func drawCapturedImage(renderEncoder: MTLRenderCommandEncoder) {
+        guard let textureY = capturedImageTextureY, let textureCbCr = capturedImageTextureCbCr else {
+            return
         }
         
-        let capturedImageDepthStateDescriptor = MTLDepthStencilDescriptor()
-        capturedImageDepthStateDescriptor.depthCompareFunction = .always
-        capturedImageDepthStateDescriptor.isDepthWriteEnabled = false
-        capturedImageDepthState = device.makeDepthStencilState(descriptor: capturedImageDepthStateDescriptor)
+        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool
+        renderEncoder.pushDebugGroup("DrawCapturedImage")
         
-        // Create captured image texture cache
-        var textureCache: CVMetalTextureCache?
-        CVMetalTextureCacheCreate(nil, nil, device, nil, &textureCache)
-        capturedImageTextureCache = textureCache
+        // Set render command encoder state
+        renderEncoder.setCullMode(.none)
+        renderEncoder.setRenderPipelineState(capturedImagePipelineState)
+        renderEncoder.setDepthStencilState(relaxedDepthState)
         
-        // Create the command queue
-        commandQueue = device.makeCommandQueue()
+        // Set mesh's vertex buffers
+        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kBufferIndexMeshPositions.rawValue))
+        
+        // Set any textures read/sampled from our render pipeline
+        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureY), index: Int(kTextureIndexY.rawValue))
+        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureCbCr), index: Int(kTextureIndexCbCr.rawValue))
+        
+        // Draw each submesh of our mesh
+        renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
+        
+        renderEncoder.popDebugGroup()
     }
+    
+}
+
+// MARK: - Update Functions
+
+private extension ScanRenderer {
     
     func updateRingBufferPointers() {
         // Update the location(s) to which we'll write to in our dynamically changing Metal buffers for
@@ -249,6 +212,25 @@ class ScanRenderer {
         capturedImageTextureCbCr = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.rg8Unorm, planeIndex:1)
     }
     
+    func updateImagePlane(frame: ARFrame) {
+        // Update the texture coordinates of our image plane to aspect fill the viewport
+        let displayToCameraTransform = frame.displayTransform(for: .portrait, viewportSize: viewportSize).inverted()
+
+        let vertexData = imagePlaneVertexBuffer.contents().assumingMemoryBound(to: Float.self)
+        for index in 0...3 {
+            let textureCoordIndex = 4 * index + 2
+            let textureCoord = CGPoint(x: CGFloat(kImagePlaneVertexData[textureCoordIndex]), y: CGFloat(kImagePlaneVertexData[textureCoordIndex + 1]))
+            let transformedCoord = textureCoord.applying(displayToCameraTransform)
+            vertexData[textureCoordIndex] = Float(transformedCoord.x)
+            vertexData[textureCoordIndex + 1] = Float(transformedCoord.y)
+        }
+    }
+}
+
+// MARK: - Initialization Functions
+
+private extension ScanRenderer {
+    
     func createTexture(fromPixelBuffer pixelBuffer: CVPixelBuffer, pixelFormat: MTLPixelFormat, planeIndex: Int) -> CVMetalTexture? {
         let width = CVPixelBufferGetWidthOfPlane(pixelBuffer, planeIndex)
         let height = CVPixelBufferGetHeightOfPlane(pixelBuffer, planeIndex)
@@ -263,43 +245,141 @@ class ScanRenderer {
         return texture
     }
     
-    func updateImagePlane(frame: ARFrame) {
-        // Update the texture coordinates of our image plane to aspect fill the viewport
-        let displayToCameraTransform = frame.displayTransform(for: .portrait, viewportSize: viewportSize).inverted()
-
-        let vertexData = imagePlaneVertexBuffer.contents().assumingMemoryBound(to: Float.self)
-        for index in 0...3 {
-            let textureCoordIndex = 4 * index + 2
-            let textureCoord = CGPoint(x: CGFloat(kImagePlaneVertexData[textureCoordIndex]), y: CGFloat(kImagePlaneVertexData[textureCoordIndex + 1]))
-            let transformedCoord = textureCoord.applying(displayToCameraTransform)
-            vertexData[textureCoordIndex] = Float(transformedCoord.x)
-            vertexData[textureCoordIndex + 1] = Float(transformedCoord.y)
-        }
+    func loadMetal() {
+        // Create and load our basic Metal state objects
+        
+        // Set the default formats needed to render
+        renderDestination.depthStencilPixelFormat = .depth32Float_stencil8
+        renderDestination.colorPixelFormat = .bgra8Unorm
+        renderDestination.sampleCount = 1
+        
+        // Calculate our uniform buffer sizes. We allocate kMaxBuffersInFlight instances for uniform
+        //   storage in a single buffer. This allows us to update uniforms in a ring (i.e. triple
+        //   buffer the uniforms) so that the GPU reads from one slot in the ring wil the CPU writes
+        //   to another.
+        //   Also uniform storage must be aligned (to 256 bytes) to meet the requirements to be an
+        //   argument in the constant address space of our shading functions.
+        let sharedUniformBufferSize = kAlignedSharedUniformsSize * kMaxBuffersInFlight
+        
+        // Create and allocate our uniform buffer objects. Indicate shared storage so that both the
+        //   CPU can access the buffer
+        sharedUniformBuffer = device.makeBuffer(length: sharedUniformBufferSize, options: .storageModeShared)
+        sharedUniformBuffer.label = "SharedUniformBuffer"
+        
+        // Create a vertex buffer with our image plane vertex data.
+        let imagePlaneVertexDataCount = kImagePlaneVertexData.count * MemoryLayout<Float>.size
+        imagePlaneVertexBuffer = device.makeBuffer(bytes: kImagePlaneVertexData, length: imagePlaneVertexDataCount, options: [])
+        imagePlaneVertexBuffer.label = "ImagePlaneVertexBuffer"
+        
+        // Load all the shader files with a metal file extension in the project
+        let defaultLibrary = device.makeDefaultLibrary()!
+        
+        makeCapturedImagePipelineState(library: defaultLibrary)
+        makeConfidencePipelineState(library: defaultLibrary)
+        makeFloat1DTexturePipelineState(library: defaultLibrary)
+        makeRelaxedDepthState()
+        
+        // Create captured image texture cache
+        var textureCache: CVMetalTextureCache?
+        CVMetalTextureCacheCreate(nil, nil, device, nil, &textureCache)
+        capturedImageTextureCache = textureCache
+        
+        // Create the command queue
+        commandQueue = device.makeCommandQueue()
     }
     
-    func drawCapturedImage(renderEncoder: MTLRenderCommandEncoder) {
-        guard let textureY = capturedImageTextureY, let textureCbCr = capturedImageTextureCbCr else {
+    // MARK: Metal Pipeline States
+    
+    func makeCapturedImagePipelineState(library: MTLLibrary) {
+        guard let capturedImageVertexFunction = library.makeFunction(name: "underlayImageVertex"),
+              let capturedImageFragmentFunction = library.makeFunction(name: "capturedImageFragment") else {
+            print("something went wrong while making captured image shader functions")
             return
         }
         
-        // Push a debug group allowing us to identify render commands in the GPU Frame Capture tool
-        renderEncoder.pushDebugGroup("DrawCapturedImage")
         
-        // Set render command encoder state
-        renderEncoder.setCullMode(.none)
-        renderEncoder.setRenderPipelineState(capturedImagePipelineState)
-        renderEncoder.setDepthStencilState(capturedImageDepthState)
+        // Create a vertex descriptor for our image plane vertex buffer
+        let imagePlaneVertexDescriptor = MTLVertexDescriptor()
         
-        // Set mesh's vertex buffers
-        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kBufferIndexMeshPositions.rawValue))
+        // Positions
+        imagePlaneVertexDescriptor.attributes[0].format = .float2
+        imagePlaneVertexDescriptor.attributes[0].offset = 0
+        imagePlaneVertexDescriptor.attributes[0].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
         
-        // Set any textures read/sampled from our render pipeline
-        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureY), index: Int(kTextureIndexY.rawValue))
-        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureCbCr), index: Int(kTextureIndexCbCr.rawValue))
+        // Texture coordinates
+        imagePlaneVertexDescriptor.attributes[1].format = .float2
+        imagePlaneVertexDescriptor.attributes[1].offset = 8
+        imagePlaneVertexDescriptor.attributes[1].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
         
-        // Draw each submesh of our mesh
-        renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
+        // Buffer Layout
+        imagePlaneVertexDescriptor.layouts[0].stride = 16
+        imagePlaneVertexDescriptor.layouts[0].stepRate = 1
+        imagePlaneVertexDescriptor.layouts[0].stepFunction = .perVertex
         
-        renderEncoder.popDebugGroup()
+        // Create a pipeline state for rendering the captured image
+        let descriptor = MTLRenderPipelineDescriptor()
+        descriptor.label = "MyCapturedImagePipeline"
+        descriptor.sampleCount = renderDestination.sampleCount
+        descriptor.vertexFunction = capturedImageVertexFunction
+        descriptor.fragmentFunction = capturedImageFragmentFunction
+        descriptor.vertexDescriptor = imagePlaneVertexDescriptor
+        descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
+        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        
+        do {
+            try capturedImagePipelineState = device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            print("Failed to created captured image pipeline state, error \(error)")
+        }
+    }
+    
+    func makeConfidencePipelineState(library: MTLLibrary) {
+        guard let vertexFunction = library.makeFunction(name: "underlayImageVertex"),
+              let fragmentFunction = library.makeFunction(name: "confidenceFragment") else {
+            print("something went wrong while making confidence shader functions")
+            return
+        }
+        
+        let descriptor = MTLRenderPipelineDescriptor()
+        descriptor.vertexFunction = vertexFunction
+        descriptor.fragmentFunction = fragmentFunction
+        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
+        
+        do {
+            try confidencePipelineState = device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            print("Failed to created captured image pipeline state, error \(error)")
+        }
+    }
+    
+    func makeFloat1DTexturePipelineState(library: MTLLibrary) {
+        guard let vertexFunction = library.makeFunction(name: "underlayImageVertex"),
+            let fragmentFunction = library.makeFunction(name: "floatTexFragment") else {
+                print("something went wrong while making float1DTexture shader functions")
+                return
+        }
+        
+        let descriptor = MTLRenderPipelineDescriptor()
+        descriptor.vertexFunction = vertexFunction
+        descriptor.fragmentFunction = fragmentFunction
+        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
+        
+        do {
+            try float1DTexturePipelineState = device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            print("Failed to created captured image pipeline state, error \(error)")
+        }
+    }
+    
+    // MARK: Metal Depth States
+    
+    func makeRelaxedDepthState() {
+        let capturedImageDepthStateDescriptor = MTLDepthStencilDescriptor()
+        capturedImageDepthStateDescriptor.depthCompareFunction = .always
+        capturedImageDepthStateDescriptor.isDepthWriteEnabled = false
+        relaxedDepthState = device.makeDepthStencilState(descriptor: capturedImageDepthStateDescriptor)
     }
 }

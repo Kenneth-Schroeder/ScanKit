@@ -18,16 +18,16 @@ typedef struct {
     float2 texCoord [[attribute(kVertexAttributeTexcoord)]];
 } ImageVertex;
 
-
 typedef struct {
     float4 position [[position]];
     float2 texCoord;
-} ImageColorInOut;
+} ImageInOut;
 
+constexpr sampler colorSampler(mip_filter::linear, mag_filter::linear, min_filter::linear);
 
 // Captured image vertex function
-vertex ImageColorInOut capturedImageVertexTransform(ImageVertex in [[stage_in]]) {
-    ImageColorInOut out;
+vertex ImageInOut underlayImageVertex(ImageVertex in [[stage_in]]) {
+    ImageInOut out;
     
     // Pass through the image vertex's position
     out.position = float4(in.position, 0.0, 1.0);
@@ -39,13 +39,9 @@ vertex ImageColorInOut capturedImageVertexTransform(ImageVertex in [[stage_in]])
 }
 
 // Captured image fragment function
-fragment float4 capturedImageFragmentShader(ImageColorInOut in [[stage_in]],
+fragment float4 capturedImageFragment(ImageInOut in [[stage_in]],
                                             texture2d<float, access::sample> capturedImageTextureY [[ texture(kTextureIndexY) ]],
                                             texture2d<float, access::sample> capturedImageTextureCbCr [[ texture(kTextureIndexCbCr) ]]) {
-    
-    constexpr sampler colorSampler(mip_filter::linear,
-                                   mag_filter::linear,
-                                   min_filter::linear);
     
     const float4x4 ycbcrToRGBTransform = float4x4(
         float4(+1.0000f, +1.0000f, +1.0000f, +0.0000f),
@@ -60,4 +56,33 @@ fragment float4 capturedImageFragmentShader(ImageColorInOut in [[stage_in]],
     
     // Return converted RGB color
     return ycbcrToRGBTransform * ycbcr;
+}
+
+fragment float4 floatTexFragment(ImageInOut in [[stage_in]],
+                            constant float &factor [[buffer(0)]],
+                            texture2d<float, access::sample> texture [[texture(0)]]) {
+    const float value = texture.sample(colorSampler, in.texCoord.xy).r * factor;
+    return float4(value, value, value, 1.0);
+}
+
+fragment float4 confidenceFragment(ImageInOut in [[stage_in]],
+                            texture2d<uint, access::sample> confidenceTexture [[texture(0)]]) {
+    // Sample the confidence map to get the confidence value
+    const uint value = confidenceTexture.sample(colorSampler, in.texCoord.xy).r;
+    float4 color;
+    switch(value){
+        case 0:
+            color = float4(1, 0, 0, 1);
+            break;
+        case 1:
+            color = float4(1, 1, 0, 1);
+            break;
+        case 2:
+            color = float4(0, 1, 0, 1);
+            break;
+        default:
+            color = float4(1, 1, 1, 1);
+            break;
+    }
+    return color;
 }
