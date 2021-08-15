@@ -17,7 +17,7 @@
 		9FFDF84926C3E474001B6016 /* RecorderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84826C3E474001B6016 /* RecorderVC.swift */; };
 		9FFDF84B26C3E4A3001B6016 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84A26C3E4A3001B6016 /* Extensions.swift */; };
 		9FFDF84D26C3E50E001B6016 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84C26C3E50E001B6016 /* Globals.swift */; };
-		9FFDF84F26C3E562001B6016 /* RecorderRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84E26C3E562001B6016 /* RecorderRenderer.swift */; };
+		9FFDF84F26C3E562001B6016 /* ScanRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84E26C3E562001B6016 /* ScanRenderer.swift */; };
 		9FFDF85826C82970001B6016 /* ScanConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF85726C82970001B6016 /* ScanConfig.swift */; };
 		9FFDF85A26C82DB1001B6016 /* ARManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF85926C82DB1001B6016 /* ARManager.swift */; };
 /* End PBXBuildFile section */
@@ -37,7 +37,7 @@
 		9FFDF84826C3E474001B6016 /* RecorderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderVC.swift; sourceTree = "<group>"; };
 		9FFDF84A26C3E4A3001B6016 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9FFDF84C26C3E50E001B6016 /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
-		9FFDF84E26C3E562001B6016 /* RecorderRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderRenderer.swift; sourceTree = "<group>"; };
+		9FFDF84E26C3E562001B6016 /* ScanRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanRenderer.swift; sourceTree = "<group>"; };
 		9FFDF85726C82970001B6016 /* ScanConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanConfig.swift; sourceTree = "<group>"; };
 		9FFDF85926C82DB1001B6016 /* ARManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -74,7 +74,7 @@
 			children = (
 				9FFDF85326C3E797001B6016 /* General */,
 				9F79BB3826C2E49B00C5654F /* Shaders.metal */,
-				9FFDF84E26C3E562001B6016 /* RecorderRenderer.swift */,
+				9FFDF84E26C3E562001B6016 /* ScanRenderer.swift */,
 				9FFDF84826C3E474001B6016 /* RecorderVC.swift */,
 				9F79BB3A26C2E49B00C5654F /* ShaderTypes.h */,
 				9F79BB5026C2E56300C5654F /* MainMenuVC.swift */,
@@ -171,7 +171,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */,
-				9FFDF84F26C3E562001B6016 /* RecorderRenderer.swift in Sources */,
+				9FFDF84F26C3E562001B6016 /* ScanRenderer.swift in Sources */,
 				9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */,
 				9FFDF84926C3E474001B6016 /* RecorderVC.swift in Sources */,
 				9FFDF85A26C82DB1001B6016 /* ARManager.swift in Sources */,

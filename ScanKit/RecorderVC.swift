@@ -12,7 +12,7 @@ import ARKit
 
 class RecorderVC: UIViewController, MTKViewDelegate {
     var ar_session: ARSession!
-    var renderer: RecorderRenderer!
+    var renderer: ScanRenderer!
     var ar_manager: ARManager!
     
     override func viewDidLoad() {
@@ -35,7 +35,7 @@ class RecorderVC: UIViewController, MTKViewDelegate {
             }
             
             // Configure the renderer to draw to the view
-            renderer = RecorderRenderer(session: ar_session, metalDevice: view.device!, renderDestination: view)
+            renderer = ScanRenderer(session: ar_session, metalDevice: view.device!, renderDestination: view)
             
             renderer.drawRectResized(size: view.bounds.size)
         }
@@ -71,22 +71,6 @@ class RecorderVC: UIViewController, MTKViewDelegate {
         ar_session.pause()
     }
     
-    @objc
-    func handleTap(gestureRecognize: UITapGestureRecognizer) {
-        // Create anchor using the camera's current position
-        if let currentFrame = ar_session.currentFrame {
-            
-            // Create a transform with a translation of 0.2 meters in front of the camera
-            var translation = matrix_identity_float4x4
-            translation.columns.3.z = -0.2
-            let transform = simd_mul(currentFrame.camera.transform, translation)
-            
-            // Add a new anchor to the session
-            let anchor = ARAnchor(transform: transform)
-            ar_session.add(anchor: anchor)
-        }
-    }
-    
     // Auto-hide the home indicator to maximize immersion in AR experiences.
     override var prefersHomeIndicatorAutoHidden: Bool {
         return true
@@ -100,6 +84,25 @@ class RecorderVC: UIViewController, MTKViewDelegate {
     public func resetTracking() {
         if let configuration = ar_session.configuration {
             ar_session.run(configuration, options: .resetSceneReconstruction)
+        }
+    }
+    
+    // MARK: - interaction handling
+    
+    @objc
+    func handleTap(gestureRecognize: UITapGestureRecognizer) {
+        // Create anchor using the camera's current position
+        if let currentFrame = ar_session.currentFrame {
+            // TODO create viewpoints on tap?
+            
+            // Create a transform with a translation of 0.2 meters in front of the camera
+            //var translation = matrix_identity_float4x4
+            //translation.columns.3.z = -0.2
+            //let transform = simd_mul(currentFrame.camera.transform, translation)
+            
+            // Add a new anchor to the session
+            //let anchor = ARAnchor(transform: transform)
+            //ar_session.add(anchor: anchor)
         }
     }
     
