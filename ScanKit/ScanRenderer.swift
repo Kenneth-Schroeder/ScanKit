@@ -27,6 +27,8 @@ class ScanRenderer {
     
     var capturedImageTextureY: CVMetalTexture?
     var capturedImageTextureCbCr: CVMetalTexture?
+    var confidenceTexture: CVMetalTexture?
+    var depthTexture: CVMetalTexture?
     
     var relaxedDepthState: MTLDepthStencilState!
     
@@ -114,7 +116,19 @@ class ScanRenderer {
 private extension ScanRenderer {
     
     func drawUnderlay(renderEncoder: MTLRenderCommandEncoder) {
-        drawCapturedImage(renderEncoder: renderEncoder)
+        switch ScanConfig.underlayIndex {
+        case 1:
+            drawCapturedImage(renderEncoder: renderEncoder)
+            break
+        case 2:
+            draw1DFloatTexture(renderEncoder: renderEncoder, scaleFactor: 1/10)
+            break
+        case 3:
+            drawConfidenceTexture(renderEncoder: renderEncoder)
+            break
+        default:
+            break
+        }
     }
     
     func drawCapturedImage(renderEncoder: MTLRenderCommandEncoder) {
@@ -143,6 +157,44 @@ private extension ScanRenderer {
         renderEncoder.popDebugGroup()
     }
     
+    func draw1DFloatTexture(renderEncoder: MTLRenderCommandEncoder, scaleFactor: Float) {
+        guard let depthTex = depthTexture else {
+            return
+        }
+        var f: Float = scaleFactor
+        
+        renderEncoder.pushDebugGroup("DrawDepthTexture")
+        
+        renderEncoder.setCullMode(.none)
+        renderEncoder.setRenderPipelineState(float1DTexturePipelineState)
+        renderEncoder.setDepthStencilState(relaxedDepthState)
+        
+        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kBufferIndexMeshPositions.rawValue))
+        renderEncoder.setFragmentBytes(&f, length: MemoryLayout.size(ofValue: scaleFactor), index: 0)
+        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(depthTex), index: 0)
+        renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
+        
+        renderEncoder.popDebugGroup()
+    }
+    
+    func drawConfidenceTexture(renderEncoder: MTLRenderCommandEncoder) {
+        guard let confTex = confidenceTexture else {
+            return
+        }
+        
+        renderEncoder.pushDebugGroup("DrawConfidenceTexture")
+        
+        renderEncoder.setCullMode(.none)
+        renderEncoder.setRenderPipelineState(confidencePipelineState)
+        renderEncoder.setDepthStencilState(relaxedDepthState)
+        
+        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kBufferIndexMeshPositions.rawValue))
+        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(confTex), index: 0)
+        renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
+        
+        renderEncoder.popDebugGroup()
+    }
+    
 }
 
 // MARK: - Update Functions
@@ -165,6 +217,7 @@ private extension ScanRenderer {
         
         updateSharedUniforms(frame: currentFrame)
         updateCapturedImageTextures(frame: currentFrame)
+        updateDepthConfidenceTextures(frame: currentFrame)
         
         if viewportSizeDidChange {
             viewportSizeDidChange = false
@@ -210,6 +263,14 @@ private extension ScanRenderer {
         
         capturedImageTextureY = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.r8Unorm, planeIndex:0)
         capturedImageTextureCbCr = createTexture(fromPixelBuffer: pixelBuffer, pixelFormat:.rg8Unorm, planeIndex:1)
+    }
+    
+    func updateDepthConfidenceTextures(frame: ARFrame) {
+        guard let dMap = frame.sceneDepth?.depthMap,
+              let cMap = frame.sceneDepth?.confidenceMap else { return }
+        
+        depthTexture = createTexture(fromPixelBuffer: dMap, pixelFormat:.r32Float, planeIndex:0)
+        confidenceTexture = createTexture(fromPixelBuffer: cMap, pixelFormat: .r8Uint, planeIndex: 0)
     }
     
     func updateImagePlane(frame: ARFrame) {
@@ -290,6 +351,28 @@ private extension ScanRenderer {
     
     // MARK: Metal Pipeline States
     
+    func underlayVertexDescriptors() -> MTLVertexDescriptor {
+        // Create a vertex descriptor for our image plane vertex buffer
+        let vertexDescriptor = MTLVertexDescriptor()
+        
+        // Positions
+        vertexDescriptor.attributes[0].format = .float2
+        vertexDescriptor.attributes[0].offset = 0
+        vertexDescriptor.attributes[0].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
+        
+        // Texture coordinates
+        vertexDescriptor.attributes[1].format = .float2
+        vertexDescriptor.attributes[1].offset = 8
+        vertexDescriptor.attributes[1].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
+        
+        // Buffer Layout
+        vertexDescriptor.layouts[0].stride = 16
+        vertexDescriptor.layouts[0].stepRate = 1
+        vertexDescriptor.layouts[0].stepFunction = .perVertex
+        
+        return vertexDescriptor
+    }
+    
     func makeCapturedImagePipelineState(library: MTLLibrary) {
         guard let capturedImageVertexFunction = library.makeFunction(name: "underlayImageVertex"),
               let capturedImageFragmentFunction = library.makeFunction(name: "capturedImageFragment") else {
@@ -297,32 +380,13 @@ private extension ScanRenderer {
             return
         }
         
-        
-        // Create a vertex descriptor for our image plane vertex buffer
-        let imagePlaneVertexDescriptor = MTLVertexDescriptor()
-        
-        // Positions
-        imagePlaneVertexDescriptor.attributes[0].format = .float2
-        imagePlaneVertexDescriptor.attributes[0].offset = 0
-        imagePlaneVertexDescriptor.attributes[0].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
-        
-        // Texture coordinates
-        imagePlaneVertexDescriptor.attributes[1].format = .float2
-        imagePlaneVertexDescriptor.attributes[1].offset = 8
-        imagePlaneVertexDescriptor.attributes[1].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
-        
-        // Buffer Layout
-        imagePlaneVertexDescriptor.layouts[0].stride = 16
-        imagePlaneVertexDescriptor.layouts[0].stepRate = 1
-        imagePlaneVertexDescriptor.layouts[0].stepFunction = .perVertex
-        
         // Create a pipeline state for rendering the captured image
         let descriptor = MTLRenderPipelineDescriptor()
         descriptor.label = "MyCapturedImagePipeline"
         descriptor.sampleCount = renderDestination.sampleCount
         descriptor.vertexFunction = capturedImageVertexFunction
         descriptor.fragmentFunction = capturedImageFragmentFunction
-        descriptor.vertexDescriptor = imagePlaneVertexDescriptor
+        descriptor.vertexDescriptor = underlayVertexDescriptors()
         descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
         descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
         descriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
@@ -344,8 +408,10 @@ private extension ScanRenderer {
         let descriptor = MTLRenderPipelineDescriptor()
         descriptor.vertexFunction = vertexFunction
         descriptor.fragmentFunction = fragmentFunction
-        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.vertexDescriptor = underlayVertexDescriptors()
         descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
+        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
         
         do {
             try confidencePipelineState = device.makeRenderPipelineState(descriptor: descriptor)
@@ -364,8 +430,10 @@ private extension ScanRenderer {
         let descriptor = MTLRenderPipelineDescriptor()
         descriptor.vertexFunction = vertexFunction
         descriptor.fragmentFunction = fragmentFunction
-        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.vertexDescriptor = underlayVertexDescriptors()
         descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
+        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
         
         do {
             try float1DTexturePipelineState = device.makeRenderPipelineState(descriptor: descriptor)

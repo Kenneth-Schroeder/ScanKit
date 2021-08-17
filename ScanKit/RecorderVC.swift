@@ -11,6 +11,8 @@ import MetalKit
 import ARKit
 
 class RecorderVC: UIViewController, MTKViewDelegate {
+    @IBOutlet weak var underlayControl: UISegmentedControl!
+    
     var ar_session: ARSession!
     var renderer: ScanRenderer!
     var ar_manager: ARManager!
@@ -116,5 +118,13 @@ class RecorderVC: UIViewController, MTKViewDelegate {
     // Called whenever the view needs to render
     func draw(in view: MTKView) {
         renderer.update()
+    }
+}
+
+// MARK: - UI Methods
+
+extension RecorderVC {
+    @IBAction func underlayControlChanged(_ sender: UISegmentedControl) {
+        ScanConfig.underlayIndex = underlayControl.selectedSegmentIndex
     }
 }

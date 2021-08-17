@@ -9,4 +9,5 @@ import Foundation
 
 class ScanConfig {
     static var url:URL?
+    static var underlayIndex: Int = 0
 }

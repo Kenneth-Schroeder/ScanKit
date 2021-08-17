@@ -84,15 +84,41 @@
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="VGZ-Eb-a9U" customClass="MTKView">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="wbY-xQ-XxG" userLabel="Underlay Control">
+                                <rect key="frame" x="84.5" y="801" width="245" height="32"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <segments>
+                                    <segment title="None"/>
+                                    <segment title="RGB"/>
+                                    <segment title="Depth"/>
+                                    <segment title="Confidence"/>
+                                </segments>
+                                <color key="selectedSegmentTintColor" systemColor="systemGreenColor"/>
+                                <connections>
+                                    <action selector="underlayControlChanged:" destination="BX7-ox-Ehg" eventType="valueChanged" id="VmL-Mq-Qf9"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="KBp-8n-9bq"/>
+                        <constraints>
+                            <constraint firstItem="wbY-xQ-XxG" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="1Uf-4p-b6j"/>
+                            <constraint firstItem="KBp-8n-9bq" firstAttribute="bottom" secondItem="wbY-xQ-XxG" secondAttribute="bottom" constant="30" id="x7K-vJ-yC1"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="underlayControl" destination="wbY-xQ-XxG" id="XWx-Js-ghH"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uLc-k7-ys6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-712" y="94"/>
+            <point key="canvasLocation" x="-713.04347826086962" y="93.75"/>
         </scene>
     </scenes>
     <resources>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemPurpleColor">
             <color red="0.68627450980392157" green="0.32156862745098042" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
