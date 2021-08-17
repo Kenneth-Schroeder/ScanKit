@@ -77,10 +77,10 @@
             </objects>
             <point key="canvasLocation" x="-1452.1739130434785" y="93.75"/>
         </scene>
-        <!--RecorderVC-->
+        <!--ScanVC-->
         <scene sceneID="x5d-eS-2Nd">
             <objects>
-                <viewController storyboardIdentifier="recording_vc" id="BX7-ox-Ehg" customClass="RecorderVC" customModule="ScanKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="recording_vc" id="BX7-ox-Ehg" customClass="ScanVC" customModule="ScanKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="VGZ-Eb-a9U" customClass="MTKView">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -99,15 +99,29 @@
                                     <action selector="underlayControlChanged:" destination="BX7-ox-Ehg" eventType="valueChanged" id="VmL-Mq-Qf9"/>
                                 </connections>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CkJ-aV-qaf" userLabel="ViewshedButton" customClass="RoundedButton" customModule="ScanKit" customModuleProvider="target">
+                                <rect key="frame" x="154.5" y="745" width="105" height="36"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="  Viewshed  ">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="viewshed_button_pressed:" destination="BX7-ox-Ehg" eventType="primaryActionTriggered" id="QBm-qD-LFH"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="KBp-8n-9bq"/>
                         <constraints>
                             <constraint firstItem="wbY-xQ-XxG" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="1Uf-4p-b6j"/>
+                            <constraint firstItem="CkJ-aV-qaf" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="FTG-BT-PUx"/>
+                            <constraint firstItem="wbY-xQ-XxG" firstAttribute="top" secondItem="CkJ-aV-qaf" secondAttribute="bottom" constant="20" id="gXt-kx-2n1"/>
                             <constraint firstItem="KBp-8n-9bq" firstAttribute="bottom" secondItem="wbY-xQ-XxG" secondAttribute="bottom" constant="30" id="x7K-vJ-yC1"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="underlayControl" destination="wbY-xQ-XxG" id="XWx-Js-ghH"/>
+                        <outlet property="viewshedButton" destination="VGZ-Eb-a9U" id="FwZ-dW-qUK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uLc-k7-ys6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

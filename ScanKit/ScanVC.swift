@@ -10,8 +10,9 @@ import Metal
 import MetalKit
 import ARKit
 
-class RecorderVC: UIViewController, MTKViewDelegate {
+class ScanVC: UIViewController, MTKViewDelegate {
     @IBOutlet weak var underlayControl: UISegmentedControl!
+    @IBOutlet weak var viewshedButton: RoundedButton!
     
     var ar_session: ARSession!
     var renderer: ScanRenderer!
@@ -42,7 +43,7 @@ class RecorderVC: UIViewController, MTKViewDelegate {
             renderer.drawRectResized(size: view.bounds.size)
         }
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(RecorderVC.handleTap(gestureRecognize:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScanVC.handleTap(gestureRecognize:)))
         view.addGestureRecognizer(tapGesture)
     }
     
@@ -123,8 +124,17 @@ class RecorderVC: UIViewController, MTKViewDelegate {
 
 // MARK: - UI Methods
 
-extension RecorderVC {
+extension ScanVC {
     @IBAction func underlayControlChanged(_ sender: UISegmentedControl) {
         ScanConfig.underlayIndex = underlayControl.selectedSegmentIndex
+    }
+    
+    @IBAction func viewshed_button_pressed(_ sender: RoundedButton) {
+        ScanConfig.viewshedActive = !ScanConfig.viewshedActive
+        if ScanConfig.viewshedActive {
+            sender.backgroundColor = .systemGreen
+        } else {
+            sender.backgroundColor = .darkGray
+        }
     }
 }

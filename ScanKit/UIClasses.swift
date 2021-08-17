@@ -16,3 +16,9 @@ class TileButton: UIButton {
         self.layer.shadowOffset = CGSize(width: 5, height: 5)
     }
 }
+
+class RoundedButton: UIButton {
+    override func didMoveToWindow() {
+        self.layer.cornerRadius = 8
+    }
+}

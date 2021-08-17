@@ -14,12 +14,14 @@
 		9F79BB4626C2E49D00C5654F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB4426C2E49D00C5654F /* LaunchScreen.storyboard */; };
 		9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB5026C2E56300C5654F /* MainMenuVC.swift */; };
 		9FFDF84726C3D659001B6016 /* UIClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84626C3D659001B6016 /* UIClasses.swift */; };
-		9FFDF84926C3E474001B6016 /* RecorderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84826C3E474001B6016 /* RecorderVC.swift */; };
+		9FFDF84926C3E474001B6016 /* ScanVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84826C3E474001B6016 /* ScanVC.swift */; };
 		9FFDF84B26C3E4A3001B6016 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84A26C3E4A3001B6016 /* Extensions.swift */; };
 		9FFDF84D26C3E50E001B6016 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84C26C3E50E001B6016 /* Globals.swift */; };
 		9FFDF84F26C3E562001B6016 /* ScanRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84E26C3E562001B6016 /* ScanRenderer.swift */; };
 		9FFDF85826C82970001B6016 /* ScanConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF85726C82970001B6016 /* ScanConfig.swift */; };
 		9FFDF85A26C82DB1001B6016 /* ARManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF85926C82DB1001B6016 /* ARManager.swift */; };
+		9FFDF85C26CC1D6E001B6016 /* MetalBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF85B26CC1D6E001B6016 /* MetalBuffer.swift */; };
+		9FFDF85E26CC32F7001B6016 /* ParticlesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF85D26CC32F7001B6016 /* ParticlesManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,12 +36,14 @@
 		9F79BB4826C2E49D00C5654F /* ScanKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ScanKit-Bridging-Header.h"; sourceTree = "<group>"; };
 		9F79BB5026C2E56300C5654F /* MainMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuVC.swift; sourceTree = "<group>"; };
 		9FFDF84626C3D659001B6016 /* UIClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIClasses.swift; sourceTree = "<group>"; };
-		9FFDF84826C3E474001B6016 /* RecorderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderVC.swift; sourceTree = "<group>"; };
+		9FFDF84826C3E474001B6016 /* ScanVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanVC.swift; sourceTree = "<group>"; };
 		9FFDF84A26C3E4A3001B6016 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9FFDF84C26C3E50E001B6016 /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		9FFDF84E26C3E562001B6016 /* ScanRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanRenderer.swift; sourceTree = "<group>"; };
 		9FFDF85726C82970001B6016 /* ScanConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanConfig.swift; sourceTree = "<group>"; };
 		9FFDF85926C82DB1001B6016 /* ARManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARManager.swift; sourceTree = "<group>"; };
+		9FFDF85B26CC1D6E001B6016 /* MetalBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalBuffer.swift; sourceTree = "<group>"; };
+		9FFDF85D26CC32F7001B6016 /* ParticlesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticlesManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,11 +79,12 @@
 				9FFDF85326C3E797001B6016 /* General */,
 				9F79BB3826C2E49B00C5654F /* Shaders.metal */,
 				9FFDF84E26C3E562001B6016 /* ScanRenderer.swift */,
-				9FFDF84826C3E474001B6016 /* RecorderVC.swift */,
+				9FFDF84826C3E474001B6016 /* ScanVC.swift */,
 				9F79BB3A26C2E49B00C5654F /* ShaderTypes.h */,
 				9F79BB5026C2E56300C5654F /* MainMenuVC.swift */,
 				9FFDF85726C82970001B6016 /* ScanConfig.swift */,
 				9FFDF85926C82DB1001B6016 /* ARManager.swift */,
+				9FFDF85D26CC32F7001B6016 /* ParticlesManager.swift */,
 			);
 			path = ScanKit;
 			sourceTree = "<group>";
@@ -96,6 +101,7 @@
 				9FFDF84626C3D659001B6016 /* UIClasses.swift */,
 				9FFDF84A26C3E4A3001B6016 /* Extensions.swift */,
 				9FFDF84C26C3E50E001B6016 /* Globals.swift */,
+				9FFDF85B26CC1D6E001B6016 /* MetalBuffer.swift */,
 			);
 			name = General;
 			sourceTree = "<group>";
@@ -173,13 +179,15 @@
 				9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */,
 				9FFDF84F26C3E562001B6016 /* ScanRenderer.swift in Sources */,
 				9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */,
-				9FFDF84926C3E474001B6016 /* RecorderVC.swift in Sources */,
+				9FFDF85C26CC1D6E001B6016 /* MetalBuffer.swift in Sources */,
+				9FFDF84926C3E474001B6016 /* ScanVC.swift in Sources */,
 				9FFDF85A26C82DB1001B6016 /* ARManager.swift in Sources */,
 				9FFDF85826C82970001B6016 /* ScanConfig.swift in Sources */,
 				9FFDF84B26C3E4A3001B6016 /* Extensions.swift in Sources */,
 				9FFDF84726C3D659001B6016 /* UIClasses.swift in Sources */,
 				9F79BB3726C2E49B00C5654F /* AppDelegate.swift in Sources */,
 				9FFDF84D26C3E50E001B6016 /* Globals.swift in Sources */,
+				9FFDF85E26CC32F7001B6016 /* ParticlesManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,6 +341,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.00.01;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
@@ -353,6 +362,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.00.01;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";

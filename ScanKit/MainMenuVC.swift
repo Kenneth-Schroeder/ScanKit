@@ -65,7 +65,7 @@ class MainMenuVC: UIViewController, UIDocumentPickerDelegate {
         }
         sender.alpha = 1.0
         rawDataTouched = false
-        guard let next_vc = storyboard?.instantiateViewController(withIdentifier: "recording_vc") as? RecorderVC else {
+        guard let next_vc = storyboard?.instantiateViewController(withIdentifier: "recording_vc") as? ScanVC else {
             return
         }
         next_vc.modalPresentationStyle = .overFullScreen

@@ -9,9 +9,9 @@ import Foundation
 import ARKit
 
 class ARManager: NSObject, ARSessionDelegate {
-    private var vc: RecorderVC
+    private var vc: ScanVC
     
-    init(viewController: RecorderVC) {
+    init(viewController: ScanVC) {
         self.vc = viewController
         super.init()
     }

@@ -9,6 +9,7 @@ import Foundation
 import Metal
 import MetalKit
 import ARKit
+import MetalPerformanceShaders
 
 class ScanRenderer {
     let session: ARSession
@@ -21,23 +22,47 @@ class ScanRenderer {
     var sharedUniformBuffer: MTLBuffer!
     var imagePlaneVertexBuffer: MTLBuffer!
     
+    private lazy var unprojectUniforms: UnprojectUniforms = {
+        var uniforms = UnprojectUniforms()
+        uniforms.cameraResolution = cameraResolution
+        return uniforms
+    }()
+    var unprojectUniformsBuffers = [MetalBuffer<UnprojectUniforms>]() // metadata for unprojecting particles
+    
+    private lazy var viewshedCloudUniforms: PointCloudUniforms = {
+        var uniforms = PointCloudUniforms()
+        uniforms.particleSize = 10
+        uniforms.coloringMethod = depth
+        uniforms.confidenceThreshold = Int32(0) // always show all points for viewshed
+        // other attributes will be updated continuously
+        return uniforms
+    }()
+    var viewshedCloudUniformsBuffers = [MetalBuffer<PointCloudUniforms>]() // metadata for rendering viewshed particles
+    
+    var viewshedParticlesBuffers = [MetalBuffer<ParticleUniforms>]() // contains actual point data
+    
     var capturedImagePipelineState: MTLRenderPipelineState!
     var confidencePipelineState: MTLRenderPipelineState!
     var float1DTexturePipelineState: MTLRenderPipelineState!
+    var particleBlendedPipelineState: MTLRenderPipelineState!
+    var unprojectPipelineState: MTLRenderPipelineState!
     
     var capturedImageTextureY: CVMetalTexture?
     var capturedImageTextureCbCr: CVMetalTexture?
     var confidenceTexture: CVMetalTexture?
     var depthTexture: CVMetalTexture?
+    private lazy var depthSobelTexture: MTLTexture = getEmptyMTLTexture(256, 192)! // texture of the depth sobel results
+    private lazy var YSobelTexture: MTLTexture = getEmptyMTLTexture(Int(cameraResolution.x), Int(cameraResolution.y))! // texture of the Y image sobel
     
     var relaxedDepthState: MTLDepthStencilState!
+    var fullDepthState: MTLDepthStencilState!
     
     // Captured image texture cache
     var capturedImageTextureCache: CVMetalTextureCache!
     
     // Used to determine _uniformBufferStride each frame.
     //   This is the current frame number modulo kMaxBuffersInFlight
-    var uniformBufferIndex: Int = 0
+    var inFlightBufferIndex: Int = 0
     
     // Offset within _sharedUniformBuffer to set for the current frame
     var sharedUniformBufferOffset: Int = 0
@@ -51,7 +76,12 @@ class ScanRenderer {
     // Flag for viewport size changes
     var viewportSizeDidChange: Bool = false
     
+    private var sampleFrame: ARFrame { session.currentFrame! }
+    private lazy var cameraResolution: Float2 = Float2(Float(sampleFrame.camera.imageResolution.width), Float(sampleFrame.camera.imageResolution.height)) // used to create selection grid from numGridPoints
+    private lazy var particlesManager: ParticlesManager = ParticlesManager(metalDevice: device, cameraResolution: cameraResolution) // BufferManager object, holding all particleBuffers and corresponding logic
     
+    private lazy var rotateToARCamera: matrix_float4x4 = makeRotateToARCameraTransform(orientation: deviceOrientation)
+
     init(session: ARSession, metalDevice device: MTLDevice, renderDestination: RenderDestinationProvider) {
         self.session = session
         self.device = device
@@ -69,6 +99,11 @@ class ScanRenderer {
         //   pipeline (App, Metal, Drivers, GPU, etc)
         let _ = inFlightSemaphore.wait(timeout: DispatchTime.distantFuture)
         
+        guard let currentFrame = session.currentFrame else {
+            inFlightSemaphore.signal()
+            return
+        }
+        
         // Create a new command buffer for each renderpass to the current drawable
         if let commandBuffer = commandQueue.makeCommandBuffer() {
             commandBuffer.label = "MyCommand"
@@ -81,7 +116,7 @@ class ScanRenderer {
             //   we use from the CVMetalTextures are not valid unless their parent CVMetalTextures
             //   are retained. Since we may release our CVMetalTexture ivars during the rendering
             //   cycle, we must retain them separately here.
-            var textures = [capturedImageTextureY, capturedImageTextureCbCr]
+            var textures = [capturedImageTextureY, capturedImageTextureCbCr, depthTexture, confidenceTexture]
             commandBuffer.addCompletedHandler{ [weak self] commandBuffer in
                 if let strongSelf = self {
                     strongSelf.inFlightSemaphore.signal()
@@ -90,13 +125,20 @@ class ScanRenderer {
             }
             
             updateRingBufferPointers()
-            updateBufferState()
+            updateBufferState(frame: currentFrame)
+            updateSobelTextures(commandBuffer: commandBuffer)
             
-            if let renderPassDescriptor = renderDestination.currentRenderPassDescriptor, let currentDrawable = renderDestination.currentDrawable, let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) {
+            if let renderPassDescriptor = renderDestination.currentRenderPassDescriptor,
+               let currentDrawable = renderDestination.currentDrawable,
+               let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) {
                 
                 renderEncoder.label = "MyRenderEncoder"
                 
+                updateViewshed(frame: currentFrame, renderEncoder: renderEncoder)
                 drawUnderlay(renderEncoder: renderEncoder)
+                if ScanConfig.viewshedActive {
+                    drawViewshed(renderEncoder: renderEncoder)
+                }
                 
                 // We're done encoding commands
                 renderEncoder.endEncoding()
@@ -108,6 +150,37 @@ class ScanRenderer {
             // Finalize rendering here & push the command buffer to the GPU
             commandBuffer.commit()
         }
+    }
+}
+
+// MARK: - Calculating Particles
+
+private extension ScanRenderer {
+    
+    // genetate new points from image data
+    private func updateViewshed(frame: ARFrame, renderEncoder: MTLRenderCommandEncoder) {
+        
+        var sobelConfig: simd_float4 = vector_float4(ScanConfig.sobelDepthThreshold, ScanConfig.sobelYThreshold, ScanConfig.sobelYEdgeSamplingRate, ScanConfig.sobelSurfaceSamplingRate)
+        var depthThresholds: Float2 = vector_float2(ScanConfig.maxPointDepth, ScanConfig.minPointDepth)
+        
+        renderEncoder.pushDebugGroup("UpdateViewshed")
+        
+        renderEncoder.setDepthStencilState(relaxedDepthState)
+        renderEncoder.setRenderPipelineState(unprojectPipelineState)
+        renderEncoder.setVertexBuffer(unprojectUniformsBuffers[inFlightBufferIndex])
+        renderEncoder.setVertexBuffer(viewshedParticlesBuffers[inFlightBufferIndex])
+        renderEncoder.setVertexBuffer(particlesManager.gridPointsBuffer) // sampling grid points buffer
+        renderEncoder.setVertexBytes(&sobelConfig, length: MemoryLayout.size(ofValue: sobelConfig), index: Int(kSobelThresholds.rawValue))
+        renderEncoder.setVertexBytes(&depthThresholds, length: MemoryLayout.size(ofValue: depthThresholds), index: Int(kDepthThresholds.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureY!), index: Int(kTextureY.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureCbCr!), index: Int(kTextureCbCr.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(depthTexture!), index: Int(kTextureDepth.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(confidenceTexture!), index: Int(kTextureConfidence.rawValue))
+        renderEncoder.setVertexTexture(depthSobelTexture, index: Int(kTextureDepthSobel.rawValue))
+        renderEncoder.setVertexTexture(YSobelTexture, index: Int(kTextureYSobel.rawValue))
+        renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particlesManager.gridSize)
+        
+        renderEncoder.popDebugGroup()
     }
 }
 
@@ -145,11 +218,11 @@ private extension ScanRenderer {
         renderEncoder.setDepthStencilState(relaxedDepthState)
         
         // Set mesh's vertex buffers
-        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kBufferIndexMeshPositions.rawValue))
+        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kUnderlayVertexDescriptors.rawValue))
         
         // Set any textures read/sampled from our render pipeline
-        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureY), index: Int(kTextureIndexY.rawValue))
-        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureCbCr), index: Int(kTextureIndexCbCr.rawValue))
+        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureY), index: Int(kTextureY.rawValue))
+        renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(textureCbCr), index: Int(kTextureCbCr.rawValue))
         
         // Draw each submesh of our mesh
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
@@ -169,7 +242,7 @@ private extension ScanRenderer {
         renderEncoder.setRenderPipelineState(float1DTexturePipelineState)
         renderEncoder.setDepthStencilState(relaxedDepthState)
         
-        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kBufferIndexMeshPositions.rawValue))
+        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kUnderlayVertexDescriptors.rawValue))
         renderEncoder.setFragmentBytes(&f, length: MemoryLayout.size(ofValue: scaleFactor), index: 0)
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(depthTex), index: 0)
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
@@ -188,13 +261,33 @@ private extension ScanRenderer {
         renderEncoder.setRenderPipelineState(confidencePipelineState)
         renderEncoder.setDepthStencilState(relaxedDepthState)
         
-        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kBufferIndexMeshPositions.rawValue))
+        renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kUnderlayVertexDescriptors.rawValue))
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(confTex), index: 0)
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
         
         renderEncoder.popDebugGroup()
     }
     
+    func drawViewshed(renderEncoder: MTLRenderCommandEncoder) {
+        var showByConfidence:Bool = false // show all points
+        var alphaFactor:Float = 0.6
+        var fakeTimestamp = 0
+        
+        renderEncoder.pushDebugGroup("DrawViewshed")
+        
+        renderEncoder.setCullMode(.none)
+        renderEncoder.setRenderPipelineState(particleBlendedPipelineState)
+        renderEncoder.setDepthStencilState(fullDepthState)
+        
+        renderEncoder.setVertexBuffer(viewshedCloudUniformsBuffers[inFlightBufferIndex])
+        renderEncoder.setVertexBuffer(viewshedParticlesBuffers[inFlightBufferIndex], atCustomIndex: Int(kParticleUniforms.rawValue))
+        renderEncoder.setVertexBytes(&showByConfidence, length: MemoryLayout.size(ofValue: showByConfidence), index: Int(kFreeBufferIndex.rawValue)+0)
+        renderEncoder.setVertexBytes(&alphaFactor, length: MemoryLayout.size(ofValue: alphaFactor), index: Int(kFreeBufferIndex.rawValue)+1)
+        renderEncoder.setVertexBytes(&fakeTimestamp, length: MemoryLayout.size(ofValue: fakeTimestamp), index: Int(kFreeBufferIndex.rawValue)+2)
+        renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: ScanConfig.numGridPoints)
+        
+        renderEncoder.popDebugGroup()
+    }
 }
 
 // MARK: - Update Functions
@@ -205,34 +298,45 @@ private extension ScanRenderer {
         // Update the location(s) to which we'll write to in our dynamically changing Metal buffers for
         //   the current frame (i.e. update our slot in the ring buffer used for the current frame)
         
-        uniformBufferIndex = (uniformBufferIndex + 1) % kMaxBuffersInFlight
-        sharedUniformBufferOffset = kAlignedSharedUniformsSize * uniformBufferIndex
+        inFlightBufferIndex = (inFlightBufferIndex + 1) % kMaxBuffersInFlight
+        sharedUniformBufferOffset = kAlignedSharedUniformsSize * inFlightBufferIndex
         sharedUniformBufferAddress = sharedUniformBuffer.contents().advanced(by: sharedUniformBufferOffset)
     }
     
-    func updateBufferState() {
-        guard let currentFrame = session.currentFrame else {
-            return
-        }
-        
-        updateSharedUniforms(frame: currentFrame)
-        updateCapturedImageTextures(frame: currentFrame)
-        updateDepthConfidenceTextures(frame: currentFrame)
+    func updateBufferState(frame: ARFrame) {
+        updateSharedUniforms(frame: frame)
+        updateCapturedImageTextures(frame: frame)
+        updateDepthConfidenceTextures(frame: frame)
         
         if viewportSizeDidChange {
             viewportSizeDidChange = false
-            updateImagePlane(frame: currentFrame)
+            updateImagePlane(frame: frame)
         }
     }
     
     func updateSharedUniforms(frame: ARFrame) {
         // Update the shared uniforms of the frame
         
-        let uniforms = sharedUniformBufferAddress.assumingMemoryBound(to: SharedUniforms.self)
+        let sharedUniforms = sharedUniformBufferAddress.assumingMemoryBound(to: SharedUniforms.self)
         
-        uniforms.pointee.viewMatrix = frame.camera.viewMatrix(for: .portrait)
-        uniforms.pointee.projectionMatrix = frame.camera.projectionMatrix(for: .portrait, viewportSize: viewportSize, zNear: 0.001, zFar: 1000)
+        let camera = frame.camera
+        let arCamViewMatrix = camera.viewMatrix(for: deviceOrientation)
+        let perspectiveProjectionMatrix = camera.projectionMatrix(for: deviceOrientation, viewportSize: viewportSize, zNear: 0.001, zFar: 10)
+        
+        let viewMatrix = arCamViewMatrix
+        let projectionMatrix = perspectiveProjectionMatrix
+        
+        sharedUniforms.pointee.viewMatrix = viewMatrix
+        sharedUniforms.pointee.projectionMatrix = projectionMatrix
+        
+        unprojectUniforms.localToWorld = arCamViewMatrix.inverse * rotateToARCamera
+        unprojectUniforms.cameraIntrinsicsInversed = camera.intrinsics.inverse
+        unprojectUniformsBuffers[inFlightBufferIndex][0] = unprojectUniforms
+        
+        viewshedCloudUniforms.viewProjectionMatrix = projectionMatrix * viewMatrix
+        viewshedCloudUniformsBuffers[inFlightBufferIndex][0] = viewshedCloudUniforms
 
+        /* TODO check empty project if i can use this for particle rendering
         // Set up lighting for the scene using the ambient intensity if provided
         var ambientIntensity: Float = 1.0
         
@@ -251,6 +355,7 @@ private extension ScanRenderer {
         uniforms.pointee.directionalLightColor = directionalLightColor * ambientIntensity
         
         uniforms.pointee.materialShininess = 30
+         */
     }
     
     func updateCapturedImageTextures(frame: ARFrame) {
@@ -271,6 +376,24 @@ private extension ScanRenderer {
         
         depthTexture = createTexture(fromPixelBuffer: dMap, pixelFormat:.r32Float, planeIndex:0)
         confidenceTexture = createTexture(fromPixelBuffer: cMap, pixelFormat: .r8Uint, planeIndex: 0)
+    }
+    
+    func updateSobelTextures(commandBuffer: MTLCommandBuffer) {
+        if let unwrappedCVMetalTex = depthTexture,
+           let unwrappedMetalTex = CVMetalTextureGetTexture(unwrappedCVMetalTex) {
+            let shader = MPSImageSobel(device: device) // MPSImageGaussianBlur(device: device, sigma: 5.0), MPSImageSobel(device: device)
+            shader.encode(commandBuffer: commandBuffer, // calling encode probably creates another renderEncoder, which throws an error if a renderencoder was already created using the same commandBuffer - https://stackoverflow.com/questions/50141522/metal-makecomputecommandencoder-assertion-failure
+                    sourceTexture: unwrappedMetalTex,
+                    destinationTexture: depthSobelTexture)
+        }
+        
+        if let unwrappedCVMetalTexY = capturedImageTextureY,
+           let unwrappedMetalTexY = CVMetalTextureGetTexture(unwrappedCVMetalTexY) {
+            let shader = MPSImageSobel(device: device)// MPSImageGaussianBlur(device: device, sigma: 5.0), MPSImageSobel(device: device)
+            shader.encode(commandBuffer: commandBuffer, // calling encode probably creates another renderEncoder, which throws an error if a renderencoder was already created using the same commandBuffer - https://stackoverflow.com/questions/50141522/metal-makecomputecommandencoder-assertion-failure
+                    sourceTexture: unwrappedMetalTexY,
+                    destinationTexture: YSobelTexture)
+        }
     }
     
     func updateImagePlane(frame: ARFrame) {
@@ -332,13 +455,22 @@ private extension ScanRenderer {
         imagePlaneVertexBuffer = device.makeBuffer(bytes: kImagePlaneVertexData, length: imagePlaneVertexDataCount, options: [])
         imagePlaneVertexBuffer.label = "ImagePlaneVertexBuffer"
         
+        for _ in 0..<kMaxBuffersInFlight {
+            viewshedParticlesBuffers.append(.init(device: device, count: ScanConfig.viewshedMaxCount, index: kViewshedParticleUniforms.rawValue))
+            unprojectUniformsBuffers.append(.init(device: device, count: 1, index: kUnprojectUniforms.rawValue))
+            viewshedCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
+        }
+        
         // Load all the shader files with a metal file extension in the project
         let defaultLibrary = device.makeDefaultLibrary()!
         
         makeCapturedImagePipelineState(library: defaultLibrary)
         makeConfidencePipelineState(library: defaultLibrary)
         makeFloat1DTexturePipelineState(library: defaultLibrary)
+        makeParticleBlendedPipelineState(library: defaultLibrary)
+        makeFilterUnprojectionPipelineState(library: defaultLibrary)
         makeRelaxedDepthState()
+        makeFullDepthState()
         
         // Create captured image texture cache
         var textureCache: CVMetalTextureCache?
@@ -347,6 +479,43 @@ private extension ScanRenderer {
         
         // Create the command queue
         commandQueue = device.makeCommandQueue()
+    }
+    
+    func cameraToDisplayRotation(orientation: UIInterfaceOrientation) -> Int {
+        switch orientation {
+        case .landscapeLeft:
+            return 180
+        case .portrait:
+            return 90
+        case .portraitUpsideDown:
+            return -90
+        default:
+            return 0
+        }
+    }
+    
+    func makeRotateToARCameraTransform(orientation: UIInterfaceOrientation) -> matrix_float4x4 {
+        // flip to ARKit Camera's coordinate
+        let flipYZ = matrix_float4x4(
+            [1, 0, 0, 0],
+            [0, -1, 0, 0],
+            [0, 0, -1, 0],
+            [0, 0, 0, 1] )
+
+        let rotationAngle = Float(cameraToDisplayRotation(orientation: orientation)) * .degreesToRadian
+        return flipYZ * matrix_float4x4(simd_quaternion(rotationAngle, Float3(0, 0, 1)))
+    }
+    
+    func getEmptyMTLTexture(_ width: Int, _ height: Int) -> MTLTexture? {
+        let textureDescriptor = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: MTLPixelFormat.r32Float, // r32Float, rgba8Unorm
+            width: width,
+            height: height,
+            mipmapped: false)
+        
+        textureDescriptor.usage = [.shaderRead, .shaderWrite] // refers to MTLTextureUsage.shaderRead (infered by context)
+        
+        return device.makeTexture(descriptor: textureDescriptor)
     }
     
     // MARK: Metal Pipeline States
@@ -358,12 +527,12 @@ private extension ScanRenderer {
         // Positions
         vertexDescriptor.attributes[0].format = .float2
         vertexDescriptor.attributes[0].offset = 0
-        vertexDescriptor.attributes[0].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
+        vertexDescriptor.attributes[0].bufferIndex = Int(kUnderlayVertexDescriptors.rawValue)
         
         // Texture coordinates
         vertexDescriptor.attributes[1].format = .float2
         vertexDescriptor.attributes[1].offset = 8
-        vertexDescriptor.attributes[1].bufferIndex = Int(kBufferIndexMeshPositions.rawValue)
+        vertexDescriptor.attributes[1].bufferIndex = Int(kUnderlayVertexDescriptors.rawValue)
         
         // Buffer Layout
         vertexDescriptor.layouts[0].stride = 16
@@ -442,12 +611,67 @@ private extension ScanRenderer {
         }
     }
     
+    func makeParticleBlendedPipelineState(library: MTLLibrary) {
+        guard let vertexFunction = library.makeFunction(name: "particleVertex"),
+            let fragmentFunction = library.makeFunction(name: "particleFragment") else {
+                print("something went wrong while making blended particle shader functions")
+                return
+        }
+        
+        let descriptor = MTLRenderPipelineDescriptor()
+        descriptor.vertexFunction = vertexFunction
+        descriptor.fragmentFunction = fragmentFunction
+        descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
+        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        
+        descriptor.colorAttachments[0].isBlendingEnabled = true
+        descriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha
+        descriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
+        descriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
+        
+        do {
+            try particleBlendedPipelineState = device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            print("Failed to created captured image pipeline state, error \(error)")
+        }
+    }
+    
+    func makeFilterUnprojectionPipelineState(library: MTLLibrary) {
+        
+        guard let vertexFunction = library.makeFunction(name: "filterUnprojectVertex") else {
+                print("something went wrong while making unprojection shader function")
+                return
+        }
+        
+        let descriptor = MTLRenderPipelineDescriptor()
+        descriptor.vertexFunction = vertexFunction
+        descriptor.isRasterizationEnabled = false
+        descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
+        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        
+        
+        do {
+            try unprojectPipelineState = device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            print("Failed to created captured image pipeline state, error \(error)")
+        }
+    }
+    
     // MARK: Metal Depth States
     
     func makeRelaxedDepthState() {
-        let capturedImageDepthStateDescriptor = MTLDepthStencilDescriptor()
-        capturedImageDepthStateDescriptor.depthCompareFunction = .always
-        capturedImageDepthStateDescriptor.isDepthWriteEnabled = false
-        relaxedDepthState = device.makeDepthStencilState(descriptor: capturedImageDepthStateDescriptor)
+        let descriptor = MTLDepthStencilDescriptor()
+        descriptor.depthCompareFunction = .always
+        descriptor.isDepthWriteEnabled = false
+        relaxedDepthState = device.makeDepthStencilState(descriptor: descriptor)
+    }
+    
+    func makeFullDepthState() {
+        let descriptor = MTLDepthStencilDescriptor()
+        descriptor.depthCompareFunction = .lessEqual
+        descriptor.isDepthWriteEnabled = true
+        fullDepthState = device.makeDepthStencilState(descriptor: descriptor)
     }
 }

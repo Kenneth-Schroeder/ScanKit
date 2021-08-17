@@ -8,6 +8,13 @@
 import Foundation
 import MetalKit
 
+typealias Float2 = SIMD2<Float>
+typealias Float3 = SIMD3<Float>
+
+extension Float {
+    static let degreesToRadian = Float.pi / 180
+}
+
 extension MTKView : RenderDestinationProvider {
 }
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MetalKit
 
 // The max number of command buffers in flight
 let kMaxBuffersInFlight: Int = 3
@@ -20,3 +21,5 @@ let kImagePlaneVertexData: [Float] = [
     -1.0,  1.0,  0.0, 0.0,
     1.0,  1.0,  1.0, 0.0,
 ]
+
+let deviceOrientation = UIInterfaceOrientation.portrait
