@@ -8,14 +8,29 @@
 import UIKit
 import UniformTypeIdentifiers
 
-class MainMenuVC: UIViewController, UIDocumentPickerDelegate {
+class SetupVC: UIViewController, UIDocumentPickerDelegate {
     @IBOutlet var folderButton: TileButton!
     @IBOutlet var scanButton: TileButton!
+    @IBOutlet var rgbQualitySlider: UISlider!
+    @IBOutlet var rgbSwitch: UISwitch!
+    @IBOutlet var depthSwitch: UISwitch!
+    @IBOutlet var confidenceSwitch: UISwitch!
+    @IBOutlet var worldmapSwitch: UISwitch!
+    @IBOutlet var qrCodeSwitch: UISwitch!
+    
     var folderSelectionTouched: Bool = false
     var scanButtonTouched: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // update UI according to ScanConfig
+        rgbQualitySlider.setValue(ScanConfig.rgbQuality, animated: false)
+        rgbSwitch.setOn(ScanConfig.saveRGBVideo, animated: false)
+        depthSwitch.setOn(ScanConfig.saveDepthVideo, animated: false)
+        confidenceSwitch.setOn(ScanConfig.saveConfidenceVideo, animated: false)
+        worldmapSwitch.setOn(ScanConfig.saveWorldMapInfo, animated: false)
+        qrCodeSwitch.setOn(ScanConfig.detectQRCodes, animated: false)
     }
     
     func displayFolderSelection() {
@@ -47,7 +62,7 @@ class MainMenuVC: UIViewController, UIDocumentPickerDelegate {
         displayFolderSelection()
     }
     
-    // MARK: - raw data button actions
+    // MARK: - scan button actions
     
     @IBAction func scan_button_touched(_ sender: TileButton) {
         sender.alpha = 0.5
@@ -70,6 +85,32 @@ class MainMenuVC: UIViewController, UIDocumentPickerDelegate {
         }
         next_vc.modalPresentationStyle = .overFullScreen
         present(next_vc, animated: true)
+    }
+    
+    // MARK: - setup UI functions
+    
+    @IBAction func rgbQualitySlider_changed(_ sender: UISlider) {
+        ScanConfig.rgbQuality = sender.value
+    }
+    
+    @IBAction func rgbSwitch_toggled(_ sender: UISwitch) {
+        ScanConfig.saveRGBVideo = sender.isOn
+    }
+    
+    @IBAction func depthSwitch_toggled(_ sender: UISwitch) {
+        ScanConfig.saveDepthVideo = sender.isOn
+    }
+    
+    @IBAction func confidenceSwitch_toggled(_ sender: UISwitch) {
+        ScanConfig.saveConfidenceVideo = sender.isOn
+    }
+    
+    @IBAction func worldmapSwitch_toggled(_ sender: UISwitch) {
+        ScanConfig.saveWorldMapInfo = sender.isOn
+    }
+    
+    @IBAction func qrCodeSwitch_toggled(_ sender: UISwitch) {
+        ScanConfig.detectQRCodes = sender.isOn
     }
     
     // MARK: - UIDocumentPickerDelegate

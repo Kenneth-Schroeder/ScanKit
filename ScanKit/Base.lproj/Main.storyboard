@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="VI7-fq-9kc">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -8,19 +8,19 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Main MenuVC-->
+        <!--SetupVC-->
         <scene sceneID="bBH-cq-50P">
             <objects>
-                <viewController storyboardIdentifier="main_menu_vc" id="VI7-fq-9kc" customClass="MainMenuVC" customModule="ScanKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="main_menu_vc" id="VI7-fq-9kc" customClass="SetupVC" customModule="ScanKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8Zy-y8-9hz">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JwH-b0-VHL" userLabel="FolderSelectionButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="30" y="592" width="354" height="100"/>
+                                <rect key="frame" x="30" y="700" width="782" height="40"/>
                                 <color key="backgroundColor" systemColor="systemPurpleColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="Oqh-io-TUQ"/>
+                                    <constraint firstAttribute="height" constant="40" id="Oqh-io-TUQ"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="Select Folder">
@@ -33,10 +33,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="ScanButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="30" y="722" width="354" height="100"/>
+                                <rect key="frame" x="30" y="750" width="782" height="40"/>
                                 <color key="backgroundColor" systemColor="systemPurpleColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="ZXu-4R-8lt"/>
+                                    <constraint firstAttribute="height" constant="40" id="ZXu-4R-8lt"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="Scan">
@@ -49,19 +49,212 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ScanKit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YSf-za-DzA">
-                                <rect key="frame" x="107" y="94" width="200.5" height="72"/>
+                                <rect key="frame" x="320.66666666666669" y="74" width="200.66666666666669" height="72"/>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Bold" family="Apple SD Gothic Neo" pointSize="60"/>
                                 <color key="textColor" red="0.57919406890000003" green="0.1280144453" blue="0.57268613580000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="cLE-5K-ztA">
+                                <rect key="frame" x="30" y="166" width="782" height="504"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qv2-CZ-60S">
+                                        <rect key="frame" x="0.0" y="0.0" width="782" height="38.666666666666664"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="qfc-WY-08W">
+                                                <rect key="frame" x="0.0" y="0.0" width="733" height="38.666666666666664"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RGB Video" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X5P-3v-DhA" userLabel="RGB Switch Title">
+                                                        <rect key="frame" x="0.0" y="0.0" width="733" height="21.666666666666668"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all images captured during the ARSession as video and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oNX-yH-FJS" userLabel="RGB Switch Description">
+                                                        <rect key="frame" x="0.0" y="21.666666666666657" width="733" height="17"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="RGB Switch" translatesAutoresizingMaskIntoConstraints="NO" id="L8W-tQ-cQj" userLabel="RGB Switch">
+                                                <rect key="frame" x="733" y="0.0" width="51" height="38.666666666666664"/>
+                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <connections>
+                                                    <action selector="rgbSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="9IA-3G-B2m"/>
+                                                </connections>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="07K-6V-0Bf">
+                                        <rect key="frame" x="0.0" y="41.666666666666657" width="782" height="295.66666666666674"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="U3k-i5-s9f">
+                                                <rect key="frame" x="0.0" y="0.0" width="395.33333333333331" height="295.66666666666669"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RGB Quality" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lX7-KS-YZ8" userLabel="RGB Quality Title">
+                                                        <rect key="frame" x="0.0" y="0.0" width="395.33333333333331" height="278.66666666666669"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adjust the JPEG compression quality of the saved RGB video." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Kyb-9g-dEA" userLabel="RGB Quality Description">
+                                                        <rect key="frame" x="0.0" y="278.66666666666663" width="395.33333333333331" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Eg3-Yn-0HC" userLabel="RGB Quality Slider">
+                                                <rect key="frame" x="393.33333333333326" y="0.0" width="390.66666666666674" height="296.66666666666669"/>
+                                                <color key="tintColor" systemColor="systemPurpleColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="qIJ-aV-ote"/>
+                                                </constraints>
+                                                <connections>
+                                                    <action selector="rgbQualitySlider_changed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="5eM-cn-6yF"/>
+                                                </connections>
+                                            </slider>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rxq-ap-Smq">
+                                        <rect key="frame" x="0.0" y="340.33333333333331" width="782" height="38.666666666666686"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Spk-im-RaR">
+                                                <rect key="frame" x="0.0" y="0.0" width="733" height="38.666666666666664"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Depth Data" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xQy-JR-7SQ" userLabel="Depth Data Title">
+                                                        <rect key="frame" x="0.0" y="0.0" width="753" height="21.666666666666668"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all depth data captured during the ARSession and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zAm-Dw-Y9M" userLabel="Depth Data Description">
+                                                        <rect key="frame" x="0.0" y="21.666666666666686" width="753" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="Depth Switch" translatesAutoresizingMaskIntoConstraints="NO" id="NIJ-oy-d4F" userLabel="Depth Switch">
+                                                <rect key="frame" x="733" y="0.0" width="51" height="38.666666666666664"/>
+                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <connections>
+                                                    <action selector="depthSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="MCV-v5-p9m"/>
+                                                </connections>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z7R-8f-j37">
+                                        <rect key="frame" x="0.0" y="382" width="782" height="38.666666666666686"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="RnA-x5-9hy">
+                                                <rect key="frame" x="0.0" y="0.0" width="733" height="38.666666666666664"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confidence Data" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vOe-hy-SJB" userLabel="Confidence Data Title">
+                                                        <rect key="frame" x="0.0" y="0.0" width="753" height="21.666666666666668"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all confidence data captured during the ARSession and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mwc-RZ-als" userLabel="Confidence Data Description">
+                                                        <rect key="frame" x="0.0" y="21.666666666666686" width="753" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="Confidence Switch" translatesAutoresizingMaskIntoConstraints="NO" id="RJk-0v-Pxt" userLabel="Confidence Switch">
+                                                <rect key="frame" x="733" y="0.0" width="51" height="38.666666666666664"/>
+                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <connections>
+                                                    <action selector="confidenceSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="YrN-6W-7ai"/>
+                                                </connections>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vGp-B4-QcT">
+                                        <rect key="frame" x="0.0" y="423.66666666666663" width="782" height="38.666666666666686"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3af-2s-om6">
+                                                <rect key="frame" x="0.0" y="0.0" width="733" height="38.666666666666664"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ARWorldMap Data" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="v11-CQ-FXy" userLabel="WorldMap Title">
+                                                        <rect key="frame" x="0.0" y="0.0" width="753" height="21.666666666666668"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Periodically save all of the ARWorldMap data to a JSON file at the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KHq-7W-GqV" userLabel="WorldMap Description">
+                                                        <rect key="frame" x="0.0" y="21.666666666666629" width="753" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="WorldMap Switch" translatesAutoresizingMaskIntoConstraints="NO" id="TNS-di-MnB" userLabel="WorldMap Switch">
+                                                <rect key="frame" x="733" y="0.0" width="51" height="38.666666666666664"/>
+                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gz1-Tb-8bp">
+                                        <rect key="frame" x="0.0" y="465.33333333333337" width="782" height="38.666666666666686"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iug-3n-I7X">
+                                                <rect key="frame" x="0.0" y="0.0" width="733" height="38.666666666666664"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code Data" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lAS-fq-a0c" userLabel="QR Code Title">
+                                                        <rect key="frame" x="0.0" y="0.0" width="753" height="21.666666666666668"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recognize QR Codes and save their location and message in JSON format to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="R22-ds-Gyt" userLabel="QR Code Description">
+                                                        <rect key="frame" x="0.0" y="21.666666666666686" width="753" height="17"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </stackView>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="QRCode Switch" translatesAutoresizingMaskIntoConstraints="NO" id="JVp-LG-wyF" userLabel="QRCode Switch">
+                                                <rect key="frame" x="733" y="0.0" width="51" height="38.666666666666664"/>
+                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <connections>
+                                                    <action selector="qrCodeSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="Mx1-Rs-nQT"/>
+                                                </connections>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hEp-gi-cNU"/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="YSf-za-DzA" firstAttribute="top" secondItem="hEp-gi-cNU" secondAttribute="top" constant="50" id="D1F-td-8Km"/>
+                            <constraint firstItem="YSf-za-DzA" firstAttribute="top" secondItem="hEp-gi-cNU" secondAttribute="top" constant="30" id="D1F-td-8Km"/>
+                            <constraint firstItem="JwH-b0-VHL" firstAttribute="top" secondItem="cLE-5K-ztA" secondAttribute="bottom" constant="30" id="FGy-6p-OfE"/>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="JwH-b0-VHL" secondAttribute="trailing" constant="30" id="Kg0-ee-mcG"/>
-                            <constraint firstItem="WKt-xy-gTV" firstAttribute="top" secondItem="JwH-b0-VHL" secondAttribute="bottom" constant="30" id="eDs-0K-6GH"/>
-                            <constraint firstItem="hEp-gi-cNU" firstAttribute="bottom" secondItem="WKt-xy-gTV" secondAttribute="bottom" constant="40" id="gVR-z4-Hlg"/>
+                            <constraint firstItem="cLE-5K-ztA" firstAttribute="top" secondItem="YSf-za-DzA" secondAttribute="bottom" constant="20" id="Kmk-ZV-i5f"/>
+                            <constraint firstItem="cLE-5K-ztA" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="TCk-KP-Ul8"/>
+                            <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="cLE-5K-ztA" secondAttribute="trailing" constant="30" id="ckN-EI-8E6"/>
+                            <constraint firstItem="WKt-xy-gTV" firstAttribute="top" secondItem="JwH-b0-VHL" secondAttribute="bottom" constant="10" id="eDs-0K-6GH"/>
+                            <constraint firstItem="hEp-gi-cNU" firstAttribute="bottom" secondItem="WKt-xy-gTV" secondAttribute="bottom" constant="20" id="gVR-z4-Hlg"/>
                             <constraint firstItem="WKt-xy-gTV" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="hNg-Im-aYg"/>
                             <constraint firstItem="YSf-za-DzA" firstAttribute="centerX" secondItem="8Zy-y8-9hz" secondAttribute="centerX" id="olq-Tm-zzy"/>
                             <constraint firstItem="JwH-b0-VHL" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="wKI-mW-K5J"/>
@@ -69,24 +262,30 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="confidenceSwitch" destination="RJk-0v-Pxt" id="7od-Zp-jwV"/>
+                        <outlet property="depthSwitch" destination="NIJ-oy-d4F" id="4Wc-QQ-RT1"/>
                         <outlet property="folderButton" destination="JwH-b0-VHL" id="VIH-mu-BSo"/>
+                        <outlet property="qrCodeSwitch" destination="JVp-LG-wyF" id="7m4-6M-GHH"/>
+                        <outlet property="rgbQualitySlider" destination="Eg3-Yn-0HC" id="tv3-6A-Y3a"/>
+                        <outlet property="rgbSwitch" destination="L8W-tQ-cQj" id="XGM-pt-SKs"/>
                         <outlet property="scanButton" destination="WKt-xy-gTV" id="3Kw-qe-0D6"/>
+                        <outlet property="worldmapSwitch" destination="TNS-di-MnB" id="NM6-RN-7O2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6g7-EG-MiG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1452.1739130434785" y="93.75"/>
+            <point key="canvasLocation" x="-1888" y="94"/>
         </scene>
         <!--ScanVC-->
         <scene sceneID="x5d-eS-2Nd">
             <objects>
                 <viewController storyboardIdentifier="recording_vc" id="BX7-ox-Ehg" customClass="ScanVC" customModule="ScanKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="VGZ-Eb-a9U" customClass="MTKView">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="wbY-xQ-XxG" userLabel="Underlay Control">
-                                <rect key="frame" x="84.5" y="801" width="245" height="32"/>
+                                <rect key="frame" x="72.666666666666686" y="749" width="245" height="32"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <segments>
                                     <segment title="None"/>
@@ -100,7 +299,7 @@
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CkJ-aV-qaf" userLabel="ViewshedButton" customClass="RoundedButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="154.5" y="745" width="105" height="36"/>
+                                <rect key="frame" x="142.66666666666666" y="693" width="105" height="36"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="  Viewshed  ">
@@ -111,7 +310,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N9f-Dw-1bl" userLabel="RecordButton" customClass="RecordButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="177" y="665" width="60" height="60"/>
+                                <rect key="frame" x="165" y="613" width="60" height="60"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="Upg-90-mFf"/>
@@ -140,7 +339,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uLc-k7-ys6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-713.04347826086962" y="93.75"/>
+            <point key="canvasLocation" x="-788" y="94"/>
         </scene>
     </scenes>
     <resources>

@@ -12,7 +12,7 @@
 		9F79BB4126C2E49B00C5654F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB3F26C2E49B00C5654F /* Main.storyboard */; };
 		9F79BB4326C2E49D00C5654F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB4226C2E49D00C5654F /* Assets.xcassets */; };
 		9F79BB4626C2E49D00C5654F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB4426C2E49D00C5654F /* LaunchScreen.storyboard */; };
-		9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB5026C2E56300C5654F /* MainMenuVC.swift */; };
+		9F79BB5126C2E56300C5654F /* SetupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB5026C2E56300C5654F /* SetupVC.swift */; };
 		9FD5F6C426D249CA00A45B31 /* RawDataCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD5F6C326D249CA00A45B31 /* RawDataCollector.swift */; };
 		9FD5F6C726D24AB900A45B31 /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD5F6C626D24AB900A45B31 /* VideoWriter.swift */; };
 		9FD5F6C926D24B6A00A45B31 /* SequenceMetaInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD5F6C826D24B6A00A45B31 /* SequenceMetaInfo.swift */; };
@@ -42,7 +42,7 @@
 		9F79BB4526C2E49D00C5654F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9F79BB4726C2E49D00C5654F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F79BB4826C2E49D00C5654F /* ScanKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ScanKit-Bridging-Header.h"; sourceTree = "<group>"; };
-		9F79BB5026C2E56300C5654F /* MainMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuVC.swift; sourceTree = "<group>"; };
+		9F79BB5026C2E56300C5654F /* SetupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupVC.swift; sourceTree = "<group>"; };
 		9FD5F6C326D249CA00A45B31 /* RawDataCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawDataCollector.swift; sourceTree = "<group>"; };
 		9FD5F6C626D24AB900A45B31 /* VideoWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
 		9FD5F6C826D24B6A00A45B31 /* SequenceMetaInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceMetaInfo.swift; sourceTree = "<group>"; };
@@ -103,13 +103,11 @@
 		9F79BB3526C2E49B00C5654F /* ScanKit */ = {
 			isa = PBXGroup;
 			children = (
+				9FD5F6D026D2AA0100A45B31 /* Rendering */,
 				9FD5F6C526D24AAB00A45B31 /* RawDataWriter */,
 				9FFDF85326C3E797001B6016 /* General */,
-				9F79BB3826C2E49B00C5654F /* Shaders.metal */,
-				9FFDF84E26C3E562001B6016 /* ScanRenderer.swift */,
 				9FFDF84826C3E474001B6016 /* ScanVC.swift */,
-				9F79BB3A26C2E49B00C5654F /* ShaderTypes.h */,
-				9F79BB5026C2E56300C5654F /* MainMenuVC.swift */,
+				9F79BB5026C2E56300C5654F /* SetupVC.swift */,
 				9FFDF85726C82970001B6016 /* ScanConfig.swift */,
 				9FFDF85926C82DB1001B6016 /* ARManager.swift */,
 				9FFDF85D26CC32F7001B6016 /* ParticlesManager.swift */,
@@ -128,6 +126,16 @@
 				9FD5F6CE26D24FA800A45B31 /* Encodables.swift */,
 			);
 			path = RawDataWriter;
+			sourceTree = "<group>";
+		};
+		9FD5F6D026D2AA0100A45B31 /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				9F79BB3826C2E49B00C5654F /* Shaders.metal */,
+				9FFDF84E26C3E562001B6016 /* ScanRenderer.swift */,
+				9F79BB3A26C2E49B00C5654F /* ShaderTypes.h */,
+			);
+			name = Rendering;
 			sourceTree = "<group>";
 		};
 		9FFDF85326C3E797001B6016 /* General */ = {
@@ -274,7 +282,7 @@
 				9FD5F6C426D249CA00A45B31 /* RawDataCollector.swift in Sources */,
 				9FFDF84F26C3E562001B6016 /* ScanRenderer.swift in Sources */,
 				9FD5F6CB26D24E4E00A45B31 /* PixelBufferCollectionWriter.swift in Sources */,
-				9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */,
+				9F79BB5126C2E56300C5654F /* SetupVC.swift in Sources */,
 				9FD5F6C726D24AB900A45B31 /* VideoWriter.swift in Sources */,
 				9FFDF85C26CC1D6E001B6016 /* MetalBuffer.swift in Sources */,
 				9FD5F6CD26D24F7600A45B31 /* FrameCollectionWriter.swift in Sources */,

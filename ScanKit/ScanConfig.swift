@@ -21,7 +21,7 @@ class ScanConfig {
     static let maxPointDepth:Float = 1.2 /// particles more than this far away from the camera at the time of recording will be deleted
     static let minPointDepth:Float = 0.6 /// particles less than this far away from the camera at the time of recording will be deleted
     
-    static let rgbQuality: Float = 0.5
+    static var rgbQuality: Float = 0.5
     
     static var saveRGBVideo: Bool = true
     static var saveDepthVideo: Bool = true
