@@ -367,7 +367,6 @@ private extension ScanRenderer {
     
     // genetate new points from image data
     private func updateViewshed(frame: ARFrame, renderEncoder: MTLRenderCommandEncoder) {
-        
         var sobelConfig: simd_float4 = vector_float4(ScanConfig.sobelDepthThreshold, ScanConfig.sobelYThreshold, ScanConfig.sobelYEdgeSamplingRate, ScanConfig.sobelSurfaceSamplingRate)
         var depthThresholds: Float2 = vector_float2(ScanConfig.maxPointDepth, ScanConfig.minPointDepth)
         

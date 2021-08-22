@@ -176,13 +176,12 @@ class RawDataCollector: CollectionWriterDelegate {
                 fCW.setWorldMap(map: map)
                 self.uploadQueue.async {[fCW] in
                     fCW.writeBufferToFile()
+                    print("WROTE FCW")
                 }
             }
         }
         
         uploadQueue.async {[self, dw, vW, cW, fCW] in
-            print("writing...")
-            
             if ScanConfig.saveRGBVideo {
                 vW.writeBufferToFile()
             }
@@ -192,7 +191,7 @@ class RawDataCollector: CollectionWriterDelegate {
             if ScanConfig.saveConfidenceVideo {
                 cW.writeBufferToFile()
             }
-            if !ScanConfig.saveWorldMapInfo && (ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo) {
+            if (!ScanConfig.saveWorldMapInfo) && (ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo) {
                 fCW.writeBufferToFile()
             }
             
