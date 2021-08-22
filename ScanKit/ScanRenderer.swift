@@ -153,37 +153,6 @@ class ScanRenderer {
     }
 }
 
-// MARK: - Calculating Particles
-
-private extension ScanRenderer {
-    
-    // genetate new points from image data
-    private func updateViewshed(frame: ARFrame, renderEncoder: MTLRenderCommandEncoder) {
-        
-        var sobelConfig: simd_float4 = vector_float4(ScanConfig.sobelDepthThreshold, ScanConfig.sobelYThreshold, ScanConfig.sobelYEdgeSamplingRate, ScanConfig.sobelSurfaceSamplingRate)
-        var depthThresholds: Float2 = vector_float2(ScanConfig.maxPointDepth, ScanConfig.minPointDepth)
-        
-        renderEncoder.pushDebugGroup("UpdateViewshed")
-        
-        renderEncoder.setDepthStencilState(relaxedDepthState)
-        renderEncoder.setRenderPipelineState(unprojectPipelineState)
-        renderEncoder.setVertexBuffer(unprojectUniformsBuffers[inFlightBufferIndex])
-        renderEncoder.setVertexBuffer(viewshedParticlesBuffers[inFlightBufferIndex])
-        renderEncoder.setVertexBuffer(particlesManager.gridPointsBuffer) // sampling grid points buffer
-        renderEncoder.setVertexBytes(&sobelConfig, length: MemoryLayout.size(ofValue: sobelConfig), index: Int(kSobelThresholds.rawValue))
-        renderEncoder.setVertexBytes(&depthThresholds, length: MemoryLayout.size(ofValue: depthThresholds), index: Int(kDepthThresholds.rawValue))
-        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureY!), index: Int(kTextureY.rawValue))
-        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureCbCr!), index: Int(kTextureCbCr.rawValue))
-        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(depthTexture!), index: Int(kTextureDepth.rawValue))
-        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(confidenceTexture!), index: Int(kTextureConfidence.rawValue))
-        renderEncoder.setVertexTexture(depthSobelTexture, index: Int(kTextureDepthSobel.rawValue))
-        renderEncoder.setVertexTexture(YSobelTexture, index: Int(kTextureYSobel.rawValue))
-        renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particlesManager.gridSize)
-        
-        renderEncoder.popDebugGroup()
-    }
-}
-
 // MARK: - Drawing Functions
 
 private extension ScanRenderer {
@@ -394,6 +363,32 @@ private extension ScanRenderer {
                     sourceTexture: unwrappedMetalTexY,
                     destinationTexture: YSobelTexture)
         }
+    }
+    
+    // genetate new points from image data
+    private func updateViewshed(frame: ARFrame, renderEncoder: MTLRenderCommandEncoder) {
+        
+        var sobelConfig: simd_float4 = vector_float4(ScanConfig.sobelDepthThreshold, ScanConfig.sobelYThreshold, ScanConfig.sobelYEdgeSamplingRate, ScanConfig.sobelSurfaceSamplingRate)
+        var depthThresholds: Float2 = vector_float2(ScanConfig.maxPointDepth, ScanConfig.minPointDepth)
+        
+        renderEncoder.pushDebugGroup("UpdateViewshed")
+        
+        renderEncoder.setDepthStencilState(relaxedDepthState)
+        renderEncoder.setRenderPipelineState(unprojectPipelineState)
+        renderEncoder.setVertexBuffer(unprojectUniformsBuffers[inFlightBufferIndex])
+        renderEncoder.setVertexBuffer(viewshedParticlesBuffers[inFlightBufferIndex])
+        renderEncoder.setVertexBuffer(particlesManager.gridPointsBuffer) // sampling grid points buffer
+        renderEncoder.setVertexBytes(&sobelConfig, length: MemoryLayout.size(ofValue: sobelConfig), index: Int(kSobelThresholds.rawValue))
+        renderEncoder.setVertexBytes(&depthThresholds, length: MemoryLayout.size(ofValue: depthThresholds), index: Int(kDepthThresholds.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureY!), index: Int(kTextureY.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureCbCr!), index: Int(kTextureCbCr.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(depthTexture!), index: Int(kTextureDepth.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(confidenceTexture!), index: Int(kTextureConfidence.rawValue))
+        renderEncoder.setVertexTexture(depthSobelTexture, index: Int(kTextureDepthSobel.rawValue))
+        renderEncoder.setVertexTexture(YSobelTexture, index: Int(kTextureYSobel.rawValue))
+        renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particlesManager.gridSize)
+        
+        renderEncoder.popDebugGroup()
     }
     
     func updateImagePlane(frame: ARFrame) {

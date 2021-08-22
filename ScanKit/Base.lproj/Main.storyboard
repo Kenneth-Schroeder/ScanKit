@@ -32,14 +32,14 @@
                                     <action selector="folder_selection_button_touched:" destination="VI7-fq-9kc" eventType="touchDown" id="lkT-Ra-GHf"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="RawDataButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="ScanButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
                                 <rect key="frame" x="30" y="722" width="354" height="100"/>
                                 <color key="backgroundColor" systemColor="systemPurpleColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="ZXu-4R-8lt"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="RAW">
+                                <state key="normal" title="Scan">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -70,7 +70,7 @@
                     </view>
                     <connections>
                         <outlet property="pointCloudButton" destination="JwH-b0-VHL" id="fXc-dT-pdF"/>
-                        <outlet property="rawDataButton" destination="WKt-xy-gTV" id="3Kw-qe-0D6"/>
+                        <outlet property="scanButton" destination="WKt-xy-gTV" id="3Kw-qe-0D6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6g7-EG-MiG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

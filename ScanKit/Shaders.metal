@@ -55,7 +55,7 @@ float rand(int x, int y, int z)
     return (( 1.0 - ( (seed * (seed * seed * 15731 + 789221) + 1376312589) & 2147483647) / 1073741824.0f) + 1.0f) / 2.0f;
 }
 
-// MARK: -
+// MARK: - Underlays
 
 // Captured image vertex function
 vertex ImageInOut underlayImageVertex(ImageVertex in [[stage_in]]) {

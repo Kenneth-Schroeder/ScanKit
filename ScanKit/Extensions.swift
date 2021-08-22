@@ -25,3 +25,14 @@ protocol RenderDestinationProvider {
     var depthStencilPixelFormat: MTLPixelFormat { get set }
     var sampleCount: Int { get set }
 }
+
+protocol CollectionWriter: AnyObject {
+    var delegate: CollectionWriterDelegate? { get set }
+    func getCurrentOutputPath() -> URL
+    func getLastWrittenFrame() -> Int
+    func getLastWrittenTitle() -> String
+}
+
+protocol CollectionWriterDelegate: AnyObject {
+    func fileWritten()
+}

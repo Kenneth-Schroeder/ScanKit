@@ -10,6 +10,7 @@ import ARKit
 
 class ARManager: NSObject, ARSessionDelegate {
     private var vc: ScanVC
+    private var collector: RawDataCollector = RawDataCollector()
     
     init(viewController: ScanVC) {
         self.vc = viewController
@@ -50,6 +51,6 @@ class ARManager: NSObject, ARSessionDelegate {
     }
 
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        // TODO save selected data
+        collector.collectDataOf(arFrame: frame)
     }
 }

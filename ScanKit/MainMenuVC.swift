@@ -9,8 +9,7 @@ import UIKit
 import UniformTypeIdentifiers
 
 class MainMenuVC: UIViewController, UIDocumentPickerDelegate {
-    @IBOutlet var pointCloudButton: TileButton!
-    @IBOutlet var rawDataButton: TileButton!
+    @IBOutlet var scanButton: TileButton!
     var folderSelectionTouched: Bool = false
     var rawDataTouched: Bool = false
     
@@ -49,17 +48,17 @@ class MainMenuVC: UIViewController, UIDocumentPickerDelegate {
     
     // MARK: - raw data button actions
     
-    @IBAction func raw_data_button_touched(_ sender: TileButton) {
+    @IBAction func scan_button_touched(_ sender: TileButton) {
         sender.alpha = 0.5
         rawDataTouched = true
     }
     
-    @IBAction func raw_data_button_released_outside(_ sender: TileButton) {
+    @IBAction func scan_button_released_outside(_ sender: TileButton) {
         sender.alpha = 1.0
         rawDataTouched = false
     }
     
-    @IBAction func raw_data_button_released_inside(_ sender: TileButton) {
+    @IBAction func scan_button_released_inside(_ sender: TileButton) {
         if !rawDataTouched {
             return
         }

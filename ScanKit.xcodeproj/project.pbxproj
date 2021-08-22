@@ -13,6 +13,12 @@
 		9F79BB4326C2E49D00C5654F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB4226C2E49D00C5654F /* Assets.xcassets */; };
 		9F79BB4626C2E49D00C5654F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB4426C2E49D00C5654F /* LaunchScreen.storyboard */; };
 		9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB5026C2E56300C5654F /* MainMenuVC.swift */; };
+		9FD5F6C426D249CA00A45B31 /* RawDataCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD5F6C326D249CA00A45B31 /* RawDataCollector.swift */; };
+		9FD5F6C726D24AB900A45B31 /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD5F6C626D24AB900A45B31 /* VideoWriter.swift */; };
+		9FD5F6C926D24B6A00A45B31 /* SequenceMetaInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD5F6C826D24B6A00A45B31 /* SequenceMetaInfo.swift */; };
+		9FD5F6CB26D24E4E00A45B31 /* PixelBufferCollectionWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD5F6CA26D24E4E00A45B31 /* PixelBufferCollectionWriter.swift */; };
+		9FD5F6CD26D24F7600A45B31 /* FrameCollectionWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD5F6CC26D24F7600A45B31 /* FrameCollectionWriter.swift */; };
+		9FD5F6CF26D24FA800A45B31 /* Encodables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FD5F6CE26D24FA800A45B31 /* Encodables.swift */; };
 		9FFDF84726C3D659001B6016 /* UIClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84626C3D659001B6016 /* UIClasses.swift */; };
 		9FFDF84926C3E474001B6016 /* ScanVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84826C3E474001B6016 /* ScanVC.swift */; };
 		9FFDF84B26C3E4A3001B6016 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFDF84A26C3E4A3001B6016 /* Extensions.swift */; };
@@ -35,6 +41,12 @@
 		9F79BB4726C2E49D00C5654F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F79BB4826C2E49D00C5654F /* ScanKit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ScanKit-Bridging-Header.h"; sourceTree = "<group>"; };
 		9F79BB5026C2E56300C5654F /* MainMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuVC.swift; sourceTree = "<group>"; };
+		9FD5F6C326D249CA00A45B31 /* RawDataCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawDataCollector.swift; sourceTree = "<group>"; };
+		9FD5F6C626D24AB900A45B31 /* VideoWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
+		9FD5F6C826D24B6A00A45B31 /* SequenceMetaInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceMetaInfo.swift; sourceTree = "<group>"; };
+		9FD5F6CA26D24E4E00A45B31 /* PixelBufferCollectionWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelBufferCollectionWriter.swift; sourceTree = "<group>"; };
+		9FD5F6CC26D24F7600A45B31 /* FrameCollectionWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameCollectionWriter.swift; sourceTree = "<group>"; };
+		9FD5F6CE26D24FA800A45B31 /* Encodables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encodables.swift; sourceTree = "<group>"; };
 		9FFDF84626C3D659001B6016 /* UIClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIClasses.swift; sourceTree = "<group>"; };
 		9FFDF84826C3E474001B6016 /* ScanVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanVC.swift; sourceTree = "<group>"; };
 		9FFDF84A26C3E4A3001B6016 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -76,6 +88,7 @@
 		9F79BB3526C2E49B00C5654F /* ScanKit */ = {
 			isa = PBXGroup;
 			children = (
+				9FD5F6C526D24AAB00A45B31 /* RawDataWriter */,
 				9FFDF85326C3E797001B6016 /* General */,
 				9F79BB3826C2E49B00C5654F /* Shaders.metal */,
 				9FFDF84E26C3E562001B6016 /* ScanRenderer.swift */,
@@ -85,8 +98,21 @@
 				9FFDF85726C82970001B6016 /* ScanConfig.swift */,
 				9FFDF85926C82DB1001B6016 /* ARManager.swift */,
 				9FFDF85D26CC32F7001B6016 /* ParticlesManager.swift */,
+				9FD5F6C326D249CA00A45B31 /* RawDataCollector.swift */,
 			);
 			path = ScanKit;
+			sourceTree = "<group>";
+		};
+		9FD5F6C526D24AAB00A45B31 /* RawDataWriter */ = {
+			isa = PBXGroup;
+			children = (
+				9FD5F6C626D24AB900A45B31 /* VideoWriter.swift */,
+				9FD5F6C826D24B6A00A45B31 /* SequenceMetaInfo.swift */,
+				9FD5F6CA26D24E4E00A45B31 /* PixelBufferCollectionWriter.swift */,
+				9FD5F6CC26D24F7600A45B31 /* FrameCollectionWriter.swift */,
+				9FD5F6CE26D24FA800A45B31 /* Encodables.swift */,
+			);
+			path = RawDataWriter;
 			sourceTree = "<group>";
 		};
 		9FFDF85326C3E797001B6016 /* General */ = {
@@ -177,17 +203,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */,
+				9FD5F6C426D249CA00A45B31 /* RawDataCollector.swift in Sources */,
 				9FFDF84F26C3E562001B6016 /* ScanRenderer.swift in Sources */,
+				9FD5F6CB26D24E4E00A45B31 /* PixelBufferCollectionWriter.swift in Sources */,
 				9F79BB5126C2E56300C5654F /* MainMenuVC.swift in Sources */,
+				9FD5F6C726D24AB900A45B31 /* VideoWriter.swift in Sources */,
 				9FFDF85C26CC1D6E001B6016 /* MetalBuffer.swift in Sources */,
+				9FD5F6CD26D24F7600A45B31 /* FrameCollectionWriter.swift in Sources */,
 				9FFDF84926C3E474001B6016 /* ScanVC.swift in Sources */,
 				9FFDF85A26C82DB1001B6016 /* ARManager.swift in Sources */,
 				9FFDF85826C82970001B6016 /* ScanConfig.swift in Sources */,
 				9FFDF84B26C3E4A3001B6016 /* Extensions.swift in Sources */,
+				9FD5F6C926D24B6A00A45B31 /* SequenceMetaInfo.swift in Sources */,
 				9FFDF84726C3D659001B6016 /* UIClasses.swift in Sources */,
 				9F79BB3726C2E49B00C5654F /* AppDelegate.swift in Sources */,
 				9FFDF84D26C3E50E001B6016 /* Globals.swift in Sources */,
 				9FFDF85E26CC32F7001B6016 /* ParticlesManager.swift in Sources */,
+				9FD5F6CF26D24FA800A45B31 /* Encodables.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,7 +373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.00.01;
+				MARKETING_VERSION = 1.00.02;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
@@ -362,7 +394,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.00.01;
+				MARKETING_VERSION = 1.00.02;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
