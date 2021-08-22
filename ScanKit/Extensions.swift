@@ -11,6 +11,26 @@ import MetalKit
 typealias Float2 = SIMD2<Float>
 typealias Float3 = SIMD3<Float>
 
+func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+    return CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
+}
+
+func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+    return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+}
+
+func / (lhs: CGPoint, rhs: Float) -> CGPoint {
+    return CGPoint(x: lhs.x / CGFloat(rhs), y: lhs.y / CGFloat(rhs))
+}
+
+extension CGPoint {
+    func convertCoordinateSystemReverseXY(from: CGSize, to: CGSize) -> CGPoint {
+        let widthFactor = to.width / from.height
+        let heightFactor = to.height / from.width
+        return CGPoint(x: y * heightFactor, y: x * widthFactor )
+    }
+}
+
 extension Float {
     static let degreesToRadian = Float.pi / 180
 }

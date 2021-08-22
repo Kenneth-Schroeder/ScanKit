@@ -18,6 +18,9 @@ class RawDataCollector: CollectionWriterDelegate {
     let SEQUENCE_LENGTH_SEC = 10
     let uploadQueue = DispatchQueue(label: "upload-queue", qos: .userInitiated, attributes: .concurrent)
     
+    let qrDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyLow])
+    var detectedCodes: [QRCode] = []
+    
     var videoWriter: VideoWriter?
     var depthWriter: PixelBufferCollectionWriter?
     var confidenceWriter: PixelBufferCollectionWriter?
@@ -83,6 +86,34 @@ class RawDataCollector: CollectionWriterDelegate {
               let frameCollectionWriter = frameCollectionWriter else {
             print("Skipping data collection, unable to unwrap writer optionals")
             return
+        }
+        
+        // detect QR Codes
+        
+        func codeWasDetected(_ newCode: QRCode) -> Bool {
+            for p in detectedCodes {
+                if p.squaredDistanceTo(code: newCode) < 1 {
+                    return true
+                }
+            }
+            return false
+        }
+        
+        if ScanConfig.detectQRCodes && frameCount % 6 == 0 {
+            let codes = qrDetector?.features(in: CIImage(cvPixelBuffer: capturedImage)) as? [CIQRCodeFeature]
+            for code in codes ?? [] {
+                let capturedCoordinateSys = CGSize(width: CVPixelBufferGetWidth(capturedImage), height: CVPixelBufferGetHeight(capturedImage))
+                let viewCoordinateSys = CGSize(width: vc.view.bounds.width, height: vc.view.bounds.height)
+                let qr_center = (code.topRight - code.bottomLeft) / 2 + code.bottomLeft
+                let qr_center_converted = qr_center.convertCoordinateSystemReverseXY(from: capturedCoordinateSys, to: viewCoordinateSys)
+
+                if let result = vc.ar_session.raycast(arFrame.raycastQuery(from: qr_center_converted, allowing: .estimatedPlane, alignment: .any)).first {
+                    let newQRCode = QRCode(location: result.worldTransform.columns.3, message: code.messageString!)
+                    if !codeWasDetected(newQRCode) {
+                        detectedCodes.append(newQRCode) // TODO visualize detected QR Codes
+                    }
+                }
+            }
         }
         
         // append new data to each writer
