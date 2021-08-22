@@ -26,7 +26,7 @@ class ScanConfig {
     static var saveRGBVideo: Bool = true
     static var saveDepthVideo: Bool = true
     static var saveConfidenceVideo: Bool = true
-    static var saveWorldMapInfo: Bool = false
+    static var saveWorldMapInfo: Bool = true
     
     static var isRecording: Bool = false
 }

@@ -13,6 +13,7 @@ import ARKit
 class ScanVC: UIViewController, MTKViewDelegate {
     @IBOutlet weak var underlayControl: UISegmentedControl!
     @IBOutlet weak var viewshedButton: RoundedButton!
+    @IBOutlet weak var recordButton: RecordButton!
     
     var ar_session: ARSession!
     var renderer: ScanRenderer!
@@ -136,5 +137,15 @@ extension ScanVC {
         } else {
             sender.backgroundColor = .darkGray
         }
+    }
+    
+    @IBAction func record_button_pressed(_ sender: RoundedButton) {
+        if ScanConfig.isRecording {
+            ar_manager.stopRecording()
+            sender.layer.backgroundColor = UIColor.green.cgColor
+        } else {
+            sender.layer.backgroundColor = UIColor.red.cgColor
+        }
+        ScanConfig.isRecording = !ScanConfig.isRecording
     }
 }

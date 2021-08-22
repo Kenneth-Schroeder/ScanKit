@@ -18,6 +18,10 @@ class ARManager: NSObject, ARSessionDelegate {
         super.init()
     }
     
+    func stopRecording() {
+        collector.stopRecording()
+    }
+    
     // MARK: - ARSessionDelegate
     
     func session(_ session: ARSession, didFailWithError error: Error) {

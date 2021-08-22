@@ -7,6 +7,15 @@
 
 import UIKit
 
+class RecordButton: UIButton {
+    override func didMoveToWindow() {
+        self.layer.borderWidth = 5
+        self.layer.borderColor = UIColor.white.cgColor
+        self.layer.backgroundColor = UIColor.green.cgColor
+        self.layer.cornerRadius = 30
+    }
+}
+
 class TileButton: UIButton {
     override func didMoveToWindow() {
         self.layer.cornerRadius = 10

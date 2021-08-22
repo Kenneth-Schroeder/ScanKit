@@ -43,9 +43,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="raw_data_button_released_inside:" destination="VI7-fq-9kc" eventType="touchUpInside" id="6kM-ES-LkB"/>
-                                    <action selector="raw_data_button_released_outside:" destination="VI7-fq-9kc" eventType="touchUpOutside" id="LGs-zg-pD7"/>
-                                    <action selector="raw_data_button_touched:" destination="VI7-fq-9kc" eventType="touchDown" id="cQB-Wm-0RC"/>
+                                    <action selector="scan_button_released_inside:" destination="VI7-fq-9kc" eventType="touchUpInside" id="6LW-OC-al2"/>
+                                    <action selector="scan_button_released_outside:" destination="VI7-fq-9kc" eventType="touchUpOutside" id="Gfx-5X-1Kg"/>
+                                    <action selector="scan_button_touched:" destination="VI7-fq-9kc" eventType="touchDown" id="bAu-Sw-koY"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ScanKit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YSf-za-DzA">
@@ -69,7 +69,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="pointCloudButton" destination="JwH-b0-VHL" id="fXc-dT-pdF"/>
+                        <outlet property="folderButton" destination="JwH-b0-VHL" id="VIH-mu-BSo"/>
                         <outlet property="scanButton" destination="WKt-xy-gTV" id="3Kw-qe-0D6"/>
                     </connections>
                 </viewController>
@@ -110,16 +110,30 @@
                                     <action selector="viewshed_button_pressed:" destination="BX7-ox-Ehg" eventType="primaryActionTriggered" id="QBm-qD-LFH"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N9f-Dw-1bl" userLabel="RecordButton" customClass="RecordButton" customModule="ScanKit" customModuleProvider="target">
+                                <rect key="frame" x="177" y="665" width="60" height="60"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="Upg-90-mFf"/>
+                                    <constraint firstAttribute="height" constant="60" id="vsf-cV-lQb"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="record_button_pressed:" destination="BX7-ox-Ehg" eventType="primaryActionTriggered" id="2Tu-eK-jY0"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="KBp-8n-9bq"/>
                         <constraints>
                             <constraint firstItem="wbY-xQ-XxG" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="1Uf-4p-b6j"/>
+                            <constraint firstItem="CkJ-aV-qaf" firstAttribute="top" secondItem="N9f-Dw-1bl" secondAttribute="bottom" constant="20" id="9kJ-aL-UgX"/>
                             <constraint firstItem="CkJ-aV-qaf" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="FTG-BT-PUx"/>
+                            <constraint firstItem="N9f-Dw-1bl" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="HRF-BS-Cp3"/>
                             <constraint firstItem="wbY-xQ-XxG" firstAttribute="top" secondItem="CkJ-aV-qaf" secondAttribute="bottom" constant="20" id="gXt-kx-2n1"/>
                             <constraint firstItem="KBp-8n-9bq" firstAttribute="bottom" secondItem="wbY-xQ-XxG" secondAttribute="bottom" constant="30" id="x7K-vJ-yC1"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="recordButton" destination="N9f-Dw-1bl" id="h74-Sf-BoE"/>
                         <outlet property="underlayControl" destination="wbY-xQ-XxG" id="XWx-Js-ghH"/>
                         <outlet property="viewshedButton" destination="VGZ-Eb-a9U" id="FwZ-dW-qUK"/>
                     </connections>

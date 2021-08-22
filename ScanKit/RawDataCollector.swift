@@ -45,8 +45,12 @@ class RawDataCollector: CollectionWriterDelegate {
         if !ScanConfig.isRecording { return }
         
         let capturedImage = arFrame.capturedImage
-        let depthBuffer = (arFrame.sceneDepth?.depthMap)!
-        let confidenceBuffer = (arFrame.sceneDepth?.confidenceMap)!
+        
+        guard let depthBuffer = arFrame.sceneDepth?.depthMap,
+              let confidenceBuffer = arFrame.sceneDepth?.confidenceMap else {
+            print("Skipping data collection, unable to unwrap depth or confidence map optionals")
+            return
+        }
         
         // initialize writers if they are reset
         
@@ -66,6 +70,11 @@ class RawDataCollector: CollectionWriterDelegate {
             let confResolution = CGSize(width: CVPixelBufferGetWidth(confidenceBuffer), height: CVPixelBufferGetHeight(confidenceBuffer))
             confMeta.setResolutionAndPath(resolution: confResolution, path: url)
             confidenceWriter = PixelBufferCollectionWriter(delegate: self, sampleBuffer: confidenceBuffer, metaInfo: confMeta)
+        }
+        
+        if frameCollectionWriter == nil {
+            jsonMeta.setPath(path: url)
+            frameCollectionWriter = FrameCollectionWriter(delegate: self, metaInfo: jsonMeta)
         }
         
         guard let videoWriter = videoWriter,
@@ -103,8 +112,6 @@ class RawDataCollector: CollectionWriterDelegate {
         frameInfo.setDepthFrame(FrameLocation(fileName: depthWriter.getLastWrittenTitle(), frameNumber: depthWriter.getLastWrittenFrame(), resolution: depthWriter.getResolution()))
         frameInfo.setConfidenceFrame(FrameLocation(fileName: confidenceWriter.getLastWrittenTitle(), frameNumber: confidenceWriter.getLastWrittenFrame(), resolution: confidenceWriter.getResolution()))
         
-        jsonMeta.setPath(path: url)
-        
         if !frameCollectionWriter.appendInfo(obj: frameInfo, metaInfo: jsonMeta) {
             print("ATTENTION: A full frame collection wasn't written to disk.")
         }
@@ -131,7 +138,7 @@ class RawDataCollector: CollectionWriterDelegate {
         writesQueued += [ScanConfig.saveRGBVideo, ScanConfig.saveDepthVideo, ScanConfig.saveConfidenceVideo,
                          ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo || ScanConfig.saveWorldMapInfo].filter{$0}.count
 
-        uploadQueue.async {[dw, vW, cW, fCW] in
+        uploadQueue.async {[self, dw, vW, cW, fCW] in
             print("writing...")
             
             if ScanConfig.saveRGBVideo {
@@ -146,6 +153,8 @@ class RawDataCollector: CollectionWriterDelegate {
             if ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo || ScanConfig.saveWorldMapInfo {
                 fCW.writeBufferToFile()
             }
+            
+            updateProgress(with: Float(self.writesFinished)/Float(self.writesQueued))
         }
         frameCount = 0
         videoWriter = nil

@@ -9,9 +9,10 @@ import UIKit
 import UniformTypeIdentifiers
 
 class MainMenuVC: UIViewController, UIDocumentPickerDelegate {
+    @IBOutlet var folderButton: TileButton!
     @IBOutlet var scanButton: TileButton!
     var folderSelectionTouched: Bool = false
-    var rawDataTouched: Bool = false
+    var scanButtonTouched: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,20 +51,20 @@ class MainMenuVC: UIViewController, UIDocumentPickerDelegate {
     
     @IBAction func scan_button_touched(_ sender: TileButton) {
         sender.alpha = 0.5
-        rawDataTouched = true
+        scanButtonTouched = true
     }
     
     @IBAction func scan_button_released_outside(_ sender: TileButton) {
         sender.alpha = 1.0
-        rawDataTouched = false
+        scanButtonTouched = false
     }
     
     @IBAction func scan_button_released_inside(_ sender: TileButton) {
-        if !rawDataTouched {
+        if !scanButtonTouched {
             return
         }
         sender.alpha = 1.0
-        rawDataTouched = false
+        scanButtonTouched = false
         guard let next_vc = storyboard?.instantiateViewController(withIdentifier: "recording_vc") as? ScanVC else {
             return
         }
