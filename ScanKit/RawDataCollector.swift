@@ -166,9 +166,20 @@ class RawDataCollector: CollectionWriterDelegate {
         let vW = videoWriter!
         let cW = confidenceWriter!
         let fCW = frameCollectionWriter!
+        
         writesQueued += [ScanConfig.saveRGBVideo, ScanConfig.saveDepthVideo, ScanConfig.saveConfidenceVideo,
                          ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo || ScanConfig.saveWorldMapInfo].filter{$0}.count
 
+        if ScanConfig.saveWorldMapInfo {
+            vc.ar_session.getCurrentWorldMap { worldMap, _ in
+                guard let map = worldMap else { return }
+                fCW.setWorldMap(map: map)
+                self.uploadQueue.async {[fCW] in
+                    fCW.writeBufferToFile()
+                }
+            }
+        }
+        
         uploadQueue.async {[self, dw, vW, cW, fCW] in
             print("writing...")
             
@@ -181,7 +192,7 @@ class RawDataCollector: CollectionWriterDelegate {
             if ScanConfig.saveConfidenceVideo {
                 cW.writeBufferToFile()
             }
-            if ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo || ScanConfig.saveWorldMapInfo {
+            if !ScanConfig.saveWorldMapInfo && (ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo) {
                 fCW.writeBufferToFile()
             }
             

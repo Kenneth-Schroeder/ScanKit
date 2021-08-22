@@ -30,7 +30,7 @@ class FrameCollectionWriter: CollectionWriter {
         return true
     }
 
-    func updateWorldMap(map: ARWorldMap, metaInfo: SequenceMetaInfo) {
+    func setWorldMap(map: ARWorldMap) {
         guard isWriting == false else { return }
         frameCollection.setWorldMap(map)
     }
@@ -41,7 +41,7 @@ class FrameCollectionWriter: CollectionWriter {
         }
     }
 
-    public func writeBufferToFile() {
+    public func writeBufferToFile() {        
         isWriting = true
         let queue = DispatchQueue(label: "frameCollectionWriterQueue", qos: .userInitiated)
         queue.async {
