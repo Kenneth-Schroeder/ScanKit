@@ -10,10 +10,11 @@ import ARKit
 
 class ARManager: NSObject, ARSessionDelegate {
     private var vc: ScanVC
-    private var collector: RawDataCollector = RawDataCollector()
+    private var collector: RawDataCollector
     
     init(viewController: ScanVC) {
         self.vc = viewController
+        collector = RawDataCollector(viewController: viewController)
         super.init()
     }
     

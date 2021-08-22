@@ -7,9 +7,10 @@
 
 import Foundation
 import ARKit
-//import Progress
+import Progress
 
 class RawDataCollector: CollectionWriterDelegate {
+    private var vc: ScanVC
     var frameCount = 0
     var writesQueued = 0
     var writesFinished = 0
@@ -26,6 +27,10 @@ class RawDataCollector: CollectionWriterDelegate {
     var depthMeta = SequenceMetaInfo(filePrefix: "depth", fileExtension: "txt", expectedFps: 60)
     var confMeta = SequenceMetaInfo(filePrefix: "confidence", fileExtension: "txt", expectedFps: 60)
     var jsonMeta = SequenceMetaInfo(filePrefix: "frameCollection", fileExtension: "json", expectedFps: 60)
+    
+    init(viewController: ScanVC) {
+        self.vc = viewController
+    }
     
     func fileWritten() {
         writesFinished += 1
@@ -126,7 +131,7 @@ class RawDataCollector: CollectionWriterDelegate {
         writesQueued += [ScanConfig.saveRGBVideo, ScanConfig.saveDepthVideo, ScanConfig.saveConfidenceVideo,
                          ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo || ScanConfig.saveWorldMapInfo].filter{$0}.count
 
-        uploadQueue.async {[self, dw, vW, cW, fCW] in
+        uploadQueue.async {[dw, vW, cW, fCW] in
             print("writing...")
             
             if ScanConfig.saveRGBVideo {
@@ -151,25 +156,25 @@ class RawDataCollector: CollectionWriterDelegate {
     
     // MARK: - Progress indicator
     
-    /*func showProgressRing() {
+    func showProgressRing() {
         let ringParam: RingProgressorParameter = (.proportional, UIColor.green.withAlphaComponent(0.4), 100, 50)
         var labelParam: LabelProgressorParameter = DefaultLabelProgressorParameter
         labelParam.font = UIFont.systemFont(ofSize: 30, weight: UIFont.Weight.bold)
         labelParam.color = UIColor.white.withAlphaComponent(0.3)
         DispatchQueue.main.async {
-            Prog.start(in: self.viewController.view, .blur(.regular), .ring(ringParam), .label(labelParam))
+            Prog.start(in: self.vc.view, .blur(.regular), .ring(ringParam), .label(labelParam))
         }
     }
     
     func updateProgress(with value: Float) {
         DispatchQueue.main.async {
-            Prog.update(value, in: self.viewController.view)
+            Prog.update(value, in: self.vc.view)
         }
         if value >= 1.0 || value.isNaN {
             usleep(600_000) // sleep mills to not break Prog
             DispatchQueue.main.async {
-                Prog.end(in: self.viewController.view)
+                Prog.end(in: self.vc.view)
             }
         }
-    } */
+    }
 }
