@@ -7,6 +7,7 @@
 
 import Foundation
 import MetalKit
+import ARKit
 
 typealias Float2 = SIMD2<Float>
 typealias Float3 = SIMD3<Float>
@@ -36,6 +37,12 @@ extension Float {
 }
 
 extension MTKView : RenderDestinationProvider {
+}
+
+extension ARCamera {
+    func getPosition() -> Float3 {
+        return Float3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+    }
 }
 
 protocol RenderDestinationProvider {

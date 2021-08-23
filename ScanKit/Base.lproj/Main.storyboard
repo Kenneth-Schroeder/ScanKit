@@ -326,7 +326,7 @@
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CkJ-aV-qaf" userLabel="ViewshedButton" customClass="RoundedButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="142.66666666666666" y="693" width="105" height="36"/>
+                                <rect key="frame" x="142.66666666666666" y="662" width="105" height="36"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="  Viewshed  ">
@@ -337,7 +337,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N9f-Dw-1bl" userLabel="RecordButton" customClass="RecordButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="165" y="613" width="60" height="60"/>
+                                <rect key="frame" x="165" y="592" width="60" height="60"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="Upg-90-mFf"/>
@@ -347,26 +347,42 @@
                                     <action selector="record_button_pressed:" destination="BX7-ox-Ehg" eventType="primaryActionTriggered" id="2Tu-eK-jY0"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="veK-go-l8Z" userLabel="View Control">
+                                <rect key="frame" x="119.66666666666669" y="708" width="151" height="32"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <segments>
+                                    <segment title="1st P."/>
+                                    <segment title="3rd P."/>
+                                    <segment title="Bird"/>
+                                </segments>
+                                <color key="selectedSegmentTintColor" systemColor="systemGreenColor"/>
+                                <connections>
+                                    <action selector="viewControlChanged:" destination="BX7-ox-Ehg" eventType="primaryActionTriggered" id="72f-Hh-5Lj"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="KBp-8n-9bq"/>
                         <constraints>
+                            <constraint firstItem="wbY-xQ-XxG" firstAttribute="top" secondItem="veK-go-l8Z" secondAttribute="bottom" constant="10" id="0BL-3B-Ob3"/>
                             <constraint firstItem="wbY-xQ-XxG" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="1Uf-4p-b6j"/>
-                            <constraint firstItem="CkJ-aV-qaf" firstAttribute="top" secondItem="N9f-Dw-1bl" secondAttribute="bottom" constant="20" id="9kJ-aL-UgX"/>
-                            <constraint firstItem="CkJ-aV-qaf" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="FTG-BT-PUx"/>
-                            <constraint firstItem="N9f-Dw-1bl" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="HRF-BS-Cp3"/>
-                            <constraint firstItem="wbY-xQ-XxG" firstAttribute="top" secondItem="CkJ-aV-qaf" secondAttribute="bottom" constant="20" id="gXt-kx-2n1"/>
+                            <constraint firstItem="N9f-Dw-1bl" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="K4s-hf-Ggq"/>
+                            <constraint firstItem="CkJ-aV-qaf" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="Klu-wO-JNg"/>
+                            <constraint firstItem="CkJ-aV-qaf" firstAttribute="top" secondItem="N9f-Dw-1bl" secondAttribute="bottom" constant="10" id="YC7-aP-aYn"/>
+                            <constraint firstItem="veK-go-l8Z" firstAttribute="top" secondItem="CkJ-aV-qaf" secondAttribute="bottom" constant="10" id="dG9-O8-fV2"/>
+                            <constraint firstItem="veK-go-l8Z" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="qoV-Li-CtH"/>
                             <constraint firstItem="KBp-8n-9bq" firstAttribute="bottom" secondItem="wbY-xQ-XxG" secondAttribute="bottom" constant="30" id="x7K-vJ-yC1"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="recordButton" destination="N9f-Dw-1bl" id="h74-Sf-BoE"/>
                         <outlet property="underlayControl" destination="wbY-xQ-XxG" id="XWx-Js-ghH"/>
+                        <outlet property="viewControl" destination="veK-go-l8Z" id="1jc-ff-0aQ"/>
                         <outlet property="viewshedButton" destination="VGZ-Eb-a9U" id="FwZ-dW-qUK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uLc-k7-ys6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-788" y="94"/>
+            <point key="canvasLocation" x="-1220" y="94"/>
         </scene>
     </scenes>
     <resources>

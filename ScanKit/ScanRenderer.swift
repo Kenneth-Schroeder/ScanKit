@@ -292,8 +292,34 @@ private extension ScanRenderer {
         let arCamViewMatrix = camera.viewMatrix(for: deviceOrientation)
         let perspectiveProjectionMatrix = camera.projectionMatrix(for: deviceOrientation, viewportSize: viewportSize, zNear: 0.001, zFar: 10)
         
-        let viewMatrix = arCamViewMatrix
-        let projectionMatrix = perspectiveProjectionMatrix
+        let thirdPersonTranslation = matrix_float4x4(rows: [simd_float4(1,0,0,0),
+                                                            simd_float4(0,1,0,0),
+                                                            simd_float4(0,0,1,-2),
+                                                            simd_float4(0,0,0,1)])
+        
+        let birdViewMatrix = getViewMatrix(forward: simd_float3(0,-1,0), right: simd_float3(1,0,0), up: simd_float3(0,0,1), position: simd_float3(-camera.getPosition().x, camera.getPosition().z, -2), for: deviceOrientation) // -cloudCenter.x, cloudCenter.z, -2
+        
+        let birdOrthProjection = matrix_float4x4(rows: [simd_float4(1,0,0,0),
+                                                           simd_float4(0,1,0,0),
+                                                           simd_float4(0,0,-1/3/2,0),
+                                                           simd_float4(0,0,0,1)])
+        
+        var viewMatrix = arCamViewMatrix
+        var projectionMatrix = perspectiveProjectionMatrix
+        
+        switch ScanConfig.viewIndex {
+            case 1: // third person
+                viewMatrix = thirdPersonTranslation * arCamViewMatrix
+                projectionMatrix = perspectiveProjectionMatrix
+                break
+            case 2: // birds eye
+                viewMatrix = birdViewMatrix
+                projectionMatrix = birdOrthProjection
+                break
+            default: // first person
+                // keep matrices
+                break
+        }
         
         sharedUniforms.pointee.viewMatrix = viewMatrix
         sharedUniforms.pointee.projectionMatrix = projectionMatrix
@@ -370,6 +396,13 @@ private extension ScanRenderer {
         var sobelConfig: simd_float4 = vector_float4(ScanConfig.sobelDepthThreshold, ScanConfig.sobelYThreshold, ScanConfig.sobelYEdgeSamplingRate, ScanConfig.sobelSurfaceSamplingRate)
         var depthThresholds: Float2 = vector_float2(ScanConfig.maxPointDepth, ScanConfig.minPointDepth)
         
+        guard let depthTexture = depthTexture,
+              let capturedImageTextureY = capturedImageTextureY,
+              let capturedImageTextureCbCr = capturedImageTextureCbCr,
+              let confidenceTexture = confidenceTexture else {
+            return
+        }
+        
         renderEncoder.pushDebugGroup("UpdateViewshed")
         
         renderEncoder.setDepthStencilState(relaxedDepthState)
@@ -379,10 +412,10 @@ private extension ScanRenderer {
         renderEncoder.setVertexBuffer(particlesManager.gridPointsBuffer) // sampling grid points buffer
         renderEncoder.setVertexBytes(&sobelConfig, length: MemoryLayout.size(ofValue: sobelConfig), index: Int(kSobelThresholds.rawValue))
         renderEncoder.setVertexBytes(&depthThresholds, length: MemoryLayout.size(ofValue: depthThresholds), index: Int(kDepthThresholds.rawValue))
-        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureY!), index: Int(kTextureY.rawValue))
-        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureCbCr!), index: Int(kTextureCbCr.rawValue))
-        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(depthTexture!), index: Int(kTextureDepth.rawValue))
-        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(confidenceTexture!), index: Int(kTextureConfidence.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureY), index: Int(kTextureY.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(capturedImageTextureCbCr), index: Int(kTextureCbCr.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(depthTexture), index: Int(kTextureDepth.rawValue))
+        renderEncoder.setVertexTexture(CVMetalTextureGetTexture(confidenceTexture), index: Int(kTextureConfidence.rawValue))
         renderEncoder.setVertexTexture(depthSobelTexture, index: Int(kTextureDepthSobel.rawValue))
         renderEncoder.setVertexTexture(YSobelTexture, index: Int(kTextureYSobel.rawValue))
         renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particlesManager.gridSize)
@@ -473,31 +506,6 @@ private extension ScanRenderer {
         
         // Create the command queue
         commandQueue = device.makeCommandQueue()
-    }
-    
-    func cameraToDisplayRotation(orientation: UIInterfaceOrientation) -> Int {
-        switch orientation {
-        case .landscapeLeft:
-            return 180
-        case .portrait:
-            return 90
-        case .portraitUpsideDown:
-            return -90
-        default:
-            return 0
-        }
-    }
-    
-    func makeRotateToARCameraTransform(orientation: UIInterfaceOrientation) -> matrix_float4x4 {
-        // flip to ARKit Camera's coordinate
-        let flipYZ = matrix_float4x4(
-            [1, 0, 0, 0],
-            [0, -1, 0, 0],
-            [0, 0, -1, 0],
-            [0, 0, 0, 1] )
-
-        let rotationAngle = Float(cameraToDisplayRotation(orientation: orientation)) * .degreesToRadian
-        return flipYZ * matrix_float4x4(simd_quaternion(rotationAngle, Float3(0, 0, 1)))
     }
     
     func getEmptyMTLTexture(_ width: Int, _ height: Int) -> MTLTexture? {
@@ -667,5 +675,41 @@ private extension ScanRenderer {
         descriptor.depthCompareFunction = .lessEqual
         descriptor.isDepthWriteEnabled = true
         fullDepthState = device.makeDepthStencilState(descriptor: descriptor)
+    }
+    
+    // MARK: Helper Functions
+    
+    func cameraToDisplayRotation(orientation: UIInterfaceOrientation) -> Int {
+        switch orientation {
+        case .landscapeLeft:
+            return 180
+        case .portrait:
+            return 90
+        case .portraitUpsideDown:
+            return -90
+        default:
+            return 0
+        }
+    }
+    
+    func makeRotateToARCameraTransform(orientation: UIInterfaceOrientation) -> matrix_float4x4 {
+        // flip to ARKit Camera's coordinate
+        let flipYZ = matrix_float4x4(
+            [1, 0, 0, 0],
+            [0, -1, 0, 0],
+            [0, 0, -1, 0],
+            [0, 0, 0, 1] )
+
+        let rotationAngle = Float(cameraToDisplayRotation(orientation: orientation)) * .degreesToRadian
+        return flipYZ * matrix_float4x4(simd_quaternion(rotationAngle, Float3(0, 0, 1)))
+    }
+    
+    // https://www.3dgep.com/understanding-the-view-matrix/
+    func getViewMatrix(forward: simd_float3, right: simd_float3, up: simd_float3, position: simd_float3, for orientation: UIInterfaceOrientation) -> matrix_float4x4 { // TODO: include orientation in calculation
+        let viewMatrix = matrix_float4x4(columns: (simd_float4(right,0),
+                                         simd_float4(up,0),
+                                         simd_float4(forward,0),
+                                         simd_float4(position,1)))
+        return viewMatrix
     }
 }

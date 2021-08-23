@@ -12,6 +12,7 @@ import ARKit
 
 class ScanVC: UIViewController, MTKViewDelegate {
     @IBOutlet weak var underlayControl: UISegmentedControl!
+    @IBOutlet weak var viewControl: UISegmentedControl!
     @IBOutlet weak var viewshedButton: RoundedButton!
     @IBOutlet weak var recordButton: RecordButton!
     
@@ -127,7 +128,11 @@ class ScanVC: UIViewController, MTKViewDelegate {
 
 extension ScanVC {
     @IBAction func underlayControlChanged(_ sender: UISegmentedControl) {
-        ScanConfig.underlayIndex = underlayControl.selectedSegmentIndex
+        ScanConfig.underlayIndex = sender.selectedSegmentIndex
+    }
+    
+    @IBAction func viewControlChanged(_ sender: UISegmentedControl) {
+        ScanConfig.viewIndex = sender.selectedSegmentIndex
     }
     
     @IBAction func viewshed_button_pressed(_ sender: RoundedButton) {

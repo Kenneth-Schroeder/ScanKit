@@ -10,10 +10,11 @@ import Foundation
 class ScanConfig {
     static var url: URL?
     static var underlayIndex: Int = 0
+    static var viewIndex: Int = 0
     static var viewshedActive: Bool = false
     static var numGridPoints: Int = 49_152
-    static let viewshedMaxCount: Int = 49_152 // TODO might need adjustment with better lidar data from apple
     
+    static let viewshedMaxCount: Int = 49_152 // TODO might need adjustment with better lidar data from apple
     static let sobelDepthThreshold:Float = 0.05 /// if the corresponding value of a particle on the depth sobel texture is above this value, it will be marked as unselected and later deleted (because it lies on an edge on the depth image)
     static let sobelYThreshold:Float = 0.5 /// if the corresponding value of a particle on the Y sobel texture is above this value, it will be kept (because it lies on an edge on the Y image and is likely important for details)
     static let sobelYEdgeSamplingRate:Float = 0.5
