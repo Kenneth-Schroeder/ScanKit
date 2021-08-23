@@ -35,6 +35,15 @@ class RawDataCollector: CollectionWriterDelegate {
         self.vc = viewController
     }
     
+    func codeWasDetected(_ newCode: QRCode) -> Bool {
+        for p in detectedCodes {
+            if p.squaredDistanceTo(code: newCode) < 1 {
+                return true
+            }
+        }
+        return false
+    }
+    
     func fileWritten() {
         writesFinished += 1
 
@@ -90,15 +99,6 @@ class RawDataCollector: CollectionWriterDelegate {
         
         // detect QR Codes
         
-        func codeWasDetected(_ newCode: QRCode) -> Bool {
-            for p in detectedCodes {
-                if p.squaredDistanceTo(code: newCode) < 1 {
-                    return true
-                }
-            }
-            return false
-        }
-        
         if ScanConfig.detectQRCodes && frameCount % 6 == 0 {
             let codes = qrDetector?.features(in: CIImage(cvPixelBuffer: capturedImage)) as? [CIQRCodeFeature]
             for code in codes ?? [] {
@@ -150,7 +150,6 @@ class RawDataCollector: CollectionWriterDelegate {
         // write to file if sequence finished
         
         frameCount += 1
-
         if frameCount >= EXPECTED_FPS * SEQUENCE_LENGTH_SEC {
             writeBuffersToFile()
         }
@@ -176,7 +175,6 @@ class RawDataCollector: CollectionWriterDelegate {
                 fCW.setWorldMap(map: map)
                 self.uploadQueue.async {[fCW] in
                     fCW.writeBufferToFile()
-                    print("WROTE FCW")
                 }
             }
         }

@@ -19,10 +19,10 @@ class RecordButton: UIButton {
 class TileButton: UIButton {
     override func didMoveToWindow() {
         self.layer.cornerRadius = 10
-        self.layer.shadowColor = UIColor.red.cgColor
+        self.layer.shadowColor = UIColor.black.cgColor
         self.layer.shadowRadius = 5
         self.layer.shadowOpacity = 0.5
-        self.layer.shadowOffset = CGSize(width: 5, height: 5)
+        self.layer.shadowOffset = CGSize(width: 3, height: 3)
     }
 }
 
