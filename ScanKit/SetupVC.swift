@@ -75,10 +75,11 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
     }
     
     @IBAction func scan_button_released_inside(_ sender: TileButton) {
-        if !scanButtonTouched {
+        sender.alpha = 1.0
+        if !scanButtonTouched || ScanConfig.url == nil {
             return
         }
-        sender.alpha = 1.0
+        
         scanButtonTouched = false
         guard let next_vc = storyboard?.instantiateViewController(withIdentifier: "recording_vc") as? ScanVC else {
             return

@@ -29,6 +29,15 @@ class ScanRenderer {
     }()
     var unprojectUniformsBuffers = [MetalBuffer<UnprojectUniforms>]() // metadata for unprojecting particles
     
+    private lazy var visualCloudUniforms: PointCloudUniforms = {
+        var uniforms = PointCloudUniforms()
+        uniforms.particleSize = ScanConfig.renderedParticleSize
+        uniforms.coloringMethod = rgb
+        uniforms.confidenceThreshold = Int32(ScanConfig.renderedParticleConfidenceThreshold)
+        return uniforms
+    }()
+    var visualCloudUniformsBuffers = [MetalBuffer<PointCloudUniforms>]()
+    
     private lazy var viewshedCloudUniforms: PointCloudUniforms = {
         var uniforms = PointCloudUniforms()
         uniforms.particleSize = 10
@@ -76,6 +85,11 @@ class ScanRenderer {
     // Flag for viewport size changes
     var viewportSizeDidChange: Bool = false
     
+    // frame timestamps
+    private var startFrameTime: TimeInterval!
+    private var lastFrameTimestamp: UInt32 = 0
+    private var lastFrameTime: TimeInterval!
+    
     private var sampleFrame: ARFrame { session.currentFrame! }
     private lazy var cameraResolution: Float2 = Float2(Float(sampleFrame.camera.imageResolution.width), Float(sampleFrame.camera.imageResolution.height)) // used to create selection grid from numGridPoints
     private lazy var particlesManager: ParticlesManager = ParticlesManager(metalDevice: device, cameraResolution: cameraResolution) // BufferManager object, holding all particleBuffers and corresponding logic
@@ -117,13 +131,16 @@ class ScanRenderer {
             //   are retained. Since we may release our CVMetalTexture ivars during the rendering
             //   cycle, we must retain them separately here.
             var textures = [capturedImageTextureY, capturedImageTextureCbCr, depthTexture, confidenceTexture]
+            let inFlightIndexAfterRender = (inFlightBufferIndex+1) % kMaxBuffersInFlight
+            
             commandBuffer.addCompletedHandler{ [weak self] commandBuffer in
                 if let strongSelf = self {
-                    strongSelf.inFlightSemaphore.signal()
+                    strongSelf.particlesManager.processNewPoints(in: strongSelf.viewshedParticlesBuffers[inFlightIndexAfterRender], signal: strongSelf.inFlightSemaphore)
                 }
                 textures.removeAll()
             }
             
+            updateTimestamps(frame: currentFrame)
             updateRingBufferPointers()
             updateBufferState(frame: currentFrame)
             updateSobelTextures(commandBuffer: commandBuffer)
@@ -139,6 +156,7 @@ class ScanRenderer {
                 if ScanConfig.viewshedActive {
                     drawViewshed(renderEncoder: renderEncoder)
                 }
+                drawVisualParticles(renderEncoder: renderEncoder)
                 
                 // We're done encoding commands
                 renderEncoder.endEncoding()
@@ -240,7 +258,7 @@ private extension ScanRenderer {
     func drawViewshed(renderEncoder: MTLRenderCommandEncoder) {
         var showByConfidence:Bool = false // show all points
         var alphaFactor:Float = 0.6
-        var fakeTimestamp = 0
+        var fakeTimestamp = UINT16_MAX // make viewshed points appear "old" to shader
         
         renderEncoder.pushDebugGroup("DrawViewshed")
         
@@ -257,11 +275,41 @@ private extension ScanRenderer {
         
         renderEncoder.popDebugGroup()
     }
+    
+    func drawVisualParticles(renderEncoder: MTLRenderCommandEncoder) {
+        for i in 0 ..< kMaxBuffersInFlight {
+            if(particlesManager.visualBufferPointCount[i] > 0) {
+                var showByConfidence:Bool = true
+                var alphaFactor:Float = 1.0 // no influence with particlePipelineState, need to use particleBlendedPipelineState
+                
+                renderEncoder.pushDebugGroup("DrawVisualCloud")
+                
+                renderEncoder.setDepthStencilState(fullDepthState)
+                renderEncoder.setRenderPipelineState(particleBlendedPipelineState)
+                renderEncoder.setVertexBuffer(visualCloudUniformsBuffers[inFlightBufferIndex])
+                renderEncoder.setVertexBuffer(particlesManager.visualParticlesBuffer[i])
+                renderEncoder.setVertexBytes(&showByConfidence, length: MemoryLayout.size(ofValue: showByConfidence), index: Int(kFreeBufferIndex.rawValue)+0)
+                renderEncoder.setVertexBytes(&alphaFactor, length: MemoryLayout.size(ofValue: alphaFactor), index: Int(kFreeBufferIndex.rawValue)+1)
+                renderEncoder.setVertexBytes(&lastFrameTimestamp, length: MemoryLayout.size(ofValue: lastFrameTimestamp), index: Int(kFreeBufferIndex.rawValue)+2)
+                renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particlesManager.visualBufferPointCount[i])
+                
+                renderEncoder.popDebugGroup()
+            }
+        }
+    }
 }
 
 // MARK: - Update Functions
 
 private extension ScanRenderer {
+    func updateTimestamps(frame: ARFrame) {
+        if startFrameTime == nil {
+            startFrameTime = frame.timestamp
+        }
+        lastFrameTime = frame.timestamp
+        
+        lastFrameTimestamp = UInt32((frame.timestamp - startFrameTime) * 1000)
+    }
     
     func updateRingBufferPointers() {
         // Update the location(s) to which we'll write to in our dynamically changing Metal buffers for
@@ -330,6 +378,9 @@ private extension ScanRenderer {
         
         viewshedCloudUniforms.viewProjectionMatrix = projectionMatrix * viewMatrix
         viewshedCloudUniformsBuffers[inFlightBufferIndex][0] = viewshedCloudUniforms
+        
+        visualCloudUniforms.viewProjectionMatrix = projectionMatrix * viewMatrix
+        visualCloudUniformsBuffers[inFlightBufferIndex][0] = visualCloudUniforms
 
         /* TODO check empty project if i can use this for particle rendering
         // Set up lighting for the scene using the ambient intensity if provided
@@ -418,7 +469,7 @@ private extension ScanRenderer {
         renderEncoder.setVertexTexture(CVMetalTextureGetTexture(confidenceTexture), index: Int(kTextureConfidence.rawValue))
         renderEncoder.setVertexTexture(depthSobelTexture, index: Int(kTextureDepthSobel.rawValue))
         renderEncoder.setVertexTexture(YSobelTexture, index: Int(kTextureYSobel.rawValue))
-        renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particlesManager.gridSize)
+        renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: ScanConfig.numGridPoints)
         
         renderEncoder.popDebugGroup()
     }
@@ -486,6 +537,7 @@ private extension ScanRenderer {
             viewshedParticlesBuffers.append(.init(device: device, count: ScanConfig.viewshedMaxCount, index: kViewshedParticleUniforms.rawValue))
             unprojectUniformsBuffers.append(.init(device: device, count: 1, index: kUnprojectUniforms.rawValue))
             viewshedCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
+            visualCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
         }
         
         // Load all the shader files with a metal file extension in the project

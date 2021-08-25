@@ -205,7 +205,7 @@ vertex ParticleInOut particleVertex(uint vertexID [[vertex_id]],
     
     float factor = 3;
     float timespan = 1000;
-    if(timestamp - particleData.timestamp < timespan) { // point was recorded within the last 500ms
+    if(timestamp - particleData.timestamp < timespan) { // point was recorded within the last 1000ms
         out.pointSize *= 1+ factor * (1 - float(timestamp - particleData.timestamp) / timespan); // make it bigger
     }
     
