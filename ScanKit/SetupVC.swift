@@ -9,7 +9,7 @@ import UIKit
 import UniformTypeIdentifiers
 
 class SetupVC: UIViewController, UIDocumentPickerDelegate {
-    @IBOutlet var folderButton: TileButton!
+    @IBOutlet var projectNameField: UITextField!
     @IBOutlet var scanButton: TileButton!
     @IBOutlet var rgbQualitySlider: UISlider!
     @IBOutlet var rgbSwitch: UISwitch!
@@ -18,11 +18,12 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
     @IBOutlet var worldmapSwitch: UISwitch!
     @IBOutlet var qrCodeSwitch: UISwitch!
     
-    var folderSelectionTouched: Bool = false
     var scanButtonTouched: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        ScanConfig.url = getDocumentsDirectory().appendingPathComponent(getDefaultProjectName(), isDirectory: true)
         
         // update UI according to ScanConfig
         rgbQualitySlider.setValue(ScanConfig.rgbQuality, animated: false)
@@ -41,25 +42,15 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         present(dp, animated: true, completion: nil)
     }
     
-    // MARK: - folder selection button actions
+    // MARK: - project name field actions
     
-    @IBAction func folder_selection_button_touched(_ sender: TileButton) {
-        sender.alpha = 0.5
-        folderSelectionTouched = true
-    }
-    
-    @IBAction func folder_selection_button_released_outside(_ sender: TileButton) {
-        sender.alpha = 1.0
-        folderSelectionTouched = false
-    }
-    
-    @IBAction func folder_selection_button_released_inside(_ sender: TileButton) {
-        if !folderSelectionTouched {
-            return
+    @IBAction func project_name_value_changed(_ sender: UITextField) {
+        sender.resignFirstResponder()
+        var text = sender.text
+        if text == "" {
+            text = nil
         }
-        sender.alpha = 1.0
-        folderSelectionTouched = false
-        displayFolderSelection()
+        ScanConfig.url = getDocumentsDirectory().appendingPathComponent(sender.text ?? getDefaultProjectName(), isDirectory: true)
     }
     
     // MARK: - scan button actions
@@ -78,6 +69,15 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         sender.alpha = 1.0
         if !scanButtonTouched || ScanConfig.url == nil {
             return
+        }
+        
+        if !FileManager.default.fileExists(atPath: ScanConfig.url!.path) {
+            do {
+                try FileManager.default.createDirectory(atPath: ScanConfig.url!.path, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print(error.localizedDescription)
+                return
+            }
         }
         
         scanButtonTouched = false
@@ -121,5 +121,21 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
             fatalError("App was not granted access to the selected folder.")
         } // https://stackoverflow.com/questions/34636150/no-permission-to-view-document-passed-back-from-ios-document-provider-on-open-op/34658428
         ScanConfig.url = urls[0]
+    }
+    
+    // https://www.hackingwithswift.com/example-code/system/how-to-find-the-users-documents-directory
+    // default hidden in Files App, but can be made visible in Info.plist
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
+    }
+    
+    // https://cocoacasts.com/swift-fundamentals-how-to-convert-a-date-to-a-string-in-swift
+    func getDefaultProjectName() -> String {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd_hh:mm:ss"
+        let now: String = df.string(from: Date())
+        return now
     }
 }

@@ -16,46 +16,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JwH-b0-VHL" userLabel="FolderSelectionButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="30" y="690" width="330" height="40"/>
-                                <color key="backgroundColor" systemColor="systemPurpleColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="Oqh-io-TUQ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="Select Folder">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="folder_selection_button_released_inside:" destination="VI7-fq-9kc" eventType="touchUpInside" id="r0f-g0-qco"/>
-                                    <action selector="folder_selection_button_released_outside:" destination="VI7-fq-9kc" eventType="touchUpOutside" id="aUa-Wo-dW8"/>
-                                    <action selector="folder_selection_button_touched:" destination="VI7-fq-9kc" eventType="touchDown" id="lkT-Ra-GHf"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="ScanButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="30" y="750" width="330" height="40"/>
-                                <color key="backgroundColor" systemColor="systemPurpleColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="ZXu-4R-8lt"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="Scan">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="scan_button_released_inside:" destination="VI7-fq-9kc" eventType="touchUpInside" id="6LW-OC-al2"/>
-                                    <action selector="scan_button_released_outside:" destination="VI7-fq-9kc" eventType="touchUpOutside" id="Gfx-5X-1Kg"/>
-                                    <action selector="scan_button_touched:" destination="VI7-fq-9kc" eventType="touchDown" id="bAu-Sw-koY"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ScanKit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YSf-za-DzA">
-                                <rect key="frame" x="94.666666666666686" y="74" width="200.66666666666663" height="109"/>
+                                <rect key="frame" x="94.666666666666671" y="74" width="200.66666666666663" height="119"/>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Bold" family="Apple SD Gothic Neo" pointSize="60"/>
                                 <color key="textColor" red="0.57919406890000003" green="0.1280144453" blue="0.57268613580000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="default project name" textAlignment="natural" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="gKH-Rc-lj4">
+                                <rect key="frame" x="30" y="223" width="330" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="pxY-cR-RUf"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="continue" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="name"/>
+                                <connections>
+                                    <action selector="project_name_value_changed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="nTk-O7-at2"/>
+                                </connections>
+                            </textField>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="cLE-5K-ztA">
-                                <rect key="frame" x="30" y="213" width="330" height="447"/>
+                                <rect key="frame" x="30" y="283" width="330" height="447"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qv2-CZ-60S">
                                         <rect key="frame" x="0.0" y="0.0" width="330" height="72"/>
@@ -70,7 +49,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all images captured during the ARSession as video and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oNX-yH-FJS" userLabel="RGB Switch Description">
-                                                        <rect key="frame" x="0.0" y="21.666666666666661" width="281" height="50.333333333333343"/>
+                                                        <rect key="frame" x="0.0" y="21.666666666666689" width="281" height="50.333333333333343"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -160,7 +139,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all confidence data captured during the ARSession and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mwc-RZ-als" userLabel="Confidence Data Description">
-                                                        <rect key="frame" x="0.0" y="21.666666666666689" width="281" height="50.333333333333343"/>
+                                                        <rect key="frame" x="0.0" y="21.666666666666632" width="281" height="50.333333333333343"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -199,6 +178,9 @@
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="WorldMap Switch" translatesAutoresizingMaskIntoConstraints="NO" id="TNS-di-MnB" userLabel="WorldMap Switch">
                                                 <rect key="frame" x="281" y="0.0" width="51" height="72"/>
                                                 <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <connections>
+                                                    <action selector="worldmapSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="at5-BQ-j8v"/>
+                                                </connections>
                                             </switch>
                                         </subviews>
                                     </stackView>
@@ -233,29 +215,45 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="ScanButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
+                                <rect key="frame" x="30" y="750" width="330" height="40"/>
+                                <color key="backgroundColor" systemColor="systemPurpleColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="ZXu-4R-8lt"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="Scan">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="scan_button_released_inside:" destination="VI7-fq-9kc" eventType="touchUpInside" id="6LW-OC-al2"/>
+                                    <action selector="scan_button_released_outside:" destination="VI7-fq-9kc" eventType="touchUpOutside" id="Gfx-5X-1Kg"/>
+                                    <action selector="scan_button_touched:" destination="VI7-fq-9kc" eventType="touchDown" id="bAu-Sw-koY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hEp-gi-cNU"/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="WKt-xy-gTV" secondAttribute="trailing" constant="30" id="37P-VI-6wS"/>
-                            <constraint firstItem="JwH-b0-VHL" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="6kP-fR-Fok"/>
                             <constraint firstItem="WKt-xy-gTV" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="6po-Pz-FH2"/>
                             <constraint firstItem="YSf-za-DzA" firstAttribute="top" secondItem="hEp-gi-cNU" secondAttribute="top" constant="30" id="CsW-Na-VPC"/>
                             <constraint firstItem="cLE-5K-ztA" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="EZe-Sr-RnJ"/>
-                            <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="JwH-b0-VHL" secondAttribute="trailing" constant="30" id="F9X-vG-Yio"/>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="bottom" secondItem="WKt-xy-gTV" secondAttribute="bottom" constant="20" id="G2i-bN-daB"/>
                             <constraint firstItem="cLE-5K-ztA" firstAttribute="centerX" secondItem="8Zy-y8-9hz" secondAttribute="centerX" id="QP9-Hf-2fu"/>
-                            <constraint firstItem="cLE-5K-ztA" firstAttribute="top" secondItem="YSf-za-DzA" secondAttribute="bottom" constant="30" id="dNf-NX-mmo"/>
+                            <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="gKH-Rc-lj4" secondAttribute="trailing" constant="30" id="cDP-Sn-2JW"/>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="cLE-5K-ztA" secondAttribute="trailing" constant="30" id="fPK-aF-6gh"/>
-                            <constraint firstItem="JwH-b0-VHL" firstAttribute="top" secondItem="cLE-5K-ztA" secondAttribute="bottom" constant="30" id="ffU-K6-XgA"/>
-                            <constraint firstItem="WKt-xy-gTV" firstAttribute="top" secondItem="JwH-b0-VHL" secondAttribute="bottom" constant="20" id="txW-Xk-VvO"/>
+                            <constraint firstItem="gKH-Rc-lj4" firstAttribute="top" secondItem="YSf-za-DzA" secondAttribute="bottom" constant="30" id="tKI-VU-geZ"/>
+                            <constraint firstItem="WKt-xy-gTV" firstAttribute="top" secondItem="cLE-5K-ztA" secondAttribute="bottom" constant="20" id="ted-0a-Wsf"/>
+                            <constraint firstItem="gKH-Rc-lj4" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="w6F-EX-a8w"/>
                             <constraint firstItem="YSf-za-DzA" firstAttribute="centerX" secondItem="8Zy-y8-9hz" secondAttribute="centerX" id="z9U-DB-WAD"/>
+                            <constraint firstItem="cLE-5K-ztA" firstAttribute="top" secondItem="gKH-Rc-lj4" secondAttribute="bottom" constant="20" id="zJI-uQ-p9a"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="confidenceSwitch" destination="RJk-0v-Pxt" id="7od-Zp-jwV"/>
                         <outlet property="depthSwitch" destination="NIJ-oy-d4F" id="4Wc-QQ-RT1"/>
-                        <outlet property="folderButton" destination="JwH-b0-VHL" id="VIH-mu-BSo"/>
+                        <outlet property="projectNameField" destination="gKH-Rc-lj4" id="hWa-rN-p8V"/>
                         <outlet property="qrCodeSwitch" destination="JVp-LG-wyF" id="7m4-6M-GHH"/>
                         <outlet property="rgbQualitySlider" destination="Eg3-Yn-0HC" id="tv3-6A-Y3a"/>
                         <outlet property="rgbSwitch" destination="L8W-tQ-cQj" id="XGM-pt-SKs"/>
