@@ -74,7 +74,6 @@ class ParticlesManager {
         } else {
             semaphore.signal()
         }
-        
     }
     
     func copySelectedPointsToVisualBuffer(fromViewshedBuffer buffer: MetalBuffer<ParticleUniforms>, toVisualBufferIdx vBIdx: Int) {

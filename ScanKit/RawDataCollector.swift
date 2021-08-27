@@ -16,6 +16,8 @@ class RawDataCollector: CollectionWriterDelegate {
     var writesFinished = 0
     let EXPECTED_FPS = 60
     let SEQUENCE_LENGTH_SEC = 10
+    var wm_worked = 0
+    var wm_failed = 0
     let uploadQueue = DispatchQueue(label: "upload-queue", qos: .userInitiated, attributes: .concurrent)
     
     let qrDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyLow])
@@ -171,8 +173,11 @@ class RawDataCollector: CollectionWriterDelegate {
 
         if ScanConfig.saveWorldMapInfo {
             vc.ar_session.getCurrentWorldMap { worldMap, _ in
-                guard let map = worldMap else { return }
-                fCW.setWorldMap(map: map)
+                if let map = worldMap {
+                    fCW.setWorldMap(map: map)
+                } else {
+                    print("Couldn't save WorldMap!") // TODO warn user?
+                }
                 self.uploadQueue.async {[fCW] in
                     fCW.writeBufferToFile()
                 }

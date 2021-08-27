@@ -374,6 +374,7 @@ private extension ScanRenderer {
         
         unprojectUniforms.localToWorld = arCamViewMatrix.inverse * rotateToARCamera
         unprojectUniforms.cameraIntrinsicsInversed = camera.intrinsics.inverse
+        unprojectUniforms.timestamp = lastFrameTimestamp
         unprojectUniformsBuffers[inFlightBufferIndex][0] = unprojectUniforms
         
         viewshedCloudUniforms.viewProjectionMatrix = projectionMatrix * viewMatrix

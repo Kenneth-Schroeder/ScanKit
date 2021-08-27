@@ -44,11 +44,11 @@ class PixelBufferCollectionWriter: CollectionWriter {
         let queue = DispatchQueue(label: "pixelBufferWriterQueue", qos: .userInitiated)
         queue.async {
             do {
-                print("starting to write pixelbuffer collection")
                 // self.isInitialized = false
                 let data = Data(self.content.reduce([], +)) as NSData
                 try data.write(to: self.meta.fullPath, options: .atomic)
                 // try data.compressed(using: .zlib).write(to: self.meta.fullPath, options: .atomic)
+                print("finished writing pixelbuffer collection")
             } catch {
                 print("Writing PixelBuffer collection to file failed.")
                 print(error.localizedDescription)
