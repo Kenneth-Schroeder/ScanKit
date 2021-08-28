@@ -245,9 +245,10 @@ fragment float4 particleFragment(ParticleInOut in [[stage_in]],
         discard_fragment();
     }
     
-    // calculate fragment surface normal - https://paroj.github.io/gltut/Illumination/Tutorial%2013.html
-    const float z = sqrt(1- pow(coords[0], 2) -pow(coords[1], 2));
-    const float3 normal = normalize(float3(coords[0], coords[1], z)); // relative to camera eye
+    // calculate fragment surface normal wrt. camera - https://paroj.github.io/gltut/Illumination/Tutorial%2013.html
+    const float2 centered_coords = coords * 2 - float2(1);
+    const float z = sqrt(1 - dot(centered_coords, centered_coords)); // sqrt(1- pow(coords[0], 2) -pow(coords[1], 2));
+    const float3 normal = float3(centered_coords, z); // relative to camera eye
     
     // Calculate the contribution of the directional light as a sum of diffuse and specular terms
     float3 directionalContribution = float3(0);
@@ -289,9 +290,9 @@ fragment float4 particleFragment(ParticleInOut in [[stage_in]],
     // We compute the final color by multiplying the sample from our color maps by the fragment's
     // lighting value
     float3 color = in.color.rgb * lightContributions;
-    // return float4(color, in.color.w);
+    return float4(color, in.color.w);
     
-    in.color.a = (1- distSquared * 4) * in.color.a; // brighter in center
-    return in.color;
+    //in.color.a = (1- distSquared * 4) * in.color.a; // brighter in center
+    //return in.color;
     
 }

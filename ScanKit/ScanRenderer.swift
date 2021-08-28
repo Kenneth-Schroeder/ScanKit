@@ -386,7 +386,7 @@ private extension ScanRenderer {
         let ambientLightColor: vector_float3 = vector3(0.5, 0.5, 0.5)
         lightUniforms.ambientLightColor = ambientLightColor * ambientIntensity
         
-        var directionalLightDirection : vector_float3 = vector3(0.0, -1.0, 0.0)
+        var directionalLightDirection : vector_float3 = vector3(0.0, 1.0, 0.0)
         directionalLightDirection = simd_normalize(directionalLightDirection)
         lightUniforms.directionalLightDirection = directionalLightDirection
         
