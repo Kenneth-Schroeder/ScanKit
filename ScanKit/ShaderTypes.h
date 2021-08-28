@@ -30,7 +30,8 @@ typedef enum BufferIndices {
     kLocalPoints = 10,
     kDevicePath = 11,
     kFrustumCorner = 12,
-    kFreeBufferIndex = 13
+    kLightUniforms = 13,
+    kFreeBufferIndex = 14
 } BufferIndices;
 
 // Attribute index values shared between shader and C code to ensure Metal shader vertex
@@ -70,13 +71,15 @@ typedef enum ColoringMethod : uint8_t {
 // Structure shared between shader and C code to ensure the layout of shared uniform data accessed in
 //    Metal shaders matches the layout of uniform data set in C code
 typedef struct {
-    // Camera Uniforms
-    matrix_float4x4 projectionMatrix;
-    matrix_float4x4 viewMatrix;
-} SharedUniforms;
+    simd_float3 ambientLightColor;
+    simd_float3 directionalLightDirection;
+    simd_float3 directionalLightColor;
+    float materialShininess;
+} LightUniforms;
 
 typedef struct {
-    matrix_float4x4 viewProjectionMatrix;
+    matrix_float4x4 viewMatrix;
+    matrix_float4x4 projectionMatrix;
     float particleSize;
     ColoringMethod coloringMethod;
     int confidenceThreshold;

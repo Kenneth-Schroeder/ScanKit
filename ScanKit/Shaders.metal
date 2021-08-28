@@ -28,6 +28,7 @@ typedef struct {
     float4 position [[position]];
     float pointSize [[point_size]];
     float4 color;
+    float4 eyeSpacePosition;
 } ParticleInOut;
 
 constexpr sampler colorSampler(mip_filter::linear, mag_filter::linear, min_filter::linear);
@@ -192,7 +193,7 @@ vertex ParticleInOut particleVertex(uint vertexID [[vertex_id]],
     const auto visibility = showByConfidence ? confidence >= uniforms.confidenceThreshold : 1;
     
     // animate and project the point
-    float4 projectedPosition = uniforms.viewProjectionMatrix * float4(position, 1.0);
+    float4 projectedPosition = uniforms.projectionMatrix * uniforms.viewMatrix * float4(position, 1.0);
     const float pointSize = max(uniforms.particleSize / max(1.0, projectedPosition.z), 0.0);
     projectedPosition /= projectedPosition.w;
     
@@ -229,18 +230,68 @@ vertex ParticleInOut particleVertex(uint vertexID [[vertex_id]],
             break;
     }
     
+    out.eyeSpacePosition = uniforms.viewMatrix * float4(position, 1.0);
+    
     return out;
 }
 
+// https://fu-berlin.webex.com/meet/paula.emily.schweizer
 fragment float4 particleFragment(ParticleInOut in [[stage_in]],
-                                 const float2 coords [[point_coord]]) {
+                                 const float2 coords [[point_coord]],
+                                 constant LightUniforms &uniforms [[ buffer(kLightUniforms) ]]) {
     // we draw within a circle
-    const float distSquared = length_squared(coords - float2(0.5)); // Table 6.8. Geometric functions in the Metal standard library https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf
+    const float distSquared = length_squared(coords - float2(0.5)); // Table 6.10. Geometric functions in the Metal standard library https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf
     if (in.color.a == 0 || distSquared > 0.25) {
         discard_fragment();
     }
     
-    in.color.a = (1- distSquared * 4) * in.color.a; // brighter in center
+    // calculate fragment surface normal - https://paroj.github.io/gltut/Illumination/Tutorial%2013.html
+    const float z = sqrt(1- pow(coords[0], 2) -pow(coords[1], 2));
+    const float3 normal = normalize(float3(coords[0], coords[1], z)); // relative to camera eye
     
+    // Calculate the contribution of the directional light as a sum of diffuse and specular terms
+    float3 directionalContribution = float3(0);
+    {
+        // Light falls off based on how closely aligned the surface normal is to the light direction
+        float nDotL = saturate(dot(normal, -uniforms.directionalLightDirection));
+        
+        // The diffuse term is then the product of the light color, the surface material
+        // reflectance, and the falloff
+        float3 diffuseTerm = uniforms.directionalLightColor * nDotL;
+        
+        // Apply specular lighting...
+        
+        // 1) Calculate the halfway vector between the light direction and the direction they eye is looking
+        float3 halfwayVector = normalize(-uniforms.directionalLightDirection - float3(in.eyeSpacePosition));
+        
+        // 2) Calculate the reflection angle between our reflection vector and the eye's direction
+        float reflectionAngle = saturate(dot(normal, halfwayVector));
+        
+        // 3) Calculate the specular intensity by multiplying our reflection angle with our object's
+        //    shininess
+        float specularIntensity = saturate(powr(reflectionAngle, uniforms.materialShininess));
+        
+        // 4) Obtain the specular term by multiplying the intensity by our light's color
+        float3 specularTerm = uniforms.directionalLightColor * specularIntensity;
+        
+        // Calculate total contribution from this light is the sum of the diffuse and specular values
+        directionalContribution = diffuseTerm + specularTerm;
+    }
+    
+    // The ambient contribution, which is an approximation for global, indirect lighting, is
+    // the product of the ambient light intensity multiplied by the material's reflectance
+    float3 ambientContribution = uniforms.ambientLightColor;
+    
+    // Now that we have the contributions our light sources in the scene, we sum them together
+    // to get the fragment's lighting value
+    float3 lightContributions = ambientContribution + directionalContribution;
+    
+    // We compute the final color by multiplying the sample from our color maps by the fragment's
+    // lighting value
+    float3 color = in.color.rgb * lightContributions;
+    // return float4(color, in.color.w);
+    
+    in.color.a = (1- distSquared * 4) * in.color.a; // brighter in center
     return in.color;
+    
 }

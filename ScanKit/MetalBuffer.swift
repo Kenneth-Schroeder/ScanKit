@@ -122,12 +122,16 @@ extension MTLRenderCommandEncoder {
         setVertexBuffer(vertexBuffer.buffer, offset: offset, index: vertexBuffer.index)
     }
     
-    func setVertexBuffer<T>(_ vertexBuffer: MetalBuffer<T>, atCustomIndex:Int, offset: Int = 0) {
+    func setVertexBuffer<T>(_ vertexBuffer: MetalBuffer<T>, atCustomIndex: Int, offset: Int = 0) {
         setVertexBuffer(vertexBuffer.buffer, offset: offset, index: atCustomIndex)
     }
     
     func setFragmentBuffer<T>(_ fragmentBuffer: MetalBuffer<T>, offset: Int = 0) {
         setFragmentBuffer(fragmentBuffer.buffer, offset: offset, index: fragmentBuffer.index)
+    }
+    
+    func setFragmentBuffer<T>(_ fragmentBuffer: MetalBuffer<T>, atCustomIndex: Int, offset: Int = 0) {
+        setFragmentBuffer(fragmentBuffer.buffer, offset: offset, index: atCustomIndex)
     }
     
     func setVertexResource<R: Resource>(_ resource: R) {

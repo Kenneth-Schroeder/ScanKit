@@ -19,8 +19,10 @@ class ScanRenderer {
     
     // Metal objects
     var commandQueue: MTLCommandQueue!
-    var sharedUniformBuffer: MTLBuffer!
     var imagePlaneVertexBuffer: MTLBuffer!
+    
+    private lazy var lightUniforms: LightUniforms = LightUniforms()
+    var lightUniformsBuffer = [MetalBuffer<LightUniforms>]()
     
     private lazy var unprojectUniforms: UnprojectUniforms = {
         var uniforms = UnprojectUniforms()
@@ -72,12 +74,6 @@ class ScanRenderer {
     // Used to determine _uniformBufferStride each frame.
     //   This is the current frame number modulo kMaxBuffersInFlight
     var inFlightBufferIndex: Int = 0
-    
-    // Offset within _sharedUniformBuffer to set for the current frame
-    var sharedUniformBufferOffset: Int = 0
-    
-    // Addresses to write shared uniforms to each frame
-    var sharedUniformBufferAddress: UnsafeMutableRawPointer!
     
     // The current viewport size
     var viewportSize: CGSize = CGSize()
@@ -271,6 +267,7 @@ private extension ScanRenderer {
         renderEncoder.setVertexBytes(&showByConfidence, length: MemoryLayout.size(ofValue: showByConfidence), index: Int(kFreeBufferIndex.rawValue)+0)
         renderEncoder.setVertexBytes(&alphaFactor, length: MemoryLayout.size(ofValue: alphaFactor), index: Int(kFreeBufferIndex.rawValue)+1)
         renderEncoder.setVertexBytes(&fakeTimestamp, length: MemoryLayout.size(ofValue: fakeTimestamp), index: Int(kFreeBufferIndex.rawValue)+2)
+        renderEncoder.setFragmentBuffer(lightUniformsBuffer[inFlightBufferIndex])
         renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: ScanConfig.numGridPoints)
         
         renderEncoder.popDebugGroup()
@@ -291,6 +288,7 @@ private extension ScanRenderer {
                 renderEncoder.setVertexBytes(&showByConfidence, length: MemoryLayout.size(ofValue: showByConfidence), index: Int(kFreeBufferIndex.rawValue)+0)
                 renderEncoder.setVertexBytes(&alphaFactor, length: MemoryLayout.size(ofValue: alphaFactor), index: Int(kFreeBufferIndex.rawValue)+1)
                 renderEncoder.setVertexBytes(&lastFrameTimestamp, length: MemoryLayout.size(ofValue: lastFrameTimestamp), index: Int(kFreeBufferIndex.rawValue)+2)
+                renderEncoder.setFragmentBuffer(lightUniformsBuffer[inFlightBufferIndex])
                 renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particlesManager.visualBufferPointCount[i])
                 
                 renderEncoder.popDebugGroup()
@@ -316,8 +314,6 @@ private extension ScanRenderer {
         //   the current frame (i.e. update our slot in the ring buffer used for the current frame)
         
         inFlightBufferIndex = (inFlightBufferIndex + 1) % kMaxBuffersInFlight
-        sharedUniformBufferOffset = kAlignedSharedUniformsSize * inFlightBufferIndex
-        sharedUniformBufferAddress = sharedUniformBuffer.contents().advanced(by: sharedUniformBufferOffset)
     }
     
     func updateBufferState(frame: ARFrame) {
@@ -333,8 +329,6 @@ private extension ScanRenderer {
     
     func updateSharedUniforms(frame: ARFrame) {
         // Update the shared uniforms of the frame
-        
-        let sharedUniforms = sharedUniformBufferAddress.assumingMemoryBound(to: SharedUniforms.self)
         
         let camera = frame.camera
         let arCamViewMatrix = camera.viewMatrix(for: deviceOrientation)
@@ -369,21 +363,19 @@ private extension ScanRenderer {
                 break
         }
         
-        sharedUniforms.pointee.viewMatrix = viewMatrix
-        sharedUniforms.pointee.projectionMatrix = projectionMatrix
-        
         unprojectUniforms.localToWorld = arCamViewMatrix.inverse * rotateToARCamera
         unprojectUniforms.cameraIntrinsicsInversed = camera.intrinsics.inverse
         unprojectUniforms.timestamp = lastFrameTimestamp
         unprojectUniformsBuffers[inFlightBufferIndex][0] = unprojectUniforms
         
-        viewshedCloudUniforms.viewProjectionMatrix = projectionMatrix * viewMatrix
+        viewshedCloudUniforms.viewMatrix = viewMatrix
+        viewshedCloudUniforms.projectionMatrix = projectionMatrix
         viewshedCloudUniformsBuffers[inFlightBufferIndex][0] = viewshedCloudUniforms
         
-        visualCloudUniforms.viewProjectionMatrix = projectionMatrix * viewMatrix
+        visualCloudUniforms.viewMatrix = viewMatrix
+        visualCloudUniforms.projectionMatrix = projectionMatrix
         visualCloudUniformsBuffers[inFlightBufferIndex][0] = visualCloudUniforms
 
-        /* TODO check empty project if i can use this for particle rendering
         // Set up lighting for the scene using the ambient intensity if provided
         var ambientIntensity: Float = 1.0
         
@@ -392,17 +384,17 @@ private extension ScanRenderer {
         }
         
         let ambientLightColor: vector_float3 = vector3(0.5, 0.5, 0.5)
-        uniforms.pointee.ambientLightColor = ambientLightColor * ambientIntensity
+        lightUniforms.ambientLightColor = ambientLightColor * ambientIntensity
         
-        var directionalLightDirection : vector_float3 = vector3(0.0, 0.0, -1.0)
+        var directionalLightDirection : vector_float3 = vector3(0.0, -1.0, 0.0)
         directionalLightDirection = simd_normalize(directionalLightDirection)
-        uniforms.pointee.directionalLightDirection = directionalLightDirection
+        lightUniforms.directionalLightDirection = directionalLightDirection
         
         let directionalLightColor: vector_float3 = vector3(0.6, 0.6, 0.6)
-        uniforms.pointee.directionalLightColor = directionalLightColor * ambientIntensity
+        lightUniforms.directionalLightColor = directionalLightColor * ambientIntensity
         
-        uniforms.pointee.materialShininess = 30
-         */
+        lightUniforms.materialShininess = 30
+        lightUniformsBuffer[inFlightBufferIndex][0] = lightUniforms
     }
     
     func updateCapturedImageTextures(frame: ARFrame) {
@@ -516,19 +508,6 @@ private extension ScanRenderer {
         renderDestination.colorPixelFormat = .bgra8Unorm
         renderDestination.sampleCount = 1
         
-        // Calculate our uniform buffer sizes. We allocate kMaxBuffersInFlight instances for uniform
-        //   storage in a single buffer. This allows us to update uniforms in a ring (i.e. triple
-        //   buffer the uniforms) so that the GPU reads from one slot in the ring wil the CPU writes
-        //   to another.
-        //   Also uniform storage must be aligned (to 256 bytes) to meet the requirements to be an
-        //   argument in the constant address space of our shading functions.
-        let sharedUniformBufferSize = kAlignedSharedUniformsSize * kMaxBuffersInFlight
-        
-        // Create and allocate our uniform buffer objects. Indicate shared storage so that both the
-        //   CPU can access the buffer
-        sharedUniformBuffer = device.makeBuffer(length: sharedUniformBufferSize, options: .storageModeShared)
-        sharedUniformBuffer.label = "SharedUniformBuffer"
-        
         // Create a vertex buffer with our image plane vertex data.
         let imagePlaneVertexDataCount = kImagePlaneVertexData.count * MemoryLayout<Float>.size
         imagePlaneVertexBuffer = device.makeBuffer(bytes: kImagePlaneVertexData, length: imagePlaneVertexDataCount, options: [])
@@ -539,6 +518,7 @@ private extension ScanRenderer {
             unprojectUniformsBuffers.append(.init(device: device, count: 1, index: kUnprojectUniforms.rawValue))
             viewshedCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
             visualCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
+            lightUniformsBuffer.append(.init(device: device, count: 1, index: kLightUniforms.rawValue))
         }
         
         // Load all the shader files with a metal file extension in the project
