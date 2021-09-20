@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9F30F00026F8B937007900C3 /* libLASlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F30EFFF26F8B8FF007900C3 /* libLASlib.a */; };
+		9F30F00326F8BE6B007900C3 /* LASWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9F30F00226F8BE6B007900C3 /* LASWrapper.mm */; };
 		9F79BB3726C2E49B00C5654F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3626C2E49B00C5654F /* AppDelegate.swift */; };
 		9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3826C2E49B00C5654F /* Shaders.metal */; };
 		9F79BB4126C2E49B00C5654F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB3F26C2E49B00C5654F /* Main.storyboard */; };
@@ -33,6 +35,9 @@
 
 /* Begin PBXFileReference section */
 		780F84BB0C62C0B48C95CA40 /* Pods-ScanKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScanKit.debug.xcconfig"; path = "Target Support Files/Pods-ScanKit/Pods-ScanKit.debug.xcconfig"; sourceTree = "<group>"; };
+		9F30EFFF26F8B8FF007900C3 /* libLASlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLASlib.a; path = LAS/lib/LASlib/libLASlib.a; sourceTree = "<group>"; };
+		9F30F00126F8BE35007900C3 /* LASWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LASWrapper.h; sourceTree = "<group>"; };
+		9F30F00226F8BE6B007900C3 /* LASWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LASWrapper.mm; sourceTree = "<group>"; };
 		9F79BB3326C2E49B00C5654F /* ScanKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScanKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F79BB3626C2E49B00C5654F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9F79BB3826C2E49B00C5654F /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
@@ -67,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F30F00026F8B937007900C3 /* libLASlib.a in Frameworks */,
 				D8E33E0C26EE689C5AB5790F /* Pods_ScanKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,9 +83,19 @@
 		71880A0BF27F01D51F212D11 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9F30EFFF26F8B8FF007900C3 /* libLASlib.a */,
 				BD8AD5DDD6A579256119E23A /* Pods_ScanKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9F30EFFE26F8B7DE007900C3 /* LAS */ = {
+			isa = PBXGroup;
+			children = (
+				9F30F00126F8BE35007900C3 /* LASWrapper.h */,
+				9F30F00226F8BE6B007900C3 /* LASWrapper.mm */,
+			);
+			name = LAS;
 			sourceTree = "<group>";
 		};
 		9F79BB2A26C2E49B00C5654F = {
@@ -103,6 +119,7 @@
 		9F79BB3526C2E49B00C5654F /* ScanKit */ = {
 			isa = PBXGroup;
 			children = (
+				9F30EFFE26F8B7DE007900C3 /* LAS */,
 				9FD5F6D026D2AA0100A45B31 /* Rendering */,
 				9FD5F6C526D24AAB00A45B31 /* RawDataWriter */,
 				9FFDF85326C3E797001B6016 /* General */,
@@ -281,6 +298,7 @@
 				9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */,
 				9FD5F6C426D249CA00A45B31 /* RawDataCollector.swift in Sources */,
 				9FFDF84F26C3E562001B6016 /* ScanRenderer.swift in Sources */,
+				9F30F00326F8BE6B007900C3 /* LASWrapper.mm in Sources */,
 				9FD5F6CB26D24E4E00A45B31 /* PixelBufferCollectionWriter.swift in Sources */,
 				9F79BB5126C2E56300C5654F /* SetupVC.swift in Sources */,
 				9FD5F6C726D24AB900A45B31 /* VideoWriter.swift in Sources */,
@@ -450,7 +468,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.00.09;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/LAS/lib/LASlib",
+				);
+				MARKETING_VERSION = 1.00.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
@@ -472,7 +494,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.00.09;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/LAS/lib/LASlib",
+				);
+				MARKETING_VERSION = 1.00.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";

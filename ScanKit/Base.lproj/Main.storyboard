@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -19,14 +18,16 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ScanKit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YSf-za-DzA">
                                 <rect key="frame" x="94.666666666666671" y="74" width="200.66666666666663" height="119"/>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Bold" family="Apple SD Gothic Neo" pointSize="60"/>
-                                <color key="textColor" red="0.57919406890000003" green="0.1280144453" blue="0.57268613580000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="default project name" textAlignment="natural" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="gKH-Rc-lj4">
                                 <rect key="frame" x="30" y="223" width="330" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="pxY-cR-RUf"/>
                                 </constraints>
+                                <color key="textColor" red="0.1162627914" green="0.051700711660000002" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="continue" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="name"/>
                                 <connections>
@@ -45,20 +46,20 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RGB Video" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X5P-3v-DhA" userLabel="RGB Switch Title">
                                                         <rect key="frame" x="0.0" y="0.0" width="281" height="21.666666666666668"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all images captured during the ARSession as video and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oNX-yH-FJS" userLabel="RGB Switch Description">
                                                         <rect key="frame" x="0.0" y="21.666666666666689" width="281" height="50.333333333333343"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="RGB Switch" translatesAutoresizingMaskIntoConstraints="NO" id="L8W-tQ-cQj" userLabel="RGB Switch">
                                                 <rect key="frame" x="281" y="0.0" width="51" height="72"/>
-                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <connections>
                                                     <action selector="rgbSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="9IA-3G-B2m"/>
                                                 </connections>
@@ -74,20 +75,20 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RGB Quality" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lX7-KS-YZ8" userLabel="RGB Quality Title">
                                                         <rect key="frame" x="0.0" y="0.0" width="180" height="21.666666666666668"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adjust the JPEG compression quality of the saved RGB video." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kyb-9g-dEA" userLabel="RGB Quality Description">
                                                         <rect key="frame" x="0.0" y="21.666666666666689" width="180" height="50.333333333333343"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Eg3-Yn-0HC" userLabel="RGB Quality Slider">
                                                 <rect key="frame" x="178" y="0.0" width="154" height="73"/>
-                                                <color key="tintColor" systemColor="systemPurpleColor"/>
+                                                <color key="tintColor" red="0.58971613649999999" green="0.22810339930000001" blue="0.60558938979999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="150" id="YZP-AW-BHi"/>
                                                 </constraints>
@@ -106,20 +107,20 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Depth Data" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xQy-JR-7SQ" userLabel="Depth Data Title">
                                                         <rect key="frame" x="0.0" y="0.0" width="281" height="21.666666666666668"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all depth data captured during the ARSession and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zAm-Dw-Y9M" userLabel="Depth Data Description">
                                                         <rect key="frame" x="0.0" y="21.666666666666689" width="281" height="50.333333333333343"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="Depth Switch" translatesAutoresizingMaskIntoConstraints="NO" id="NIJ-oy-d4F" userLabel="Depth Switch">
                                                 <rect key="frame" x="281" y="0.0" width="51" height="72"/>
-                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <connections>
                                                     <action selector="depthSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="MCV-v5-p9m"/>
                                                 </connections>
@@ -135,20 +136,20 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confidence Data" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vOe-hy-SJB" userLabel="Confidence Data Title">
                                                         <rect key="frame" x="0.0" y="0.0" width="281" height="21.666666666666668"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all confidence data captured during the ARSession and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mwc-RZ-als" userLabel="Confidence Data Description">
                                                         <rect key="frame" x="0.0" y="21.666666666666632" width="281" height="50.333333333333343"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="Confidence Switch" translatesAutoresizingMaskIntoConstraints="NO" id="RJk-0v-Pxt" userLabel="Confidence Switch">
                                                 <rect key="frame" x="281" y="0.0" width="51" height="72"/>
-                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <connections>
                                                     <action selector="confidenceSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="YrN-6W-7ai"/>
                                                 </connections>
@@ -164,20 +165,20 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ARWorldMap Data" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v11-CQ-FXy" userLabel="WorldMap Title">
                                                         <rect key="frame" x="0.0" y="0.0" width="281" height="21.666666666666668"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Periodically save all of the ARWorldMap data to a JSON file at the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHq-7W-GqV" userLabel="WorldMap Description">
                                                         <rect key="frame" x="0.0" y="21.666666666666632" width="281" height="50.333333333333343"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="WorldMap Switch" translatesAutoresizingMaskIntoConstraints="NO" id="TNS-di-MnB" userLabel="WorldMap Switch">
                                                 <rect key="frame" x="281" y="0.0" width="51" height="72"/>
-                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <connections>
                                                     <action selector="worldmapSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="at5-BQ-j8v"/>
                                                 </connections>
@@ -193,20 +194,20 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code Data" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lAS-fq-a0c" userLabel="QR Code Title">
                                                         <rect key="frame" x="0.0" y="0.0" width="281" height="21.666666666666668"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recognize QR Codes and save their location and message in JSON format to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R22-ds-Gyt" userLabel="QR Code Description">
                                                         <rect key="frame" x="0.0" y="21.666666666666632" width="281" height="50.333333333333343"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <nil key="textColor"/>
+                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="QRCode Switch" translatesAutoresizingMaskIntoConstraints="NO" id="JVp-LG-wyF" userLabel="QRCode Switch">
                                                 <rect key="frame" x="281" y="0.0" width="51" height="72"/>
-                                                <color key="onTintColor" systemColor="systemPurpleColor"/>
+                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <connections>
                                                     <action selector="qrCodeSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="Mx1-Rs-nQT"/>
                                                 </connections>
@@ -217,7 +218,7 @@
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="ScanButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
                                 <rect key="frame" x="30" y="750" width="330" height="40"/>
-                                <color key="backgroundColor" systemColor="systemPurpleColor"/>
+                                <color key="backgroundColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="ZXu-4R-8lt"/>
                                 </constraints>
@@ -233,7 +234,7 @@
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hEp-gi-cNU"/>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.91576826570000003" green="0.88451762793551858" blue="0.83009546682378765" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="WKt-xy-gTV" secondAttribute="trailing" constant="30" id="37P-VI-6wS"/>
                             <constraint firstItem="WKt-xy-gTV" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="6po-Pz-FH2"/>
@@ -282,7 +283,7 @@
                                     <segment title="Depth"/>
                                     <segment title="Confidence"/>
                                 </segments>
-                                <color key="selectedSegmentTintColor" systemColor="systemGreenColor"/>
+                                <color key="selectedSegmentTintColor" red="0.91576826570000003" green="0.85329061750000001" blue="0.66431504490000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <connections>
                                     <action selector="underlayControlChanged:" destination="BX7-ox-Ehg" eventType="valueChanged" id="VmL-Mq-Qf9"/>
                                 </connections>
@@ -317,7 +318,7 @@
                                     <segment title="3rd P."/>
                                     <segment title="Bird"/>
                                 </segments>
-                                <color key="selectedSegmentTintColor" systemColor="systemGreenColor"/>
+                                <color key="selectedSegmentTintColor" red="0.91576826570000003" green="0.85329061750000001" blue="0.66431504490000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <connections>
                                     <action selector="viewControlChanged:" destination="BX7-ox-Ehg" eventType="primaryActionTriggered" id="72f-Hh-5Lj"/>
                                 </connections>
@@ -347,12 +348,4 @@
             <point key="canvasLocation" x="-1220" y="94"/>
         </scene>
     </scenes>
-    <resources>
-        <systemColor name="systemGreenColor">
-            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemPurpleColor">
-            <color red="0.68627450980392157" green="0.32156862745098042" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-    </resources>
 </document>

@@ -25,6 +25,8 @@ class ParticlesManager {
     let copyQueue = DispatchQueue(label: "copy-queue", qos: .userInteractive) /// serial (!= sync), which means tasks in this queue are executed atomically, used for copying of selected points to mainBuffer
     let filterQueue = DispatchQueue(label: "filter-queue", qos: .userInitiated) /// serial (!= sync), which means tasks in this queue are executed atomically, used for filtering filled mainBuffers
     
+    private var lasWriter = LASwriter_oc()
+    
     init(metalDevice device: MTLDevice, cameraResolution: Float2) {
         self.device = device
         self.cameraResolution = cameraResolution

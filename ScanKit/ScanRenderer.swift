@@ -43,7 +43,7 @@ class ScanRenderer {
     private lazy var viewshedCloudUniforms: PointCloudUniforms = {
         var uniforms = PointCloudUniforms()
         uniforms.particleSize = 10
-        uniforms.coloringMethod = depth
+        uniforms.coloringMethod = rgb
         uniforms.confidenceThreshold = Int32(0) // always show all points for viewshed
         // other attributes will be updated continuously
         return uniforms
@@ -659,6 +659,7 @@ private extension ScanRenderer {
         descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
         descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
         descriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        // descriptor.isAlphaToCoverageEnabled = true
         
         descriptor.colorAttachments[0].isBlendingEnabled = true
         descriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha

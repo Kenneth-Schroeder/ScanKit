@@ -127,6 +127,14 @@ class ScanVC: UIViewController, MTKViewDelegate {
 // MARK: - UI Methods
 
 extension ScanVC {
+    func UIColorFromHex(_ rgbValue: Int) -> UIColor! {
+        return UIColor(
+            red: CGFloat((Float((rgbValue & 0xff0000) >> 16)) / 255.0),
+            green: CGFloat((Float((rgbValue & 0x00ff00) >> 8)) / 255.0),
+            blue: CGFloat((Float((rgbValue & 0x0000ff) >> 0)) / 255.0),
+            alpha: 1.0)
+    }
+    
     @IBAction func underlayControlChanged(_ sender: UISegmentedControl) {
         ScanConfig.underlayIndex = sender.selectedSegmentIndex
     }
@@ -138,7 +146,7 @@ extension ScanVC {
     @IBAction func viewshed_button_pressed(_ sender: RoundedButton) {
         ScanConfig.viewshedActive = !ScanConfig.viewshedActive
         if ScanConfig.viewshedActive {
-            sender.backgroundColor = .systemGreen
+            sender.backgroundColor = UIColorFromHex(0xEDD9A3)
         } else {
             sender.backgroundColor = .darkGray
         }
