@@ -9,8 +9,9 @@ import UIKit
 import Metal
 import MetalKit
 import ARKit
+import Progress
 
-class ScanVC: UIViewController, MTKViewDelegate {
+class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker {
     @IBOutlet weak var underlayControl: UISegmentedControl!
     @IBOutlet weak var viewControl: UISegmentedControl!
     @IBOutlet weak var viewshedButton: RoundedButton!
@@ -19,6 +20,9 @@ class ScanVC: UIViewController, MTKViewDelegate {
     var ar_session: ARSession!
     var renderer: ScanRenderer!
     var ar_manager: ARManager!
+    
+    var currentProgressRaw: Float = 0
+    var currentProgressPC: Float = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -154,11 +158,48 @@ extension ScanVC {
     
     @IBAction func record_button_pressed(_ sender: RoundedButton) {
         if ScanConfig.isRecording {
-            ar_manager.stopRecording()
+            ar_manager.stopRecording(notify: self)
+            renderer.stopRecording(notify: self)
+            showProgressRing()
             sender.layer.backgroundColor = UIColor.green.cgColor
         } else {
             sender.layer.backgroundColor = UIColor.red.cgColor
         }
         ScanConfig.isRecording = !ScanConfig.isRecording
+    }
+    
+    // MARK: - Progress indicator
+    
+    func showProgressRing() {
+        let ringParam: RingProgressorParameter = (.proportional, UIColor.green.withAlphaComponent(0.4), 100, 50)
+        var labelParam: LabelProgressorParameter = DefaultLabelProgressorParameter
+        labelParam.font = UIFont.systemFont(ofSize: 30, weight: UIFont.Weight.bold)
+        labelParam.color = UIColor.white.withAlphaComponent(0.3)
+        DispatchQueue.main.async {
+            Prog.start(in: self.view, .blur(.regular), .ring(ringParam), .label(labelParam))
+        }
+    }
+    
+    func notifyProgressRaw(value: Float) {
+        currentProgressRaw = value
+        updateProgress()
+    }
+    func notifyProgressPC(value: Float) {
+        currentProgressPC = value
+        updateProgress()
+    }
+    
+    func updateProgress() {
+        let value: Float = (currentProgressRaw + currentProgressPC) / 2.0
+        
+        DispatchQueue.main.async {
+            Prog.update(value, in: self.view)
+        }
+        if value >= 1.0 || value.isNaN {
+            usleep(600_000) // sleep mills to not break Prog
+            DispatchQueue.main.async {
+                Prog.end(in: self.view)
+            }
+        }
     }
 }

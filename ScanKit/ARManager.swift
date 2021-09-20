@@ -18,8 +18,8 @@ class ARManager: NSObject, ARSessionDelegate {
         super.init()
     }
     
-    func stopRecording() {
-        collector.stopRecording()
+    func stopRecording(notify tracker: ProgressTracker?) {
+        collector.stopRecording(notify: tracker)
     }
     
     // MARK: - ARSessionDelegate

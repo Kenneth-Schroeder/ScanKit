@@ -91,7 +91,7 @@ class ScanRenderer {
     private lazy var particlesManager: ParticlesManager = ParticlesManager(metalDevice: device, cameraResolution: cameraResolution) // BufferManager object, holding all particleBuffers and corresponding logic
     
     private lazy var rotateToARCamera: matrix_float4x4 = makeRotateToARCameraTransform(orientation: deviceOrientation)
-
+    
     init(session: ARSession, metalDevice device: MTLDevice, renderDestination: RenderDestinationProvider) {
         self.session = session
         self.device = device
@@ -102,6 +102,10 @@ class ScanRenderer {
     func drawRectResized(size: CGSize) {
         viewportSize = size
         viewportSizeDidChange = true
+    }
+    
+    func stopRecording(notify tracker: ProgressTracker?) {
+        particlesManager.saveRemainingBuffer(notify: tracker)
     }
     
     func update() {

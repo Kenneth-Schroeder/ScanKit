@@ -63,3 +63,17 @@ protocol CollectionWriter: AnyObject {
 protocol CollectionWriterDelegate: AnyObject {
     func fileWritten()
 }
+
+protocol ProgressTracker: AnyObject {
+    func notifyProgressRaw(value: Float)
+    func notifyProgressPC(value: Float)
+}
+
+// https://stackoverflow.com/questions/28332946/how-do-i-get-the-current-date-in-short-format-in-swift
+extension Date {
+    func string(format: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        return formatter.string(from: self)
+    }
+}

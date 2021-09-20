@@ -7,7 +7,6 @@
 
 import Foundation
 import ARKit
-import Progress
 
 class RawDataCollector: CollectionWriterDelegate {
     private var vc: ScanVC
@@ -18,6 +17,7 @@ class RawDataCollector: CollectionWriterDelegate {
     let SEQUENCE_LENGTH_SEC = 10
     var wm_worked = 0
     var wm_failed = 0
+    var progressTracker: ProgressTracker? = nil
     let uploadQueue = DispatchQueue(label: "upload-queue", qos: .userInitiated, attributes: .concurrent)
     
     let qrDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyLow])
@@ -48,9 +48,10 @@ class RawDataCollector: CollectionWriterDelegate {
     
     func fileWritten() {
         writesFinished += 1
-
-        if !ScanConfig.isRecording {
-            updateProgress(with: Float(self.writesFinished)/Float(self.writesQueued))
+        
+        if !ScanConfig.isRecording,
+           let pt = progressTracker {
+            pt.notifyProgressRaw(value: Float(writesFinished) / Float(writesQueued))
         }
     }
     
@@ -157,9 +158,9 @@ class RawDataCollector: CollectionWriterDelegate {
         }
     }
     
-    func stopRecording() {
+    func stopRecording(notify tracker: ProgressTracker?) {
+        progressTracker = tracker
         writeBuffersToFile()
-        showProgressRing()
     }
     
     private func writeBuffersToFile() {
@@ -184,7 +185,7 @@ class RawDataCollector: CollectionWriterDelegate {
             }
         }
         
-        uploadQueue.async {[self, dw, vW, cW, fCW] in
+        uploadQueue.async {[dw, vW, cW, fCW] in
             if ScanConfig.saveRGBVideo {
                 vW.writeBufferToFile()
             }
@@ -197,37 +198,11 @@ class RawDataCollector: CollectionWriterDelegate {
             if (!ScanConfig.saveWorldMapInfo) && (ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo) {
                 fCW.writeBufferToFile()
             }
-            
-            updateProgress(with: Float(self.writesFinished)/Float(self.writesQueued))
         }
         frameCount = 0
         videoWriter = nil
         depthWriter = nil
         confidenceWriter = nil
         frameCollectionWriter = nil
-    }
-    
-    // MARK: - Progress indicator
-    
-    func showProgressRing() {
-        let ringParam: RingProgressorParameter = (.proportional, UIColor.green.withAlphaComponent(0.4), 100, 50)
-        var labelParam: LabelProgressorParameter = DefaultLabelProgressorParameter
-        labelParam.font = UIFont.systemFont(ofSize: 30, weight: UIFont.Weight.bold)
-        labelParam.color = UIColor.white.withAlphaComponent(0.3)
-        DispatchQueue.main.async {
-            Prog.start(in: self.vc.view, .blur(.regular), .ring(ringParam), .label(labelParam))
-        }
-    }
-    
-    func updateProgress(with value: Float) {
-        DispatchQueue.main.async {
-            Prog.update(value, in: self.vc.view)
-        }
-        if value >= 1.0 || value.isNaN {
-            usleep(600_000) // sleep mills to not break Prog
-            DispatchQueue.main.async {
-                Prog.end(in: self.vc.view)
-            }
-        }
     }
 }
