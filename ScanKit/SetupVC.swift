@@ -9,6 +9,7 @@ import UIKit
 import UniformTypeIdentifiers
 
 class SetupVC: UIViewController, UIDocumentPickerDelegate {
+    @IBOutlet var dataRateLabel: UILabel!
     @IBOutlet var projectNameField: UITextField!
     @IBOutlet var scanButton: TileButton!
     @IBOutlet var rgbQualitySlider: UISlider!
@@ -32,6 +33,7 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         confidenceSwitch.setOn(ScanConfig.saveConfidenceVideo, animated: false)
         worldmapSwitch.setOn(ScanConfig.saveWorldMapInfo, animated: false)
         qrCodeSwitch.setOn(ScanConfig.detectQRCodes, animated: false)
+        updateDataEstimate()
     }
     
     func displayFolderSelection() {
@@ -40,6 +42,23 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         dp.delegate = self
         dp.allowsMultipleSelection = false
         present(dp, animated: true, completion: nil)
+    }
+    
+    func updateDataEstimate() {
+        var estimate: Float = 1 // only point cloud
+        if ScanConfig.saveRGBVideo {
+            estimate += (30 + 577 * pow(ScanConfig.rgbQuality, 4))/10
+        }
+        if ScanConfig.saveDepthVideo {
+            estimate += 118.0/10
+        }
+        if ScanConfig.saveConfidenceVideo {
+            estimate += 30.0/10
+        }
+        if ScanConfig.saveWorldMapInfo {
+            estimate += 15 // note: increasing over time
+        }
+        dataRateLabel.text = String(format: "Estimated Data Rate: %.2f MB/s", estimate)
     }
     
     // MARK: - project name field actions
@@ -92,26 +111,32 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
     
     @IBAction func rgbQualitySlider_changed(_ sender: UISlider) {
         ScanConfig.rgbQuality = sender.value
+        updateDataEstimate()
     }
     
     @IBAction func rgbSwitch_toggled(_ sender: UISwitch) {
         ScanConfig.saveRGBVideo = sender.isOn
+        updateDataEstimate()
     }
     
     @IBAction func depthSwitch_toggled(_ sender: UISwitch) {
         ScanConfig.saveDepthVideo = sender.isOn
+        updateDataEstimate()
     }
     
     @IBAction func confidenceSwitch_toggled(_ sender: UISwitch) {
         ScanConfig.saveConfidenceVideo = sender.isOn
+        updateDataEstimate()
     }
     
     @IBAction func worldmapSwitch_toggled(_ sender: UISwitch) {
         ScanConfig.saveWorldMapInfo = sender.isOn
+        updateDataEstimate()
     }
     
     @IBAction func qrCodeSwitch_toggled(_ sender: UISwitch) {
         ScanConfig.detectQRCodes = sender.isOn
+        updateDataEstimate()
     }
     
     // MARK: - UIDocumentPickerDelegate
