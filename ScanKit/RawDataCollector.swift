@@ -57,7 +57,6 @@ class RawDataCollector: CollectionWriterDelegate {
     
     func collectDataOf(arFrame: ARFrame) {
         guard let url = ScanConfig.url else { return }
-        if !ScanConfig.isRecording { return }
         
         let capturedImage = arFrame.capturedImage
         
@@ -99,6 +98,8 @@ class RawDataCollector: CollectionWriterDelegate {
             print("Skipping data collection, unable to unwrap writer optionals")
             return
         }
+        
+        if !ScanConfig.isRecording { return } // recording check down here so that writers are already initialized when starting recording
         
         // detect QR Codes
         
