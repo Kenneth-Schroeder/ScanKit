@@ -12,6 +12,7 @@ class ScanConfig {
     static var underlayIndex: Int = 0
     static var viewIndex: Int = 0
     static var viewshedActive: Bool = false
+    static var torchActive: Bool = false
     static var numGridPoints: Int = 49_152
     static var renderedParticleSize: Float = 15
     static var renderedParticleConfidenceThreshold: Int = 2

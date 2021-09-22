@@ -15,6 +15,7 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker {
     @IBOutlet weak var underlayControl: UISegmentedControl!
     @IBOutlet weak var viewControl: UISegmentedControl!
     @IBOutlet weak var viewshedButton: RoundedButton!
+    @IBOutlet weak var torchButton: RoundedButton!
     @IBOutlet weak var recordButton: RecordButton!
     
     var ar_session: ARSession!
@@ -153,6 +154,33 @@ extension ScanVC {
             sender.backgroundColor = UIColorFromHex(0xEDD9A3)
         } else {
             sender.backgroundColor = .darkGray
+        }
+    }
+    
+    // https://stackoverflow.com/questions/27207278/how-to-turn-flashlight-on-and-off-in-swift
+    @IBAction func torch_button_pressed(_ sender: RoundedButton) {
+        
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
+        guard device.hasTorch else { return }
+
+        do {
+            try device.lockForConfiguration()
+
+            if (device.torchMode == AVCaptureDevice.TorchMode.on) {
+                device.torchMode = AVCaptureDevice.TorchMode.off
+                sender.backgroundColor = .darkGray
+            } else {
+                do {
+                    try device.setTorchModeOn(level: 1.0)
+                    sender.backgroundColor = UIColorFromHex(0xEDD9A3)
+                } catch {
+                    print(error)
+                }
+            }
+
+            device.unlockForConfiguration()
+        } catch {
+            print(error)
         }
     }
     

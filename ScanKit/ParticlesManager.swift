@@ -101,8 +101,6 @@ class ParticlesManager {
             copyQueue.async {
                 self.copySelectedPoints(fromViewshedBuffer: buffer, toVisualBufferIdx: vBIdx, toRecordingBufferIdx: rBIdx)
                 
-                print(self.recordingBufferPointCount[rBIdx])
-                
                 if self.recordingBufferPointCount[rBIdx] == ScanConfig.maxPointsPerRecordingBuffer {
                     self.recordingBufferStage[rBIdx] = .writing // 'writing' to disk
                     self.recordingBufferIndex = (self.recordingBufferIndex + 1) % kMaxBuffersInFlight // async, but protected by semaphore; TODO could search for next ready buffer alternatively
