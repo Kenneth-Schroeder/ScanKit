@@ -12,14 +12,13 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
     @IBOutlet var dataRateLabel: UILabel!
     @IBOutlet var projectNameField: UITextField!
     @IBOutlet var scanButton: TileButton!
+    @IBOutlet var projecstButton: TileButton!
     @IBOutlet var rgbQualitySlider: UISlider!
     @IBOutlet var rgbSwitch: UISwitch!
     @IBOutlet var depthSwitch: UISwitch!
     @IBOutlet var confidenceSwitch: UISwitch!
     @IBOutlet var worldmapSwitch: UISwitch!
     @IBOutlet var qrCodeSwitch: UISwitch!
-    
-    var scanButtonTouched: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,21 +71,10 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         ScanConfig.url = getDocumentsDirectory().appendingPathComponent(sender.text ?? getDefaultProjectName(), isDirectory: true)
     }
     
-    // MARK: - scan button actions
+    // MARK: - scan button
     
-    @IBAction func scan_button_touched(_ sender: TileButton) {
-        sender.alpha = 0.5
-        scanButtonTouched = true
-    }
-    
-    @IBAction func scan_button_released_outside(_ sender: TileButton) {
-        sender.alpha = 1.0
-        scanButtonTouched = false
-    }
-    
-    @IBAction func scan_button_released_inside(_ sender: TileButton) {
-        sender.alpha = 1.0
-        if !scanButtonTouched || ScanConfig.url == nil {
+    @IBAction func scan_button_pressed(_ sender: TileButton) {
+        if ScanConfig.url == nil {
             return
         }
         
@@ -99,12 +87,12 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
             }
         }
         
-        scanButtonTouched = false
         guard let next_vc = storyboard?.instantiateViewController(withIdentifier: "recording_vc") as? ScanVC else {
             return
         }
         next_vc.modalPresentationStyle = .overFullScreen
-        present(next_vc, animated: true)
+        //present(next_vc, animated: true)
+        navigationController?.pushViewController(next_vc, animated: true)
     }
     
     // MARK: - setup UI functions
@@ -138,6 +126,15 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         ScanConfig.detectQRCodes = sender.isOn
         updateDataEstimate()
     }
+    
+    /*@IBAction func projectsButton_pressed(_ sender: TileButton) {
+        guard let next_vc = storyboard?.instantiateViewController(withIdentifier: "projects_vc") as? ProjectsVC else {
+            return
+        }
+        next_vc.modalPresentationStyle = .overFullScreen
+        //present(next_vc, animated: true)
+        navigationController?.pushViewController(next_vc, animated: true)
+    }*/
     
     // MARK: - UIDocumentPickerDelegate
 

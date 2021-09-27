@@ -77,6 +77,14 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        if ScanConfig.isRecording {
+            ar_manager.stopRecording(notify: self)
+            renderer.stopRecording(notify: self)
+            showProgressRing()
+            recordButton.backgroundColor = UIColor.green
+        }
+        ScanConfig.isRecording = false
+        
         // Pause the view's session
         ar_session.pause()
     }
