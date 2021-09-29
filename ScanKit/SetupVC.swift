@@ -7,6 +7,7 @@
 
 import UIKit
 import UniformTypeIdentifiers
+import SwiftUI
 
 class SetupVC: UIViewController, UIDocumentPickerDelegate {
     @IBOutlet var dataRateLabel: UILabel!
@@ -127,14 +128,10 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         updateDataEstimate()
     }
     
-    /*@IBAction func projectsButton_pressed(_ sender: TileButton) {
-        guard let next_vc = storyboard?.instantiateViewController(withIdentifier: "projects_vc") as? ProjectsVC else {
-            return
-        }
-        next_vc.modalPresentationStyle = .overFullScreen
-        //present(next_vc, animated: true)
-        navigationController?.pushViewController(next_vc, animated: true)
-    }*/
+    @IBAction func projectsButton_pressed(_ sender: TileButton) {
+        let next_vc = UIHostingController(rootView: ProjectsSUIV())
+        present(next_vc, animated: true)
+    }
     
     // MARK: - UIDocumentPickerDelegate
 
