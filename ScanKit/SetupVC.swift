@@ -39,6 +39,10 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         
         projectNameField.attributedPlaceholder = NSAttributedString(string: "<default project name>",
                                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+        
+        // Adjust label text size according to device size
+        let screenWidth = self.view.frame.width
+        //label.font = UIFont(name: "Helvetica", size: screenWidth / 20.0)
     }
     
     func displayFolderSelection() {

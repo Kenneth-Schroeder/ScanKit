@@ -31,7 +31,7 @@ func getMetaData(_ projectName: String) -> ScanMetaDataPrintable {
 }
 
 struct ProjectDetailsSUIV: View {
-    var projectName: String //  {didSet}
+    var projectName: String
     var metaDataP: ScanMetaDataPrintable
     
     init(projectName: String) {
@@ -113,6 +113,17 @@ struct ProjectDetailsSUIV: View {
                         Text(metaDataP.detectQRCodes)
                     }
                 }
+            }
+            Button("Open in Files App") { // https://stackoverflow.com/questions/64591298/how-can-i-open-default-files-app-with-myapp-folder-programmatically
+                func getDocumentsDirectory() -> URL { // returns your application folder
+                    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+                    let documentsDirectory = paths[0]
+                    return documentsDirectory
+                }
+                let projectURL = getDocumentsDirectory().appendingPathComponent(projectName)
+                let path = projectURL.absoluteString.replacingOccurrences(of: "file://", with: "shareddocuments://")
+                let url = URL(string: path)!
+                UIApplication.shared.open(url)
             }
             Spacer()
         }
