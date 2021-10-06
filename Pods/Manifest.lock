@@ -1,16 +1,20 @@
 PODS:
+  - NMSSH (2.3.1)
   - Progress (3.0)
 
 DEPENDENCIES:
+  - NMSSH
   - Progress
 
 SPEC REPOS:
   trunk:
+    - NMSSH
     - Progress
 
 SPEC CHECKSUMS:
+  NMSSH: cd689ae535a1581a6dd9fd4600ff71247df510a6
   Progress: ba9d35a566ac1b3752bf077326f2775c7cee1b80
 
-PODFILE CHECKSUM: 14b8a9227d1a07bce85815fa563fbf3beebc0d46
+PODFILE CHECKSUM: f69dc53667f64a2c0238005cc5c9d5130cb8b1be
 
 COCOAPODS: 1.9.3

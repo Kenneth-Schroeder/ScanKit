@@ -1,2 +1,3 @@
 ${PODS_ROOT}/Target Support Files/Pods-ScanKit/Pods-ScanKit-frameworks.sh
+${BUILT_PRODUCTS_DIR}/NMSSH/NMSSH.framework
 ${BUILT_PRODUCTS_DIR}/Progress/Progress.framework

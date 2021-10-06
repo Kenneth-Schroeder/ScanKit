@@ -21,6 +21,9 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
     @IBOutlet var confidenceSwitch: UISwitch!
     @IBOutlet var worldmapSwitch: UISwitch!
     @IBOutlet var qrCodeSwitch: UISwitch!
+    @IBOutlet var titleLabels: [UILabel]!
+    @IBOutlet var descriptionLabels: [UILabel]!
+    @IBOutlet var mainTitleLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +44,14 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
                                                                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         
         // Adjust label text size according to device size
-        let screenWidth = self.view.frame.width
-        //label.font = UIFont(name: "Helvetica", size: screenWidth / 20.0)
+        let screenWidth = view.frame.width
+        //for labl in titleLabels {
+        //    labl.font = UIFont(name: "Geeza Pro Bold", size: screenWidth / 40.0)
+        //}
+        //for labl in descriptionLabels {
+        //    labl.font = UIFont(name: "Geeza Pro", size: screenWidth / 50.0)
+        //}
+        mainTitleLabel.font = UIFont(name: "Apple SD Gothic Neo Bold", size: screenWidth / 5.0)
     }
     
     func displayFolderSelection() {
