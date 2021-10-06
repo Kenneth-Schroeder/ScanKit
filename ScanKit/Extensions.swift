@@ -77,3 +77,9 @@ extension Date {
         return formatter.string(from: self)
     }
 }
+
+extension CLLocationCoordinate2D: Identifiable {
+    public var id: String {
+        "\(latitude)-\(longitude)"
+    }
+}

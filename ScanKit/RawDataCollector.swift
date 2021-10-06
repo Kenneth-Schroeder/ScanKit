@@ -200,6 +200,12 @@ class RawDataCollector: CollectionWriterDelegate {
                 fCW.writeBufferToFile()
             }
         }
+        
+        if writesFinished >= writesQueued, // if nothing queued
+           let pt = progressTracker{
+            pt.notifyProgressRaw(value: 1)
+        }
+        
         frameCount = 0
         videoWriter = nil
         depthWriter = nil

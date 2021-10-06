@@ -55,6 +55,10 @@ class VideoWriter: CollectionWriter {
         videoWriter = createVideoWriter(outputURL: meta.fullPath)
         videoWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings.getOutputSettings(size: meta.resolution))
 
+        if !ScanConfig.saveRGBVideo {
+            return
+        }
+        
         if videoWriter.canAdd(videoWriterInput) {
             videoWriter.add(videoWriterInput)
         } else {
@@ -119,7 +123,12 @@ class VideoWriter: CollectionWriter {
 
     public func writeBufferToFile() {
         precondition(videoWriter != nil, "Call start() to initialize the writer")
-
+        
+        if frameCounter == 0 {
+            self.delegate!.fileWritten() // tell delegate that we are done here
+            return
+        }
+        
         let queue = DispatchQueue(label: "rgbWriterQueue", qos: .userInitiated, attributes: .concurrent)
         videoWriterInput.requestMediaDataWhenReady(on: queue) {
             self.videoWriterInput.markAsFinished()

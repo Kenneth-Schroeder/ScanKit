@@ -14,6 +14,7 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
     @IBOutlet var projectNameField: UITextField!
     @IBOutlet var scanButton: TileButton!
     @IBOutlet var projecstButton: TileButton!
+    @IBOutlet var pointCloudSwitch: UISwitch!
     @IBOutlet var rgbQualitySlider: UISlider!
     @IBOutlet var rgbSwitch: UISwitch!
     @IBOutlet var depthSwitch: UISwitch!
@@ -27,6 +28,7 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         ScanConfig.url = getDocumentsDirectory().appendingPathComponent(getDefaultProjectName(), isDirectory: true)
         
         // update UI according to ScanConfig
+        pointCloudSwitch.setOn(ScanConfig.savePointCloud, animated: false)
         rgbQualitySlider.setValue(ScanConfig.rgbQuality, animated: false)
         rgbSwitch.setOn(ScanConfig.saveRGBVideo, animated: false)
         depthSwitch.setOn(ScanConfig.saveDepthVideo, animated: false)
@@ -34,6 +36,9 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         worldmapSwitch.setOn(ScanConfig.saveWorldMapInfo, animated: false)
         qrCodeSwitch.setOn(ScanConfig.detectQRCodes, animated: false)
         updateDataEstimate()
+        
+        projectNameField.attributedPlaceholder = NSAttributedString(string: "<default project name>",
+                                                                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
     }
     
     func displayFolderSelection() {
@@ -45,7 +50,11 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
     }
     
     func updateDataEstimate() {
-        var estimate: Float = 1 // only point cloud
+        var estimate: Float = 0
+        
+        if ScanConfig.savePointCloud {
+            estimate += 1
+        }
         if ScanConfig.saveRGBVideo {
             estimate += (30 + 577 * pow(ScanConfig.rgbQuality, 4))/10
         }
@@ -103,6 +112,11 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         updateDataEstimate()
     }
     
+    @IBAction func pointCloudSwitch_toggled(_ sender: UISwitch) {
+        ScanConfig.savePointCloud = sender.isOn
+        updateDataEstimate()
+    }
+    
     @IBAction func rgbSwitch_toggled(_ sender: UISwitch) {
         ScanConfig.saveRGBVideo = sender.isOn
         updateDataEstimate()
@@ -153,7 +167,7 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
     // https://cocoacasts.com/swift-fundamentals-how-to-convert-a-date-to-a-string-in-swift
     func getDefaultProjectName() -> String {
         let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd_hh:mm:ss"
+        df.dateFormat = "yyyy-MM-dd_HH:mm:ss"
         let now: String = df.string(from: Date())
         return now
     }

@@ -296,3 +296,76 @@ struct QRCode: Encodable {
         return simd_distance_squared(location, code.location)
     }
 }
+
+// MARK: - MetaData
+
+struct ScanMetaData: Codable {
+    var latitude: CLLocationDegrees?
+    var longitude: CLLocationDegrees?
+    var scanStart: TimeInterval
+    var scanEnd: TimeInterval
+    
+    var savePointCloud: Bool = ScanConfig.savePointCloud
+    var saveRGBVideo: Bool = ScanConfig.saveRGBVideo
+    var rgbQuality: Float = ScanConfig.rgbQuality
+    var saveDepthVideo: Bool = ScanConfig.saveDepthVideo
+    var saveConfidenceVideo: Bool = ScanConfig.saveConfidenceVideo
+    var saveWorldMapInfo: Bool = ScanConfig.saveWorldMapInfo
+    var detectQRCodes: Bool = ScanConfig.detectQRCodes
+    
+    init(location: CLLocation?, startTime: TimeInterval, endTime: TimeInterval) {
+        self.latitude = location?.coordinate.latitude
+        self.longitude = location?.coordinate.longitude
+        self.scanStart = startTime
+        self.scanEnd = endTime
+    }
+}
+
+struct ScanMetaDataPrintable {
+    var latitude: String = "-"
+    var longitude: String = "-"
+    var latitudePrecise: CLLocationDegrees?
+    var longitudePrecise: CLLocationDegrees?
+    var scanStart: String = "-"
+    var scanEnd: String = "-"
+    
+    var savePointCloud: String = "-"
+    var saveRGBVideo: String = "-"
+    var rgbQuality: String = "-"
+    var saveDepthVideo: String = "-"
+    var saveConfidenceVideo: String = "-"
+    var saveWorldMapInfo: String = "-"
+    var detectQRCodes: String = "-"
+    
+    init(fromScanMetaData meta: ScanMetaData?) {
+        if let m = meta {
+            longitudePrecise = m.longitude
+            latitudePrecise = m.latitude
+            
+            if let long = m.longitude {
+                longitude = String(format: "%.5f", long)
+            }
+            if let lat = m.latitude {
+                latitude = String(format: "%.5f", lat)
+            }
+            
+            let startDate = Date(timeIntervalSince1970: m.scanStart)
+            let endDate = Date(timeIntervalSince1970: m.scanEnd)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .short
+            dateFormatter.timeStyle = .short
+            //dateFormatter.dateFormat = "YY/MM/dd at hh:mm"
+            
+            scanStart = dateFormatter.string(from: startDate)
+            scanEnd = dateFormatter.string(from: endDate)
+            
+            savePointCloud = m.savePointCloud ? "Yes" : "No"
+            saveRGBVideo = m.saveRGBVideo ? "Yes" : "No"
+            rgbQuality = String(format: "%.3f", m.rgbQuality)
+            saveDepthVideo = m.saveDepthVideo ? "Yes" : "No"
+            saveConfidenceVideo = m.saveConfidenceVideo ? "Yes" : "No"
+            saveWorldMapInfo = m.saveWorldMapInfo ? "Yes" : "No"
+            detectQRCodes = m.detectQRCodes ? "Yes" : "No"
+        }
+    }
+}

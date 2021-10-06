@@ -21,7 +21,7 @@ func getProjectNames() -> [String] { // https://stackoverflow.com/questions/4289
     } catch let error as NSError {
         print(error.localizedDescription)
     }
-    return projectNames
+    return projectNames.sorted()
 }
 
 // https://youtu.be/diK5WkGpCUE https://developer.apple.com/videos/play/wwdc2019/231/ https://medium.com/flawless-app-stories/swiftui-dynamic-list-identifiable-73c56215f9ff https://youtu.be/k5rupivxnMA
@@ -32,7 +32,7 @@ struct ProjectsSUIV: View { // SUIV = SwiftUI View
         NavigationView {
             VStack {
                 List(projectNames, id: \.hash) { project in
-                    NavigationLink(destination: ProjectDetailsSUIV(text: project), label: {
+                    NavigationLink(destination: ProjectDetailsSUIV(projectName: project), label: {
                         Text(project)
                     })
                 }

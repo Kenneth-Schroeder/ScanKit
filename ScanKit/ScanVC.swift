@@ -11,7 +11,7 @@ import MetalKit
 import ARKit
 import Progress
 
-class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker {
+class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationManagerDelegate {
     @IBOutlet weak var underlayControl: UISegmentedControl!
     @IBOutlet weak var viewControl: UISegmentedControl!
     @IBOutlet weak var viewshedButton: RoundedButton!
@@ -24,6 +24,13 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker {
     
     var currentProgressRaw: Float = 0
     var currentProgressPC: Float = 0
+    
+    let locationManager = CLLocationManager()
+    var scanLocation: CLLocation?
+    var scanStart: TimeInterval!
+    var scanEnd: TimeInterval!
+    
+    let jsonEncoder = JSONEncoder()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +55,24 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker {
             renderer = ScanRenderer(session: ar_session, metalDevice: view.device!, renderDestination: view)
             
             renderer.drawRectResized(size: view.bounds.size)
+        }
+        
+        // update UI according to ScanConfig
+        underlayControl.selectedSegmentIndex = ScanConfig.underlayIndex
+        viewControl.selectedSegmentIndex = ScanConfig.viewIndex
+        if ScanConfig.viewshedActive {
+            viewshedButton.backgroundColor = UIColorFromHex(0xEDD9A3)
+        } else {
+            viewshedButton.backgroundColor = .darkGray
+        }
+        
+        // Ask for Authorisation from the User.
+        self.locationManager.requestWhenInUseAuthorization()
+
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
         }
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScanVC.handleTap(gestureRecognize:)))
@@ -154,6 +179,13 @@ extension ScanVC {
     
     @IBAction func viewControlChanged(_ sender: UISegmentedControl) {
         ScanConfig.viewIndex = sender.selectedSegmentIndex
+        if ScanConfig.viewIndex > 0 {
+            underlayControl.selectedSegmentIndex = 0
+            ScanConfig.underlayIndex = 0
+            underlayControl.isEnabled = false
+        } else {
+            underlayControl.isEnabled = true
+        }
     }
     
     @IBAction func viewshed_button_pressed(_ sender: RoundedButton) {
@@ -194,11 +226,28 @@ extension ScanVC {
     
     @IBAction func record_button_pressed(_ sender: RoundedButton) {
         if ScanConfig.isRecording {
+            scanEnd = NSDate().timeIntervalSince1970
+            let meta = ScanMetaData(location: scanLocation, startTime: scanStart, endTime: scanEnd)
+            if let url = ScanConfig.url {
+                if let metaData = try? self.jsonEncoder.encode(meta) {
+                    do {
+                        try metaData.write(to: url.appendingPathComponent("metadata.json"), options: .atomic)
+                    } catch {
+                        print("Writing metadata json file failed.")
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+            
             ar_manager.stopRecording(notify: self)
             renderer.stopRecording(notify: self)
             showProgressRing()
             sender.layer.backgroundColor = UIColor.green.cgColor
+            navigationItem.hidesBackButton = false
         } else {
+            navigationItem.hidesBackButton = true
+            scanLocation = locationManager.location
+            scanStart = NSDate().timeIntervalSince1970
             sender.layer.backgroundColor = UIColor.red.cgColor
         }
         ScanConfig.isRecording = !ScanConfig.isRecording
@@ -213,7 +262,9 @@ extension ScanVC {
         labelParam.color = UIColor.white.withAlphaComponent(0.3)
         DispatchQueue.main.async {
             Prog.start(in: self.view, .blur(.regular), .ring(ringParam), .label(labelParam))
+            //self.updateProgress()
         }
+        perform(#selector(updateProgress), with: nil, afterDelay: 2.0)
     }
     
     func notifyProgressRaw(value: Float) {
@@ -225,14 +276,14 @@ extension ScanVC {
         updateProgress()
     }
     
-    func updateProgress() {
+    @objc func updateProgress() {
         let value: Float = (currentProgressRaw + currentProgressPC) / 2.0
         
         DispatchQueue.main.async {
             Prog.update(value, in: self.view)
         }
         if value >= 1.0 || value.isNaN {
-            usleep(600_000) // sleep mills to not break Prog
+            // usleep(600_000) // sleep mills to not break Prog
             DispatchQueue.main.async {
                 Prog.end(in: self.view)
             }

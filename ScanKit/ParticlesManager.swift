@@ -155,11 +155,21 @@ class ParticlesManager {
     }
     
     func saveBuffer(at index: Int, signal semaphore: DispatchSemaphore? = nil, notify tracker: ProgressTracker? = nil) {
-        writesQueued += 1
-        let _ = saveBufferLocallyAsLAS(index: index, signal: semaphore, notify: tracker) // this function itself is called synchronously within this thread
+        if ScanConfig.savePointCloud {
+            writesQueued += 1
+            let _ = saveBufferLocallyAsLAS(index: index, signal: semaphore) // this function itself is called synchronously within this thread
+            writesFinished += 1
+        }
+        if let t = tracker {
+            if writesFinished >= writesQueued {
+                t.notifyProgressPC(value: 1) // in case both 0
+            } else {
+                t.notifyProgressPC(value: Float(writesFinished) / Float(writesQueued))
+            }
+        }
+        // reset statistics
         recordingBufferPointCount[index] = 0
         recordingBuffersWriteAddress[index] = 0 /// TODO: check if only resetting pointIndex is enough, which could be designed so that old points are not deleted immediately, but get overwritten slowly as the buffer fills back up (need to prevent triggering of filtering though)
-        // reset statistics
         recordingBufferStage[index] = .ready
     }
     
@@ -167,11 +177,11 @@ class ParticlesManager {
         saveBuffer(at: recordingBufferIndex, notify: tracker)
     }
     
-    func saveBufferLocallyAsLAS(index: Int, withJson: Bool = true, signal semaphore: DispatchSemaphore? = nil, notify tracker: ProgressTracker? = nil) -> [URL?] {
+    func saveBufferLocallyAsLAS(index: Int, withJson: Bool = true, signal semaphore: DispatchSemaphore? = nil) -> [URL?] {
         var paths = [URL?]()
         guard let localURL = ScanConfig.url else { return [] }
         
-        let localPath = localURL//FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let localPath = localURL
         let lasPath : URL = localPath.appendingPathComponent("Buffer_\(index)_" + Date().string(format: "yyyy-MM-dd_HH_mm_ss") + ".las")
         paths.append(lasPath)
         
@@ -187,11 +197,6 @@ class ParticlesManager {
             print("Beginning to write " + String(pointCount) + " points to file...")
             lasWriter.write_lasFile(&arr, ofSize: Int32(pointCount), toFileNamed: lasPath.relativePath)
             print("Finished writing a file!")
-            writesFinished += 1
-            
-            if let t = tracker {
-                t.notifyProgressPC(value: Float(writesFinished) / Float(writesQueued))
-            }
             
             return paths
         }

@@ -11,7 +11,7 @@ class ScanConfig {
     static var url: URL?
     static var underlayIndex: Int = 0
     static var viewIndex: Int = 0
-    static var viewshedActive: Bool = false
+    static var viewshedActive: Bool = true
     static var torchActive: Bool = false
     static var numGridPoints: Int = 49_152
     static var renderedParticleSize: Float = 15
@@ -29,6 +29,7 @@ class ScanConfig {
     
     static var rgbQuality: Float = 0.5
     
+    static var savePointCloud: Bool = true
     static var saveRGBVideo: Bool = true
     static var saveDepthVideo: Bool = true
     static var saveConfidenceVideo: Bool = true
