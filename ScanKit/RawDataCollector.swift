@@ -101,6 +101,11 @@ class RawDataCollector: CollectionWriterDelegate {
         
         if !ScanConfig.isRecording { return } // recording check down here so that writers are already initialized when starting recording
         
+        if !vc.updateMemoryBarAskContinue() {
+            vc.finishRecording()
+            return
+        }
+        
         // detect QR Codes
         
         if ScanConfig.detectQRCodes && frameCount % 6 == 0 {

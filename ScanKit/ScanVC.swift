@@ -17,6 +17,8 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
     @IBOutlet weak var viewshedButton: RoundedButton!
     @IBOutlet weak var torchButton: RoundedButton!
     @IBOutlet weak var recordButton: RecordButton!
+    @IBOutlet weak var memoryBar: UIProgressView!
+    var memoryBarTimer = Timer()
     
     var ar_session: ARSession!
     var renderer: ScanRenderer!
@@ -77,6 +79,10 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScanVC.handleTap(gestureRecognize:)))
         view.addGestureRecognizer(tapGesture)
+        
+        self.memoryBarTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
+            self.updateMemoryBarAskContinue()
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -224,33 +230,42 @@ extension ScanVC {
         }
     }
     
-    @IBAction func record_button_pressed(_ sender: RoundedButton) {
-        if ScanConfig.isRecording {
-            scanEnd = NSDate().timeIntervalSince1970
-            let meta = ScanMetaData(location: scanLocation, startTime: scanStart, endTime: scanEnd)
-            if let url = ScanConfig.url {
-                if let metaData = try? self.jsonEncoder.encode(meta) {
-                    do {
-                        try metaData.write(to: url.appendingPathComponent("metadata.json"), options: .atomic)
-                    } catch {
-                        print("Writing metadata json file failed.")
-                        print(error.localizedDescription)
-                    }
+    func beginRecording() {
+        navigationItem.hidesBackButton = true
+        scanLocation = locationManager.location
+        scanStart = NSDate().timeIntervalSince1970
+        recordButton.layer.backgroundColor = UIColor.red.cgColor
+        ScanConfig.isRecording = true
+    }
+    
+    func finishRecording() {
+        scanEnd = NSDate().timeIntervalSince1970
+        let meta = ScanMetaData(location: scanLocation, startTime: scanStart, endTime: scanEnd)
+        if let url = ScanConfig.url {
+            if let metaData = try? self.jsonEncoder.encode(meta) {
+                do {
+                    try metaData.write(to: url.appendingPathComponent("metadata.json"), options: .atomic)
+                } catch {
+                    print("Writing metadata json file failed.")
+                    print(error.localizedDescription)
                 }
             }
-            
-            ar_manager.stopRecording(notify: self)
-            renderer.stopRecording(notify: self)
-            showProgressRing()
-            sender.layer.backgroundColor = UIColor.green.cgColor
-            navigationItem.hidesBackButton = false
-        } else {
-            navigationItem.hidesBackButton = true
-            scanLocation = locationManager.location
-            scanStart = NSDate().timeIntervalSince1970
-            sender.layer.backgroundColor = UIColor.red.cgColor
         }
-        ScanConfig.isRecording = !ScanConfig.isRecording
+        
+        ar_manager.stopRecording(notify: self)
+        renderer.stopRecording(notify: self)
+        showProgressRing()
+        navigationItem.hidesBackButton = false
+        recordButton.layer.backgroundColor = UIColor.green.cgColor
+        ScanConfig.isRecording = false
+    }
+    
+    @IBAction func record_button_pressed(_ sender: RoundedButton) {
+        if ScanConfig.isRecording {
+            finishRecording()
+        } else {
+            beginRecording()
+        }
     }
     
     // MARK: - Progress indicator
@@ -287,6 +302,39 @@ extension ScanVC {
             DispatchQueue.main.async {
                 Prog.end(in: self.view)
             }
+        }
+    }
+    
+    // MARK: - Memory Bar
+    
+    func updateMemoryBarAskContinue() -> Bool {
+        memoryBar.progress = Float(query_memory())/5_000_000_000
+        if memoryBar.progress < 0.5 {
+            memoryBar.tintColor = .green
+        } else if memoryBar.progress < 0.75 {
+            memoryBar.tintColor = .orange
+        } else {
+            memoryBar.tintColor = .red
+            return false
+        }
+        return true
+    }
+    
+    func query_memory() -> UInt64 {
+        var taskInfo = mach_task_basic_info()
+        var count = mach_msg_type_number_t(MemoryLayout<mach_task_basic_info>.size)/4
+        let kerr: kern_return_t = withUnsafeMutablePointer(to: &taskInfo) {
+            $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
+                task_info(mach_task_self_, task_flavor_t(MACH_TASK_BASIC_INFO), $0, &count)
+            }
+        }
+
+        if kerr == KERN_SUCCESS {
+            return taskInfo.resident_size
+        } else {
+            print("Error with task_info(): " +
+                (String(cString: mach_error_string(kerr), encoding: String.Encoding.ascii) ?? "unknown error"))
+            return 0
         }
     }
 }
