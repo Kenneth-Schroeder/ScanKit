@@ -343,12 +343,14 @@ private extension ScanRenderer {
                                                             simd_float4(0,0,1,-2),
                                                             simd_float4(0,0,0,1)])
         
-        let birdViewMatrix = getViewMatrix(forward: simd_float3(0,-1,0), right: simd_float3(1,0,0), up: simd_float3(0,0,1), position: simd_float3(-camera.getPosition().x, camera.getPosition().z, -2), for: deviceOrientation) // -cloudCenter.x, cloudCenter.z, -2
+        let birdViewMatrix = getViewMatrix(forward: simd_float3(0,-1,0), right: simd_float3(1,0,0), up: simd_float3(0,0,1), position: simd_float3(-camera.getPosition().x, camera.getPosition().z, -2), for: deviceOrientation)
         
-        let birdOrthProjection = matrix_float4x4(rows: [simd_float4(1,0,0,0),
-                                                           simd_float4(0,1,0,0),
-                                                           simd_float4(0,0,-1/3/2,0),
-                                                           simd_float4(0,0,0,1)])
+        let aspect = Float(viewportSize.width) / Float(viewportSize.height)
+        let scaling: Float = 0.5
+        let birdOrthProjection = matrix_float4x4(rows: [simd_float4(1*scaling,0,0,0),
+                                                        simd_float4(0,aspect*scaling,0,0),
+                                                        simd_float4(0,0,-1/3/2,0),
+                                                        simd_float4(0,0,0,1)])
         
         var viewMatrix = arCamViewMatrix
         var projectionMatrix = perspectiveProjectionMatrix
@@ -745,9 +747,9 @@ private extension ScanRenderer {
     // https://www.3dgep.com/understanding-the-view-matrix/
     func getViewMatrix(forward: simd_float3, right: simd_float3, up: simd_float3, position: simd_float3, for orientation: UIInterfaceOrientation) -> matrix_float4x4 { // TODO: include orientation in calculation
         let viewMatrix = matrix_float4x4(columns: (simd_float4(right,0),
-                                         simd_float4(up,0),
-                                         simd_float4(forward,0),
-                                         simd_float4(position,1)))
+                                                   simd_float4(up,0),
+                                                   simd_float4(forward,0),
+                                                   simd_float4(position,1)))
         return viewMatrix
     }
 }
