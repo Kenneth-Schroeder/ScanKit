@@ -97,7 +97,7 @@ public extension FileManager {
     ///
     /// - note: There are a couple of oddities that are not taken into account (like symbolic links, meta data of
     /// directories, hard links, ...).
-    public func allocatedSizeOfDirectory(at directoryURL: URL) throws -> UInt64 {
+    func allocatedSizeOfDirectory(at directoryURL: URL) throws -> UInt64 {
 
         // The error handler simply stores the error and stops traversal
         var enumeratorError: Error? = nil

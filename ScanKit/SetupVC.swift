@@ -9,7 +9,7 @@ import UIKit
 import UniformTypeIdentifiers
 import SwiftUI
 
-class SetupVC: UIViewController, UIDocumentPickerDelegate {
+class SetupVC: UIViewController {
     @IBOutlet var dataRateLabel: UILabel!
     @IBOutlet var projectNameField: UITextField!
     @IBOutlet var scanButton: TileButton!
@@ -52,14 +52,6 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
         //    labl.font = UIFont(name: "Geeza Pro", size: screenWidth / 50.0)
         //}
         mainTitleLabel.font = UIFont(name: "Apple SD Gothic Neo Bold", size: screenWidth / 5.0)
-    }
-    
-    func displayFolderSelection() {
-        // lots of deprecated documentation, look under "Initializers" section https://developer.apple.com/documentation/uikit/uidocumentpickerviewcontroller
-        let dp = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.folder])
-        dp.delegate = self
-        dp.allowsMultipleSelection = false
-        present(dp, animated: true, completion: nil)
     }
     
     func updateDataEstimate() {
@@ -158,15 +150,6 @@ class SetupVC: UIViewController, UIDocumentPickerDelegate {
     @IBAction func projectsButton_pressed(_ sender: TileButton) {
         let next_vc = UIHostingController(rootView: ProjectsSUIV())
         present(next_vc, animated: true)
-    }
-    
-    // MARK: - UIDocumentPickerDelegate
-
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        if !urls[0].startAccessingSecurityScopedResource() {
-            fatalError("App was not granted access to the selected folder.")
-        } // https://stackoverflow.com/questions/34636150/no-permission-to-view-document-passed-back-from-ios-document-provider-on-open-op/34658428
-        ScanConfig.url = urls[0]
     }
     
     // https://www.hackingwithswift.com/example-code/system/how-to-find-the-users-documents-directory
