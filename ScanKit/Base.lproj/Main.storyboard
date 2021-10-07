@@ -17,13 +17,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ScanKit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YSf-za-DzA">
-                                <rect key="frame" x="94.666666666666671" y="97.999999999999986" width="200.66666666666663" height="148.66666666666663"/>
+                                <rect key="frame" x="94.666666666666671" y="98" width="200.66666666666663" height="98.666666666666686"/>
                                 <fontDescription key="fontDescription" name="AppleSDGothicNeo-Bold" family="Apple SD Gothic Neo" pointSize="60"/>
                                 <color key="textColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="gKH-Rc-lj4">
-                                <rect key="frame" x="30" y="256.66666666666669" width="330" height="40"/>
+                                <rect key="frame" x="30" y="206.66666666666666" width="330" height="40"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="pxY-cR-RUf"/>
@@ -36,7 +36,7 @@
                                 </connections>
                             </textField>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="cLE-5K-ztA">
-                                <rect key="frame" x="30" y="316.66666666666674" width="330" height="363.33333333333326"/>
+                                <rect key="frame" x="30" y="266.66666666666674" width="330" height="363.33333333333326"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jox-ca-p7F">
                                         <rect key="frame" x="0.0" y="0.0" width="330" height="49.333333333333336"/>
@@ -170,7 +170,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all confidence data captured during the ARSession and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mwc-RZ-als" userLabel="Confidence Data Description">
-                                                        <rect key="frame" x="0.0" y="19.666666666666629" width="281" height="29.666666666666671"/>
+                                                        <rect key="frame" x="0.0" y="19.666666666666686" width="281" height="29.666666666666671"/>
                                                         <fontDescription key="fontDescription" name="GeezaPro" family="Geeza Pro" pointSize="12"/>
                                                         <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
@@ -247,7 +247,7 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LVv-Sb-ndL" userLabel="ProjectsButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="205" y="750" width="155" height="40"/>
+                                <rect key="frame" x="200" y="750" width="160" height="40"/>
                                 <color key="backgroundColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Tqs-6N-Nk3"/>
@@ -260,8 +260,36 @@
                                     <action selector="projectsButton_pressed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="PCT-gu-fOI"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RtP-jx-gFT" userLabel="ScanButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
+                                <rect key="frame" x="30" y="700" width="330" height="40"/>
+                                <color key="backgroundColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="0dS-fN-51R"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="Scan">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="scan_button_pressed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="PGE-sR-CdE"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="AboutButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
+                                <rect key="frame" x="30" y="750" width="160" height="40"/>
+                                <color key="backgroundColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="ZXu-4R-8lt"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="About">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="about_button_pressed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="2e2-5n-EyJ"/>
+                                </connections>
+                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Estimated Data Rate:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SR0-wl-WnL" userLabel="DataRateLabel">
-                                <rect key="frame" x="30" y="700" width="330" height="30"/>
+                                <rect key="frame" x="30" y="650" width="330" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="4oM-45-Crl"/>
                                 </constraints>
@@ -269,39 +297,28 @@
                                 <color key="textColor" red="0.1162627914" green="0.051700711660000002" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="ScanButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="30" y="750" width="155" height="40"/>
-                                <color key="backgroundColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="ZXu-4R-8lt"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="Scan">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="scan_button_pressed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="AWW-iC-WEk"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hEp-gi-cNU"/>
                         <color key="backgroundColor" red="0.91576826570000003" green="0.88451762793551858" blue="0.83009546682378765" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="SR0-wl-WnL" firstAttribute="top" secondItem="cLE-5K-ztA" secondAttribute="bottom" constant="20" id="00d-YV-6pW"/>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="bottom" secondItem="LVv-Sb-ndL" secondAttribute="bottom" constant="20" id="0AL-lK-acE"/>
-                            <constraint firstItem="WKt-xy-gTV" firstAttribute="top" secondItem="SR0-wl-WnL" secondAttribute="bottom" constant="20" id="5Pl-jj-xlv"/>
+                            <constraint firstItem="RtP-jx-gFT" firstAttribute="top" secondItem="SR0-wl-WnL" secondAttribute="bottom" constant="20" id="0eH-gN-9hF"/>
                             <constraint firstItem="WKt-xy-gTV" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="6po-Pz-FH2"/>
                             <constraint firstItem="YSf-za-DzA" firstAttribute="top" secondItem="hEp-gi-cNU" secondAttribute="top" constant="10" id="CsW-Na-VPC"/>
                             <constraint firstItem="cLE-5K-ztA" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="EZe-Sr-RnJ"/>
                             <constraint firstItem="SR0-wl-WnL" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="FzK-5J-FMA"/>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="bottom" secondItem="WKt-xy-gTV" secondAttribute="bottom" constant="20" id="G2i-bN-daB"/>
                             <constraint firstItem="cLE-5K-ztA" firstAttribute="centerX" secondItem="8Zy-y8-9hz" secondAttribute="centerX" id="QP9-Hf-2fu"/>
+                            <constraint firstItem="RtP-jx-gFT" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="SJ6-3h-ItW"/>
                             <constraint firstItem="LVv-Sb-ndL" firstAttribute="width" secondItem="WKt-xy-gTV" secondAttribute="width" id="UAB-1a-Ju5"/>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="LVv-Sb-ndL" secondAttribute="trailing" constant="30" id="ZK5-dP-8ry"/>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="gKH-Rc-lj4" secondAttribute="trailing" constant="30" id="cDP-Sn-2JW"/>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="cLE-5K-ztA" secondAttribute="trailing" constant="30" id="fPK-aF-6gh"/>
                             <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="SR0-wl-WnL" secondAttribute="trailing" constant="30" id="hdQ-UO-fMh"/>
-                            <constraint firstItem="LVv-Sb-ndL" firstAttribute="leading" secondItem="WKt-xy-gTV" secondAttribute="trailing" constant="20" id="oML-fU-W2J"/>
+                            <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="RtP-jx-gFT" secondAttribute="trailing" constant="30" id="jX8-8H-E7c"/>
+                            <constraint firstItem="LVv-Sb-ndL" firstAttribute="leading" secondItem="WKt-xy-gTV" secondAttribute="trailing" constant="10" id="oML-fU-W2J"/>
+                            <constraint firstItem="WKt-xy-gTV" firstAttribute="top" secondItem="RtP-jx-gFT" secondAttribute="bottom" constant="10" id="rWC-DQ-Epl"/>
                             <constraint firstItem="gKH-Rc-lj4" firstAttribute="top" secondItem="YSf-za-DzA" secondAttribute="bottom" constant="10" id="tKI-VU-geZ"/>
                             <constraint firstItem="gKH-Rc-lj4" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="w6F-EX-a8w"/>
                             <constraint firstItem="YSf-za-DzA" firstAttribute="centerX" secondItem="8Zy-y8-9hz" secondAttribute="centerX" id="z9U-DB-WAD"/>
@@ -310,6 +327,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="2hv-1h-yKO"/>
                     <connections>
+                        <outlet property="aboutButton" destination="WKt-xy-gTV" id="LvT-2P-Pil"/>
                         <outlet property="confidenceSwitch" destination="RJk-0v-Pxt" id="7od-Zp-jwV"/>
                         <outlet property="dataRateLabel" destination="SR0-wl-WnL" id="9rZ-mj-xTA"/>
                         <outlet property="depthSwitch" destination="NIJ-oy-d4F" id="4Wc-QQ-RT1"/>
@@ -320,7 +338,7 @@
                         <outlet property="qrCodeSwitch" destination="JVp-LG-wyF" id="7m4-6M-GHH"/>
                         <outlet property="rgbQualitySlider" destination="Eg3-Yn-0HC" id="tv3-6A-Y3a"/>
                         <outlet property="rgbSwitch" destination="L8W-tQ-cQj" id="XGM-pt-SKs"/>
-                        <outlet property="scanButton" destination="WKt-xy-gTV" id="3Kw-qe-0D6"/>
+                        <outlet property="scanButton" destination="RtP-jx-gFT" id="gSG-F8-hdY"/>
                         <outlet property="worldmapSwitch" destination="TNS-di-MnB" id="NM6-RN-7O2"/>
                         <outletCollection property="descriptionLabels" destination="aQf-VL-Cgo" collectionClass="NSMutableArray" id="PGV-Yq-NRO"/>
                         <outletCollection property="descriptionLabels" destination="oNX-yH-FJS" collectionClass="NSMutableArray" id="2dG-b1-iwz"/>

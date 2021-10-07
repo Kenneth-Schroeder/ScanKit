@@ -14,6 +14,7 @@ class SetupVC: UIViewController {
     @IBOutlet var projectNameField: UITextField!
     @IBOutlet var scanButton: TileButton!
     @IBOutlet var projecstButton: TileButton!
+    @IBOutlet var aboutButton: TileButton!
     @IBOutlet var pointCloudSwitch: UISwitch!
     @IBOutlet var rgbQualitySlider: UISlider!
     @IBOutlet var rgbSwitch: UISwitch!
@@ -149,6 +150,11 @@ class SetupVC: UIViewController {
     
     @IBAction func projectsButton_pressed(_ sender: TileButton) {
         let next_vc = UIHostingController(rootView: ProjectsSUIV())
+        present(next_vc, animated: true)
+    }
+    
+    @IBAction func about_button_pressed(_ sender: TileButton) {
+        let next_vc = UIHostingController(rootView: AboutSUIV())
         present(next_vc, animated: true)
     }
     
