@@ -31,7 +31,8 @@ typedef enum BufferIndices {
     kDevicePath = 11,
     kFrustumCorner = 12,
     kLightUniforms = 13,
-    kFreeBufferIndex = 14
+    kTextureCornersBuffer = 14,
+    kFreeBufferIndex = 15
 } BufferIndices;
 
 // Attribute index values shared between shader and C code to ensure Metal shader vertex
@@ -76,6 +77,12 @@ typedef struct {
     simd_float3 directionalLightColor;
     float materialShininess;
 } LightUniforms;
+
+struct SceneUniforms {
+    matrix_float4x4 arCamViewMatrix;
+    matrix_float4x4 arCamViewMatrixInversed;
+    matrix_float4x4 viewProjectionMatrix; // of actually used camera
+};
 
 typedef struct {
     matrix_float4x4 viewMatrix;

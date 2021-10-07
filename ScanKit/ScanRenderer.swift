@@ -22,7 +22,10 @@ class ScanRenderer {
     var imagePlaneVertexBuffer: MTLBuffer!
     
     private lazy var lightUniforms: LightUniforms = LightUniforms()
-    var lightUniformsBuffer = [MetalBuffer<LightUniforms>]()
+    private var lightUniformsBuffer = [MetalBuffer<LightUniforms>]()
+    
+    private lazy var sceneUniforms: SceneUniforms = SceneUniforms()
+    private var sceneUniformsBuffer = [MetalBuffer<SceneUniforms>]()
     
     private lazy var unprojectUniforms: UnprojectUniforms = {
         var uniforms = UnprojectUniforms()
@@ -49,14 +52,17 @@ class ScanRenderer {
         return uniforms
     }()
     var viewshedCloudUniformsBuffers = [MetalBuffer<PointCloudUniforms>]() // metadata for rendering viewshed particles
-    
     var viewshedParticlesBuffers = [MetalBuffer<ParticleUniforms>]() // contains actual point data
+    
+    private var frustumCornersBuffer: MetalBuffer<simd_float3>
     
     var capturedImagePipelineState: MTLRenderPipelineState!
     var confidencePipelineState: MTLRenderPipelineState!
     var float1DTexturePipelineState: MTLRenderPipelineState!
     var particleBlendedPipelineState: MTLRenderPipelineState!
     var unprojectPipelineState: MTLRenderPipelineState!
+    var pathPipelineState: MTLRenderPipelineState!
+    var floatingTexturePipelineState: MTLRenderPipelineState!
     
     var capturedImageTextureY: CVMetalTexture?
     var capturedImageTextureCbCr: CVMetalTexture?
@@ -96,6 +102,7 @@ class ScanRenderer {
         self.session = session
         self.device = device
         self.renderDestination = renderDestination
+        self.frustumCornersBuffer = MetalBuffer<simd_float3>(device: device, count: 17, index: kDevicePath.rawValue, options: [])
         loadMetal()
     }
     
@@ -157,6 +164,8 @@ class ScanRenderer {
                     drawViewshed(renderEncoder: renderEncoder)
                 }
                 drawVisualParticles(renderEncoder: renderEncoder)
+                drawFrustum(renderEncoder: renderEncoder)
+                drawDeviceTexture(renderEncoder: renderEncoder)
                 
                 // We're done encoding commands
                 renderEncoder.endEncoding()
@@ -174,7 +183,6 @@ class ScanRenderer {
 // MARK: - Drawing Functions
 
 private extension ScanRenderer {
-    
     func drawUnderlay(renderEncoder: MTLRenderCommandEncoder) {
         switch ScanConfig.underlayIndex {
         case 1:
@@ -250,6 +258,54 @@ private extension ScanRenderer {
         
         renderEncoder.setVertexBuffer(imagePlaneVertexBuffer, offset: 0, index: Int(kUnderlayVertexDescriptors.rawValue))
         renderEncoder.setFragmentTexture(CVMetalTextureGetTexture(confTex), index: 0)
+        renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
+        
+        renderEncoder.popDebugGroup()
+    }
+    
+    func drawFrustum(renderEncoder: MTLRenderCommandEncoder) {
+        renderEncoder.pushDebugGroup("DrawFrustum")
+        
+        renderEncoder.setDepthStencilState(fullDepthState)
+        renderEncoder.setRenderPipelineState(pathPipelineState)
+        renderEncoder.setVertexBuffer(frustumCornersBuffer)
+        renderEncoder.setVertexBuffer(visualCloudUniformsBuffers[inFlightBufferIndex])
+        renderEncoder.drawPrimitives(type: .lineStrip, vertexStart: 0, vertexCount: 17)
+        
+        renderEncoder.popDebugGroup()
+    }
+    
+    func drawDeviceTexture(renderEncoder: MTLRenderCommandEncoder) {
+        let iPadCorners = [simd_float4(-0.185,  0.02, 0, 1), // adjusted for physical camera location on ipad
+                           simd_float4(-0.185, -0.26, 0, 1),
+                           simd_float4( 0.030,  0.02, 0, 1),
+                           simd_float4( 0.030, -0.26, 0, 1) ]
+        
+        let textureLoader = MTKTextureLoader(device: device)
+        if let imgPath = Bundle.main.path(forResource: "ipad_back", ofType: "png") {
+            let imgURL = URL(fileURLWithPath: imgPath)
+            do {
+                let ipadTex = try textureLoader.newTexture(URL: imgURL, options: nil)
+                drawFloatingTexture(renderEncoder: renderEncoder, texture: ipadTex, corners: iPadCorners, alpha: 0.5, verticesWithARCamCoordinates: true)
+            } catch { print("Error info: \(error)") }
+        }
+    }
+    
+    func drawFloatingTexture(renderEncoder: MTLRenderCommandEncoder, texture: MTLTexture?, corners: [simd_float4], alpha: Float = 1.0, verticesWithARCamCoordinates: Bool = false){
+        
+        let cornersBuffer = MetalBuffer<simd_float4>(device: device, array: corners, index: kTextureCornersBuffer.rawValue, options: [])
+        var arCoordinates:Bool = verticesWithARCamCoordinates
+        var a:Float = alpha
+        
+        renderEncoder.pushDebugGroup("DrawDeviceTexture")
+        
+        renderEncoder.setDepthStencilState(relaxedDepthState)
+        renderEncoder.setRenderPipelineState(floatingTexturePipelineState)
+        renderEncoder.setVertexBuffer(sceneUniformsBuffer[inFlightBufferIndex])
+        renderEncoder.setVertexBuffer(cornersBuffer)
+        renderEncoder.setVertexBytes(&arCoordinates, length: MemoryLayout.size(ofValue: arCoordinates), index: Int(kFreeBufferIndex.rawValue)+0)
+        renderEncoder.setFragmentTexture(texture, index: 0)
+        renderEncoder.setFragmentBytes(&a, length: MemoryLayout.size(ofValue: a), index: Int(kFreeBufferIndex.rawValue))
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
         
         renderEncoder.popDebugGroup()
@@ -337,6 +393,7 @@ private extension ScanRenderer {
         let camera = frame.camera
         let arCamViewMatrix = camera.viewMatrix(for: deviceOrientation)
         let perspectiveProjectionMatrix = camera.projectionMatrix(for: deviceOrientation, viewportSize: viewportSize, zNear: 0.001, zFar: 10)
+        updateFrustumCorners(inverseMat: arCamViewMatrix.inverse * perspectiveProjectionMatrix.inverse)
         
         let thirdPersonTranslation = matrix_float4x4(rows: [simd_float4(1,0,0,0),
                                                             simd_float4(0,1,0,0),
@@ -401,6 +458,12 @@ private extension ScanRenderer {
         
         lightUniforms.materialShininess = 30
         lightUniformsBuffer[inFlightBufferIndex][0] = lightUniforms
+        
+        sceneUniforms.arCamViewMatrix = arCamViewMatrix
+        sceneUniforms.arCamViewMatrixInversed = arCamViewMatrix.inverse
+        sceneUniforms.viewProjectionMatrix = projectionMatrix * viewMatrix
+        
+        sceneUniformsBuffer[inFlightBufferIndex][0] = sceneUniforms
     }
     
     func updateCapturedImageTextures(frame: ARFrame) {
@@ -486,6 +549,54 @@ private extension ScanRenderer {
             vertexData[textureCoordIndex + 1] = Float(transformedCoord.y)
         }
     }
+    
+    func updateFrustumCorners(inverseMat: simd_float4x4) {
+        let test:Float = 0.01
+        var topLeftFar =   inverseMat * simd_float4(-1, 1, 1-test, 1)
+        var topLeftNear =  inverseMat * simd_float4(-1, 1, 0, 1)
+        var topRightFar =  inverseMat * simd_float4( 1, 1, 1-test, 1)
+        var topRightNear = inverseMat * simd_float4( 1, 1, 0, 1)
+        var botLeftFar =   inverseMat * simd_float4(-1,-1, 1-test, 1)
+        var botLeftNear =  inverseMat * simd_float4(-1,-1, 0, 1)
+        var botRightFar =  inverseMat * simd_float4( 1,-1, 1-test, 1)
+        var botRightNear = inverseMat * simd_float4( 1,-1, 0, 1)
+    
+        topLeftFar   /= topLeftFar.w
+        topLeftNear  /= topLeftNear.w
+        topRightFar  /= topRightFar.w
+        topRightNear /= topRightNear.w
+        botLeftFar   /= botLeftFar.w
+        botLeftNear  /= botLeftNear.w
+        botRightFar  /= botRightFar.w
+        botRightNear /= botRightNear.w
+        
+        let tlf = Float3(topLeftFar.x, topLeftFar.y, topLeftFar.z)
+        let tln = Float3(topLeftNear.x, topLeftNear.y, topLeftNear.z)
+        let trf = Float3(topRightFar.x, topRightFar.y, topRightFar.z)
+        let trn = Float3(topRightNear.x, topRightNear.y, topRightNear.z)
+        let blf = Float3(botLeftFar.x, botLeftFar.y, botLeftFar.z)
+        let bln = Float3(botLeftNear.x, botLeftNear.y, botLeftNear.z)
+        let brf = Float3(botRightFar.x, botRightFar.y, botRightFar.z)
+        let brn = Float3(botRightNear.x, botRightNear.y, botRightNear.z)
+        
+        frustumCornersBuffer[ 0] = tlf
+        frustumCornersBuffer[ 1] = trf
+        frustumCornersBuffer[ 2] = trn
+        frustumCornersBuffer[ 3] = brn
+        frustumCornersBuffer[ 4] = brf
+        frustumCornersBuffer[ 5] = blf
+        frustumCornersBuffer[ 6] = bln
+        frustumCornersBuffer[ 7] = tln
+        frustumCornersBuffer[ 8] = tlf
+        frustumCornersBuffer[ 9] = blf
+        frustumCornersBuffer[10] = bln
+        frustumCornersBuffer[11] = brn
+        frustumCornersBuffer[12] = brf
+        frustumCornersBuffer[13] = trf
+        frustumCornersBuffer[14] = trn
+        frustumCornersBuffer[15] = tln
+        frustumCornersBuffer[16] = tlf
+    }
 }
 
 // MARK: - Initialization Functions
@@ -525,6 +636,7 @@ private extension ScanRenderer {
             viewshedCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
             visualCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
             lightUniformsBuffer.append(.init(device: device, count: 1, index: kLightUniforms.rawValue))
+            sceneUniformsBuffer.append(.init(device: device, count: 1, index: kSceneUniforms.rawValue))
         }
         
         // Load all the shader files with a metal file extension in the project
@@ -535,6 +647,8 @@ private extension ScanRenderer {
         makeFloat1DTexturePipelineState(library: defaultLibrary)
         makeParticleBlendedPipelineState(library: defaultLibrary)
         makeFilterUnprojectionPipelineState(library: defaultLibrary)
+        makePathPipelineState(library: defaultLibrary)
+        makeDeviceTexturePipelineState(library: defaultLibrary)
         makeRelaxedDepthState()
         makeFullDepthState()
         
@@ -604,7 +718,7 @@ private extension ScanRenderer {
         do {
             try capturedImagePipelineState = device.makeRenderPipelineState(descriptor: descriptor)
         } catch let error {
-            print("Failed to created captured image pipeline state, error \(error)")
+            print("Failed to create captured image pipeline state, error \(error)")
         }
     }
     
@@ -626,7 +740,7 @@ private extension ScanRenderer {
         do {
             try confidencePipelineState = device.makeRenderPipelineState(descriptor: descriptor)
         } catch let error {
-            print("Failed to created captured image pipeline state, error \(error)")
+            print("Failed to create confidence pipeline state, error \(error)")
         }
     }
     
@@ -648,7 +762,7 @@ private extension ScanRenderer {
         do {
             try float1DTexturePipelineState = device.makeRenderPipelineState(descriptor: descriptor)
         } catch let error {
-            print("Failed to created captured image pipeline state, error \(error)")
+            print("Failed to create Float1DTexture pipeline state, error \(error)")
         }
     }
     
@@ -675,7 +789,7 @@ private extension ScanRenderer {
         do {
             try particleBlendedPipelineState = device.makeRenderPipelineState(descriptor: descriptor)
         } catch let error {
-            print("Failed to created captured image pipeline state, error \(error)")
+            print("Failed to create blended particle pipeline state, error \(error)")
         }
     }
     
@@ -697,7 +811,56 @@ private extension ScanRenderer {
         do {
             try unprojectPipelineState = device.makeRenderPipelineState(descriptor: descriptor)
         } catch let error {
-            print("Failed to created captured image pipeline state, error \(error)")
+            print("Failed to create filter unprojection pipeline state, error \(error)")
+        }
+    }
+    
+    func makePathPipelineState(library: MTLLibrary) {
+        
+        guard let vertexFunction = library.makeFunction(name: "pathVertex"),
+            let fragmentFunction = library.makeFunction(name: "pathFragment") else {
+                print("something went wrong while making path shader functions")
+                return
+        }
+        
+        let descriptor = MTLRenderPipelineDescriptor()
+        descriptor.vertexFunction = vertexFunction
+        descriptor.fragmentFunction = fragmentFunction
+        descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
+        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        
+        do {
+            try pathPipelineState = device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            print("Failed to create path pipeline state, error \(error)")
+        }
+    }
+    
+    func makeDeviceTexturePipelineState(library: MTLLibrary) {
+        
+        guard let vertexFunction = library.makeFunction(name: "floatingTextureVertex"),
+            let fragmentFunction = library.makeFunction(name: "floatingTextureFragment") else {
+                print("something went wrong while making device texture shader functions")
+                return
+        }
+        
+        let descriptor = MTLRenderPipelineDescriptor()
+        descriptor.vertexFunction = vertexFunction
+        descriptor.fragmentFunction = fragmentFunction
+        descriptor.colorAttachments[0].pixelFormat = renderDestination.colorPixelFormat
+        descriptor.depthAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        descriptor.stencilAttachmentPixelFormat = renderDestination.depthStencilPixelFormat
+        // enable blending here to enable transparency
+        descriptor.colorAttachments[0].isBlendingEnabled = true
+        descriptor.colorAttachments[0].sourceRGBBlendFactor = .sourceAlpha
+        descriptor.colorAttachments[0].destinationRGBBlendFactor = .oneMinusSourceAlpha
+        descriptor.colorAttachments[0].destinationAlphaBlendFactor = .oneMinusSourceAlpha
+        
+        do {
+            try floatingTexturePipelineState = device.makeRenderPipelineState(descriptor: descriptor)
+        } catch let error {
+            print("Failed to create floating texture pipeline state, error \(error)")
         }
     }
     

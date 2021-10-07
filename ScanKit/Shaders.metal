@@ -23,6 +23,11 @@ typedef struct {
     float2 texCoord;
 } ImageInOut;
 
+typedef struct {
+    float4 position [[position]];
+    float4 color;
+} DevicePathVertex;
+
 
 typedef struct {
     float4 position [[position]];
@@ -38,6 +43,7 @@ constant float4x4 ycbcrToRGBTransform = float4x4(
     float4(+1.4020f, -0.7141f, +0.0000f, +0.0000f),
     float4(-0.7010f, +0.5291f, -0.8860f, +1.0000f)
 );
+constant float2 viewTexCoords[] = { float2(0, 0), float2(0, 1), float2(1, 0), float2(1, 1) };
 
 // Retrieves the world position of a specified camera point with depth
 static simd_float4 worldPoint(simd_float2 cameraPoint, float depth, matrix_float3x3 cameraIntrinsicsInversed, matrix_float4x4 localToWorld) {
@@ -295,4 +301,52 @@ fragment float4 particleFragment(ParticleInOut in [[stage_in]],
     //in.color.a = (1- distSquared * 4) * in.color.a; // brighter in center
     //return in.color;
     
+}
+
+// MARK: - Plane Shaders
+
+vertex ImageInOut floatingTextureVertex(uint vertexID [[vertex_id]],
+                                        constant SceneUniforms &uniforms [[buffer(kSceneUniforms)]],
+                                        constant float4 *vertices [[buffer(kTextureCornersBuffer)]],
+                                        constant bool &verticesWithARCamCoordinates [[buffer(kFreeBufferIndex+0)]]) {
+    const float3 texCoord = float3(viewTexCoords[vertexID], 1); // texture coordinate
+    
+    float4x4 transformation = uniforms.viewProjectionMatrix;
+    if(verticesWithARCamCoordinates){ // if true, convert to global coordinates first
+        transformation = transformation * uniforms.arCamViewMatrixInversed;
+    }
+    
+    ImageInOut out;
+    out.position = transformation * vertices[vertexID];
+    out.texCoord = texCoord.xy;
+    
+    return out;
+}
+
+fragment float4 floatingTextureFragment(ImageInOut in [[stage_in]],
+                                        constant float &alpha [[buffer(kFreeBufferIndex)]],
+                                        texture2d<float, access::sample> texture [[texture(0)]] ) {
+    float3 color = texture.sample(colorSampler, in.texCoord.xy).rgb;
+    return float4(color, alpha);
+}
+
+// MARK: - Path Shaders
+
+vertex DevicePathVertex pathVertex(uint vertexID [[vertex_id]],
+                                   constant float3 *positions [[buffer(kDevicePath)]],
+                                   constant PointCloudUniforms &uniforms [[buffer(kPointCloudUniforms)]]) {
+    // get point data
+    const auto position = positions[vertexID];
+    float4 projectedPosition = uniforms.projectionMatrix * uniforms.viewMatrix * float4(position, 1.0);
+    projectedPosition /= projectedPosition.w;
+    
+    DevicePathVertex out;
+    out.position = projectedPosition;
+    out.color = float4(1,0,0,0.5);
+    
+    return out;
+}
+
+fragment float4 pathFragment(DevicePathVertex in [[stage_in]]) {
+    return in.color;
 }

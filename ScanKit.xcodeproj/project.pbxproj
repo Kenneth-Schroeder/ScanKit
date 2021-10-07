@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9F30F00026F8B937007900C3 /* libLASlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F30EFFF26F8B8FF007900C3 /* libLASlib.a */; };
 		9F30F00326F8BE6B007900C3 /* LASWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9F30F00226F8BE6B007900C3 /* LASWrapper.mm */; };
+		9F53670B270EFDD5004CA874 /* ipad_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 9F53670A270EFDD5004CA874 /* ipad_back.png */; };
 		9F79BB3726C2E49B00C5654F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3626C2E49B00C5654F /* AppDelegate.swift */; };
 		9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9F79BB3826C2E49B00C5654F /* Shaders.metal */; };
 		9F79BB4126C2E49B00C5654F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F79BB3F26C2E49B00C5654F /* Main.storyboard */; };
@@ -40,6 +41,7 @@
 		9F30EFFF26F8B8FF007900C3 /* libLASlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLASlib.a; path = LAS/lib/LASlib/libLASlib.a; sourceTree = "<group>"; };
 		9F30F00126F8BE35007900C3 /* LASWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LASWrapper.h; sourceTree = "<group>"; };
 		9F30F00226F8BE6B007900C3 /* LASWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LASWrapper.mm; sourceTree = "<group>"; };
+		9F53670A270EFDD5004CA874 /* ipad_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_back.png; sourceTree = "<group>"; };
 		9F79BB3326C2E49B00C5654F /* ScanKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScanKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F79BB3626C2E49B00C5654F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9F79BB3826C2E49B00C5654F /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				9FFDF85926C82DB1001B6016 /* ARManager.swift */,
 				9FFDF85D26CC32F7001B6016 /* ParticlesManager.swift */,
 				9FD5F6C326D249CA00A45B31 /* RawDataCollector.swift */,
+				9F53670A270EFDD5004CA874 /* ipad_back.png */,
 			);
 			path = ScanKit;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 			files = (
 				9F79BB4626C2E49D00C5654F /* LaunchScreen.storyboard in Resources */,
 				9F79BB4326C2E49D00C5654F /* Assets.xcassets in Resources */,
+				9F53670B270EFDD5004CA874 /* ipad_back.png in Resources */,
 				9F79BB4126C2E49B00C5654F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
