@@ -14,6 +14,7 @@ struct AboutSUIV: View {
                 List {
                     Section(header: Text("Usage")) {
                         Text("...")
+                        // FILE FORMATTING JSON
                         //Image("fall-leaves").resizable()
                         //                    .scaledToFit()
                     }

@@ -124,6 +124,7 @@ class VideoWriter: CollectionWriter {
     public func writeBufferToFile() {
         precondition(videoWriter != nil, "Call start() to initialize the writer")
         
+        print("ENTERING WRITE")
         if frameCounter == 0 {
             self.delegate!.fileWritten() // tell delegate that we are done here
             return

@@ -46,12 +46,14 @@ class SetupVC: UIViewController {
         
         // Adjust label text size according to device size
         let screenWidth = view.frame.width
-        //for labl in titleLabels {
-        //    labl.font = UIFont(name: "Geeza Pro Bold", size: screenWidth / 40.0)
-        //}
-        //for labl in descriptionLabels {
-        //    labl.font = UIFont(name: "Geeza Pro", size: screenWidth / 50.0)
-        //}
+        if screenWidth > 500 {
+            for labl in titleLabels {
+                labl.font = UIFont(name: "Geeza Pro Bold", size: 24)
+            }
+            for labl in descriptionLabels {
+                labl.font = UIFont(name: "Geeza Pro", size: 20)
+            }
+        }
         mainTitleLabel.font = UIFont(name: "Apple SD Gothic Neo Bold", size: screenWidth / 5.0)
     }
     

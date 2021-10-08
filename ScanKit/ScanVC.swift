@@ -63,7 +63,7 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
         underlayControl.selectedSegmentIndex = ScanConfig.underlayIndex
         viewControl.selectedSegmentIndex = ScanConfig.viewIndex
         if ScanConfig.viewshedActive {
-            viewshedButton.backgroundColor = UIColorFromHex(0xEDD9A3)
+            viewshedButton.backgroundColor = UIColor(named: "Occa")
         } else {
             viewshedButton.backgroundColor = .darkGray
         }
@@ -81,7 +81,7 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
         view.addGestureRecognizer(tapGesture)
         
         self.memoryBarTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
-            self.updateMemoryBarAskContinue()
+            let _ = self.updateMemoryBarAskContinue()
         })
     }
     
@@ -115,6 +115,8 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
             recordButton.backgroundColor = UIColor.green
         }
         ScanConfig.isRecording = false
+        
+        // TODO clean up folder if nothing recorded
         
         // Pause the view's session
         ar_session.pause()
@@ -171,14 +173,6 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
 // MARK: - UI Methods
 
 extension ScanVC {
-    func UIColorFromHex(_ rgbValue: Int) -> UIColor! {
-        return UIColor(
-            red: CGFloat((Float((rgbValue & 0xff0000) >> 16)) / 255.0),
-            green: CGFloat((Float((rgbValue & 0x00ff00) >> 8)) / 255.0),
-            blue: CGFloat((Float((rgbValue & 0x0000ff) >> 0)) / 255.0),
-            alpha: 1.0)
-    }
-    
     @IBAction func underlayControlChanged(_ sender: UISegmentedControl) {
         ScanConfig.underlayIndex = sender.selectedSegmentIndex
     }
@@ -197,7 +191,7 @@ extension ScanVC {
     @IBAction func viewshed_button_pressed(_ sender: RoundedButton) {
         ScanConfig.viewshedActive = !ScanConfig.viewshedActive
         if ScanConfig.viewshedActive {
-            sender.backgroundColor = UIColorFromHex(0xEDD9A3)
+            sender.backgroundColor = UIColor(named: "Occa")
         } else {
             sender.backgroundColor = .darkGray
         }
@@ -205,7 +199,6 @@ extension ScanVC {
     
     // https://stackoverflow.com/questions/27207278/how-to-turn-flashlight-on-and-off-in-swift
     @IBAction func torch_button_pressed(_ sender: RoundedButton) {
-        
         guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
         guard device.hasTorch else { return }
 
@@ -218,7 +211,7 @@ extension ScanVC {
             } else {
                 do {
                     try device.setTorchModeOn(level: 1.0)
-                    sender.backgroundColor = UIColorFromHex(0xEDD9A3)
+                    sender.backgroundColor = UIColor(named: "Occa")
                 } catch {
                     print(error)
                 }
@@ -266,6 +259,10 @@ extension ScanVC {
         } else {
             beginRecording()
         }
+    }
+    
+    @IBAction func back_button_pressed(_ sender: RoundedButton) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Progress indicator

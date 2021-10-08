@@ -1,376 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="HbA-Hq-O1C">
-    <device id="retina6_0" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="utf-Hb-hmz">
+    <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--SetupVC-->
-        <scene sceneID="bBH-cq-50P">
-            <objects>
-                <viewController storyboardIdentifier="main_menu_vc" id="VI7-fq-9kc" customClass="SetupVC" customModule="ScanKit" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8Zy-y8-9hz">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ScanKit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YSf-za-DzA">
-                                <rect key="frame" x="94.666666666666671" y="98" width="200.66666666666663" height="98.666666666666686"/>
-                                <fontDescription key="fontDescription" name="AppleSDGothicNeo-Bold" family="Apple SD Gothic Neo" pointSize="60"/>
-                                <color key="textColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="gKH-Rc-lj4">
-                                <rect key="frame" x="30" y="206.66666666666666" width="330" height="40"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="pxY-cR-RUf"/>
-                                </constraints>
-                                <color key="textColor" red="0.1162627914" green="0.051700711660000002" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="continue" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="name"/>
-                                <connections>
-                                    <action selector="project_name_value_changed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="nTk-O7-at2"/>
-                                </connections>
-                            </textField>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="cLE-5K-ztA">
-                                <rect key="frame" x="30" y="266.66666666666674" width="330" height="363.33333333333326"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jox-ca-p7F">
-                                        <rect key="frame" x="0.0" y="0.0" width="330" height="49.333333333333336"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="KjO-lj-tea">
-                                                <rect key="frame" x="0.0" y="0.0" width="281" height="49.333333333333336"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Point Cloud" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vaa-gD-DzS" userLabel="Point Cloud Switch Title">
-                                                        <rect key="frame" x="0.0" y="0.0" width="281" height="19.666666666666668"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro-Bold" family="Geeza Pro" pointSize="16"/>
-                                                        <color key="textColor" red="0.1162627914" green="0.051700711660000002" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="On-the-fly generation of a colored point cloud, saved to documents folder in the .las file format." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQf-VL-Cgo" userLabel="Point Cloud Switch Description">
-                                                        <rect key="frame" x="0.0" y="19.666666666666629" width="281" height="29.666666666666671"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro" family="Geeza Pro" pointSize="12"/>
-                                                        <color key="textColor" red="0.1162627914" green="0.051700711660000002" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="Point Cloud Switch" translatesAutoresizingMaskIntoConstraints="NO" id="flq-kZ-bEa" userLabel="Point Cloud Switch">
-                                                <rect key="frame" x="281" y="0.0" width="51" height="49.333333333333336"/>
-                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <connections>
-                                                    <action selector="pointCloudSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="mcB-yB-9Ld"/>
-                                                </connections>
-                                            </switch>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qv2-CZ-60S">
-                                        <rect key="frame" x="0.0" y="52.333333333333314" width="330" height="49.333333333333343"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="qfc-WY-08W">
-                                                <rect key="frame" x="0.0" y="0.0" width="281" height="49.333333333333336"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RGB Video" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X5P-3v-DhA" userLabel="RGB Switch Title">
-                                                        <rect key="frame" x="0.0" y="0.0" width="281" height="19.666666666666668"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro-Bold" family="Geeza Pro" pointSize="16"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all images captured during the ARSession as video and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oNX-yH-FJS" userLabel="RGB Switch Description">
-                                                        <rect key="frame" x="0.0" y="19.666666666666686" width="281" height="29.666666666666671"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro" family="Geeza Pro" pointSize="12"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="RGB Switch" translatesAutoresizingMaskIntoConstraints="NO" id="L8W-tQ-cQj" userLabel="RGB Switch">
-                                                <rect key="frame" x="281" y="0.0" width="51" height="49.333333333333336"/>
-                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <connections>
-                                                    <action selector="rgbSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="9IA-3G-B2m"/>
-                                                </connections>
-                                            </switch>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="07K-6V-0Bf">
-                                        <rect key="frame" x="0.0" y="104.66666666666661" width="330" height="49.333333333333329"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="U3k-i5-s9f">
-                                                <rect key="frame" x="0.0" y="0.0" width="180" height="49.333333333333336"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RGB Quality" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lX7-KS-YZ8" userLabel="RGB Quality Title">
-                                                        <rect key="frame" x="0.0" y="0.0" width="180" height="19.666666666666668"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro-Bold" family="Geeza Pro" pointSize="16"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adjust the JPEG compression quality of the saved RGB video." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kyb-9g-dEA" userLabel="RGB Quality Description">
-                                                        <rect key="frame" x="0.0" y="19.666666666666686" width="180" height="29.666666666666671"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro" family="Geeza Pro" pointSize="12"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Eg3-Yn-0HC" userLabel="RGB Quality Slider">
-                                                <rect key="frame" x="178" y="0.0" width="154" height="50.333333333333336"/>
-                                                <color key="tintColor" red="0.58971613649999999" green="0.22810339930000001" blue="0.60558938979999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="150" id="YZP-AW-BHi"/>
-                                                </constraints>
-                                                <connections>
-                                                    <action selector="rgbQualitySlider_changed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="5eM-cn-6yF"/>
-                                                </connections>
-                                            </slider>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rxq-ap-Smq">
-                                        <rect key="frame" x="0.0" y="157" width="330" height="49.333333333333343"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Spk-im-RaR">
-                                                <rect key="frame" x="0.0" y="0.0" width="281" height="49.333333333333336"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Depth Data" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xQy-JR-7SQ" userLabel="Depth Data Title">
-                                                        <rect key="frame" x="0.0" y="0.0" width="281" height="19.666666666666668"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro-Bold" family="Geeza Pro" pointSize="16"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all depth data captured during the ARSession and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zAm-Dw-Y9M" userLabel="Depth Data Description">
-                                                        <rect key="frame" x="0.0" y="19.666666666666629" width="281" height="29.666666666666671"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro" family="Geeza Pro" pointSize="12"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="Depth Switch" translatesAutoresizingMaskIntoConstraints="NO" id="NIJ-oy-d4F" userLabel="Depth Switch">
-                                                <rect key="frame" x="281" y="0.0" width="51" height="49.333333333333336"/>
-                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <connections>
-                                                    <action selector="depthSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="MCV-v5-p9m"/>
-                                                </connections>
-                                            </switch>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z7R-8f-j37">
-                                        <rect key="frame" x="0.0" y="209.33333333333331" width="330" height="49.333333333333314"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="RnA-x5-9hy">
-                                                <rect key="frame" x="0.0" y="0.0" width="281" height="49.333333333333336"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confidence Data" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vOe-hy-SJB" userLabel="Confidence Data Title">
-                                                        <rect key="frame" x="0.0" y="0.0" width="281" height="19.666666666666668"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro-Bold" family="Geeza Pro" pointSize="16"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record all confidence data captured during the ARSession and save it to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mwc-RZ-als" userLabel="Confidence Data Description">
-                                                        <rect key="frame" x="0.0" y="19.666666666666686" width="281" height="29.666666666666671"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro" family="Geeza Pro" pointSize="12"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="Confidence Switch" translatesAutoresizingMaskIntoConstraints="NO" id="RJk-0v-Pxt" userLabel="Confidence Switch">
-                                                <rect key="frame" x="281" y="0.0" width="51" height="49.333333333333336"/>
-                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <connections>
-                                                    <action selector="confidenceSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="YrN-6W-7ai"/>
-                                                </connections>
-                                            </switch>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vGp-B4-QcT">
-                                        <rect key="frame" x="0.0" y="261.66666666666669" width="330" height="49.333333333333314"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3af-2s-om6">
-                                                <rect key="frame" x="0.0" y="0.0" width="281" height="49.333333333333336"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ARWorldMap Data" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v11-CQ-FXy" userLabel="WorldMap Title">
-                                                        <rect key="frame" x="0.0" y="0.0" width="281" height="19.666666666666668"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro-Bold" family="Geeza Pro" pointSize="16"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Periodically save all of the ARWorldMap data to a JSON file at the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHq-7W-GqV" userLabel="WorldMap Description">
-                                                        <rect key="frame" x="0.0" y="19.666666666666629" width="281" height="29.666666666666671"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro" family="Geeza Pro" pointSize="12"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="WorldMap Switch" translatesAutoresizingMaskIntoConstraints="NO" id="TNS-di-MnB" userLabel="WorldMap Switch">
-                                                <rect key="frame" x="281" y="0.0" width="51" height="49.333333333333336"/>
-                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <connections>
-                                                    <action selector="worldmapSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="at5-BQ-j8v"/>
-                                                </connections>
-                                            </switch>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gz1-Tb-8bp">
-                                        <rect key="frame" x="0.0" y="313.99999999999994" width="330" height="49.333333333333314"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iug-3n-I7X">
-                                                <rect key="frame" x="0.0" y="0.0" width="281" height="49.333333333333336"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Code Data" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lAS-fq-a0c" userLabel="QR Code Title">
-                                                        <rect key="frame" x="0.0" y="0.0" width="281" height="19.666666666666668"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro-Bold" family="Geeza Pro" pointSize="16"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recognize QR Codes and save their location and message in JSON format to the specified location." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R22-ds-Gyt" userLabel="QR Code Description">
-                                                        <rect key="frame" x="0.0" y="19.666666666666742" width="281" height="29.666666666666671"/>
-                                                        <fontDescription key="fontDescription" name="GeezaPro" family="Geeza Pro" pointSize="12"/>
-                                                        <color key="textColor" red="0.11626279142854626" green="0.051700711656969205" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </stackView>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" title="QRCode Switch" translatesAutoresizingMaskIntoConstraints="NO" id="JVp-LG-wyF" userLabel="QRCode Switch">
-                                                <rect key="frame" x="281" y="0.0" width="51" height="49.333333333333336"/>
-                                                <color key="onTintColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <connections>
-                                                    <action selector="qrCodeSwitch_toggled:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="Mx1-Rs-nQT"/>
-                                                </connections>
-                                            </switch>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                            </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LVv-Sb-ndL" userLabel="ProjectsButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="200" y="750" width="160" height="40"/>
-                                <color key="backgroundColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="Tqs-6N-Nk3"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="Projects">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="projectsButton_pressed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="PCT-gu-fOI"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RtP-jx-gFT" userLabel="ScanButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="30" y="700" width="330" height="40"/>
-                                <color key="backgroundColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="0dS-fN-51R"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="Scan">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="scan_button_pressed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="PGE-sR-CdE"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKt-xy-gTV" userLabel="AboutButton" customClass="TileButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="30" y="750" width="160" height="40"/>
-                                <color key="backgroundColor" red="0.53938412670000002" green="0.210760951" blue="0.60878789420000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="ZXu-4R-8lt"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="About">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="about_button_pressed:" destination="VI7-fq-9kc" eventType="primaryActionTriggered" id="2e2-5n-EyJ"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Estimated Data Rate:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SR0-wl-WnL" userLabel="DataRateLabel">
-                                <rect key="frame" x="30" y="650" width="330" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="4oM-45-Crl"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="GeezaPro-Bold" family="Geeza Pro" pointSize="18"/>
-                                <color key="textColor" red="0.1162627914" green="0.051700711660000002" blue="0.54892712830000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="hEp-gi-cNU"/>
-                        <color key="backgroundColor" red="0.91576826570000003" green="0.88451762793551858" blue="0.83009546682378765" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                        <constraints>
-                            <constraint firstItem="SR0-wl-WnL" firstAttribute="top" secondItem="cLE-5K-ztA" secondAttribute="bottom" constant="20" id="00d-YV-6pW"/>
-                            <constraint firstItem="hEp-gi-cNU" firstAttribute="bottom" secondItem="LVv-Sb-ndL" secondAttribute="bottom" constant="20" id="0AL-lK-acE"/>
-                            <constraint firstItem="RtP-jx-gFT" firstAttribute="top" secondItem="SR0-wl-WnL" secondAttribute="bottom" constant="20" id="0eH-gN-9hF"/>
-                            <constraint firstItem="WKt-xy-gTV" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="6po-Pz-FH2"/>
-                            <constraint firstItem="YSf-za-DzA" firstAttribute="top" secondItem="hEp-gi-cNU" secondAttribute="top" constant="10" id="CsW-Na-VPC"/>
-                            <constraint firstItem="cLE-5K-ztA" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="EZe-Sr-RnJ"/>
-                            <constraint firstItem="SR0-wl-WnL" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="FzK-5J-FMA"/>
-                            <constraint firstItem="hEp-gi-cNU" firstAttribute="bottom" secondItem="WKt-xy-gTV" secondAttribute="bottom" constant="20" id="G2i-bN-daB"/>
-                            <constraint firstItem="cLE-5K-ztA" firstAttribute="centerX" secondItem="8Zy-y8-9hz" secondAttribute="centerX" id="QP9-Hf-2fu"/>
-                            <constraint firstItem="RtP-jx-gFT" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="SJ6-3h-ItW"/>
-                            <constraint firstItem="LVv-Sb-ndL" firstAttribute="width" secondItem="WKt-xy-gTV" secondAttribute="width" id="UAB-1a-Ju5"/>
-                            <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="LVv-Sb-ndL" secondAttribute="trailing" constant="30" id="ZK5-dP-8ry"/>
-                            <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="gKH-Rc-lj4" secondAttribute="trailing" constant="30" id="cDP-Sn-2JW"/>
-                            <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="cLE-5K-ztA" secondAttribute="trailing" constant="30" id="fPK-aF-6gh"/>
-                            <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="SR0-wl-WnL" secondAttribute="trailing" constant="30" id="hdQ-UO-fMh"/>
-                            <constraint firstItem="hEp-gi-cNU" firstAttribute="trailing" secondItem="RtP-jx-gFT" secondAttribute="trailing" constant="30" id="jX8-8H-E7c"/>
-                            <constraint firstItem="LVv-Sb-ndL" firstAttribute="leading" secondItem="WKt-xy-gTV" secondAttribute="trailing" constant="10" id="oML-fU-W2J"/>
-                            <constraint firstItem="WKt-xy-gTV" firstAttribute="top" secondItem="RtP-jx-gFT" secondAttribute="bottom" constant="10" id="rWC-DQ-Epl"/>
-                            <constraint firstItem="gKH-Rc-lj4" firstAttribute="top" secondItem="YSf-za-DzA" secondAttribute="bottom" constant="10" id="tKI-VU-geZ"/>
-                            <constraint firstItem="gKH-Rc-lj4" firstAttribute="leading" secondItem="hEp-gi-cNU" secondAttribute="leading" constant="30" id="w6F-EX-a8w"/>
-                            <constraint firstItem="YSf-za-DzA" firstAttribute="centerX" secondItem="8Zy-y8-9hz" secondAttribute="centerX" id="z9U-DB-WAD"/>
-                            <constraint firstItem="cLE-5K-ztA" firstAttribute="top" secondItem="gKH-Rc-lj4" secondAttribute="bottom" constant="20" id="zJI-uQ-p9a"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="2hv-1h-yKO"/>
-                    <connections>
-                        <outlet property="aboutButton" destination="WKt-xy-gTV" id="LvT-2P-Pil"/>
-                        <outlet property="confidenceSwitch" destination="RJk-0v-Pxt" id="7od-Zp-jwV"/>
-                        <outlet property="dataRateLabel" destination="SR0-wl-WnL" id="9rZ-mj-xTA"/>
-                        <outlet property="depthSwitch" destination="NIJ-oy-d4F" id="4Wc-QQ-RT1"/>
-                        <outlet property="mainTitleLabel" destination="YSf-za-DzA" id="RwR-fV-SbM"/>
-                        <outlet property="pointCloudSwitch" destination="flq-kZ-bEa" id="7DK-tj-kZw"/>
-                        <outlet property="projecstButton" destination="LVv-Sb-ndL" id="Ku1-uP-5gb"/>
-                        <outlet property="projectNameField" destination="gKH-Rc-lj4" id="hWa-rN-p8V"/>
-                        <outlet property="qrCodeSwitch" destination="JVp-LG-wyF" id="7m4-6M-GHH"/>
-                        <outlet property="rgbQualitySlider" destination="Eg3-Yn-0HC" id="tv3-6A-Y3a"/>
-                        <outlet property="rgbSwitch" destination="L8W-tQ-cQj" id="XGM-pt-SKs"/>
-                        <outlet property="scanButton" destination="RtP-jx-gFT" id="gSG-F8-hdY"/>
-                        <outlet property="worldmapSwitch" destination="TNS-di-MnB" id="NM6-RN-7O2"/>
-                        <outletCollection property="descriptionLabels" destination="aQf-VL-Cgo" collectionClass="NSMutableArray" id="PGV-Yq-NRO"/>
-                        <outletCollection property="descriptionLabels" destination="oNX-yH-FJS" collectionClass="NSMutableArray" id="2dG-b1-iwz"/>
-                        <outletCollection property="descriptionLabels" destination="Kyb-9g-dEA" collectionClass="NSMutableArray" id="qei-vS-ZCk"/>
-                        <outletCollection property="descriptionLabels" destination="zAm-Dw-Y9M" collectionClass="NSMutableArray" id="qoH-Fu-izh"/>
-                        <outletCollection property="descriptionLabels" destination="mwc-RZ-als" collectionClass="NSMutableArray" id="CQO-oY-qLx"/>
-                        <outletCollection property="descriptionLabels" destination="KHq-7W-GqV" collectionClass="NSMutableArray" id="Y8A-td-cgk"/>
-                        <outletCollection property="descriptionLabels" destination="R22-ds-Gyt" collectionClass="NSMutableArray" id="rDs-pw-rkh"/>
-                        <outletCollection property="titleLabels" destination="Vaa-gD-DzS" collectionClass="NSMutableArray" id="IQc-g2-gaz"/>
-                        <outletCollection property="titleLabels" destination="X5P-3v-DhA" collectionClass="NSMutableArray" id="1G6-iz-yDb"/>
-                        <outletCollection property="titleLabels" destination="lX7-KS-YZ8" collectionClass="NSMutableArray" id="Aes-Ya-24D"/>
-                        <outletCollection property="titleLabels" destination="xQy-JR-7SQ" collectionClass="NSMutableArray" id="vnS-OO-CuR"/>
-                        <outletCollection property="titleLabels" destination="vOe-hy-SJB" collectionClass="NSMutableArray" id="5ZF-x9-7tA"/>
-                        <outletCollection property="titleLabels" destination="v11-CQ-FXy" collectionClass="NSMutableArray" id="jZU-IU-ws2"/>
-                        <outletCollection property="titleLabels" destination="lAS-fq-a0c" collectionClass="NSMutableArray" id="Bq6-iS-qga"/>
-                        <outletCollection property="titleLabels" destination="SR0-wl-WnL" collectionClass="NSMutableArray" id="FGc-B4-nfv"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6g7-EG-MiG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1389" y="94"/>
-        </scene>
         <!--ScanVC-->
         <scene sceneID="x5d-eS-2Nd">
             <objects>
                 <viewController storyboardIdentifier="recording_vc" id="BX7-ox-Ehg" customClass="ScanVC" customModule="ScanKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="VGZ-Eb-a9U" userLabel="MTKView" customClass="MTKView">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8tj-Za-mjd">
+                                <rect key="frame" x="30" y="54" width="40" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="K2i-5L-MGE"/>
+                                    <constraint firstAttribute="width" constant="40" id="rcU-eJ-cDL"/>
+                                </constraints>
+                                <color key="tintColor" name="Occa"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="chevron.backward.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="back_button_pressed:" destination="BX7-ox-Ehg" eventType="primaryActionTriggered" id="qPi-96-1KT"/>
+                                </connections>
+                            </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="wbY-xQ-XxG" userLabel="Underlay Control">
-                                <rect key="frame" x="72.666666666666686" y="755" width="245" height="32"/>
+                                <rect key="frame" x="294.5" y="1119" width="245" height="32"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <segments>
                                     <segment title="None"/>
@@ -378,13 +40,13 @@
                                     <segment title="Depth"/>
                                     <segment title="Confidence"/>
                                 </segments>
-                                <color key="selectedSegmentTintColor" red="0.91576826570000003" green="0.85329061750000001" blue="0.66431504490000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="selectedSegmentTintColor" name="Occa"/>
                                 <connections>
                                     <action selector="underlayControlChanged:" destination="BX7-ox-Ehg" eventType="valueChanged" id="VmL-Mq-Qf9"/>
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CkJ-aV-qaf" userLabel="ViewshedButton" customClass="RoundedButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="142.66666666666666" y="668" width="105" height="36"/>
+                                <rect key="frame" x="364.5" y="1032" width="105" height="36"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="  Viewshed  ">
@@ -395,7 +57,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N9f-Dw-1bl" userLabel="RecordButton" customClass="RecordButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="165" y="598" width="60" height="60"/>
+                                <rect key="frame" x="387" y="962" width="60" height="60"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="Upg-90-mFf"/>
@@ -406,26 +68,26 @@
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="veK-go-l8Z" userLabel="View Control">
-                                <rect key="frame" x="119.66666666666669" y="714" width="151" height="32"/>
+                                <rect key="frame" x="341.5" y="1078" width="151" height="32"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <segments>
                                     <segment title="1st P."/>
                                     <segment title="3rd P."/>
                                     <segment title="Bird"/>
                                 </segments>
-                                <color key="selectedSegmentTintColor" red="0.91576826570000003" green="0.85329061750000001" blue="0.66431504490000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="selectedSegmentTintColor" name="Occa"/>
                                 <connections>
                                     <action selector="viewControlChanged:" destination="BX7-ox-Ehg" eventType="primaryActionTriggered" id="72f-Hh-5Lj"/>
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UaX-HX-i6r" userLabel="TorchButton" customClass="RoundedButton" customModule="ScanKit" customModuleProvider="target">
-                                <rect key="frame" x="334" y="668" width="36" height="36"/>
+                                <rect key="frame" x="778" y="1032" width="36" height="36"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="36" id="Cot-sc-YNv"/>
                                     <constraint firstAttribute="width" constant="36" id="ZTV-hO-mZb"/>
                                 </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" name="Occa"/>
                                 <state key="normal" image="flashlight.off.fill" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -433,8 +95,8 @@
                                     <action selector="torch_button_pressed:" destination="BX7-ox-Ehg" eventType="primaryActionTriggered" id="3v4-ic-cLz"/>
                                 </connections>
                             </button>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="3EW-0y-o5R">
-                                <rect key="frame" x="30" y="796" width="330" height="4"/>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.050000000000000003" translatesAutoresizingMaskIntoConstraints="NO" id="3EW-0y-o5R">
+                                <rect key="frame" x="30" y="1160" width="774" height="4"/>
                                 <color key="progressTintColor" red="0.0" green="0.99997437000274658" blue="0.0" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
                             </progressView>
                         </subviews>
@@ -442,6 +104,7 @@
                         <constraints>
                             <constraint firstItem="wbY-xQ-XxG" firstAttribute="top" secondItem="veK-go-l8Z" secondAttribute="bottom" constant="10" id="0BL-3B-Ob3"/>
                             <constraint firstItem="wbY-xQ-XxG" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="1Uf-4p-b6j"/>
+                            <constraint firstItem="8tj-Za-mjd" firstAttribute="leading" secondItem="KBp-8n-9bq" secondAttribute="leading" constant="30" id="9wF-sP-Dnv"/>
                             <constraint firstItem="3EW-0y-o5R" firstAttribute="leading" secondItem="KBp-8n-9bq" secondAttribute="leading" constant="30" id="EL2-gc-3ye"/>
                             <constraint firstItem="N9f-Dw-1bl" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="K4s-hf-Ggq"/>
                             <constraint firstItem="CkJ-aV-qaf" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="Klu-wO-JNg"/>
@@ -449,6 +112,7 @@
                             <constraint firstItem="KBp-8n-9bq" firstAttribute="trailing" secondItem="3EW-0y-o5R" secondAttribute="trailing" constant="30" id="arh-eo-bop"/>
                             <constraint firstItem="3EW-0y-o5R" firstAttribute="top" secondItem="wbY-xQ-XxG" secondAttribute="bottom" constant="10" id="dCS-eA-GjV"/>
                             <constraint firstItem="veK-go-l8Z" firstAttribute="top" secondItem="CkJ-aV-qaf" secondAttribute="bottom" constant="10" id="dG9-O8-fV2"/>
+                            <constraint firstItem="8tj-Za-mjd" firstAttribute="top" secondItem="KBp-8n-9bq" secondAttribute="top" constant="30" id="hPK-ow-bLL"/>
                             <constraint firstItem="KBp-8n-9bq" firstAttribute="bottom" secondItem="3EW-0y-o5R" secondAttribute="bottom" constant="10" id="l99-gK-Jy1"/>
                             <constraint firstItem="KBp-8n-9bq" firstAttribute="trailing" secondItem="UaX-HX-i6r" secondAttribute="trailing" constant="20" id="psI-jG-cQJ"/>
                             <constraint firstItem="veK-go-l8Z" firstAttribute="centerX" secondItem="VGZ-Eb-a9U" secondAttribute="centerX" id="qoV-Li-CtH"/>
@@ -467,28 +131,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uLc-k7-ys6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-612" y="94"/>
+            <point key="canvasLocation" x="-1468.3453237410074" y="93.969849246231149"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="xCL-Na-DZq">
+        <!--Setup Hosting Controller-->
+        <scene sceneID="b4v-2k-xM8">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="HbA-Hq-O1C" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8Ae-eh-TbH">
-                        <rect key="frame" x="0.0" y="44" width="390" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="VI7-fq-9kc" kind="relationship" relationship="rootViewController" id="P7P-Ne-q2u"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hCO-aG-5PN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <hostingController id="utf-Hb-hmz" customClass="SetupHostingController" customModule="ScanKit" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gb0-o5-lm9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2165" y="94"/>
+            <point key="canvasLocation" x="-2099" y="94"/>
         </scene>
     </scenes>
     <resources>
+        <image name="chevron.backward.circle" catalog="system" width="128" height="121"/>
         <image name="flashlight.off.fill" catalog="system" width="76" height="128"/>
+        <namedColor name="Occa">
+            <color red="0.62713314788510099" green="0.52841599291335628" blue="0.24887131144609459" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

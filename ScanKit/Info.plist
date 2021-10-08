@@ -21,7 +21,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>ScanKit would like to access your camera for scanning.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>ScanKit would like to save your location at the beginning of each scan.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
@@ -50,5 +50,7 @@
 	</array>
 	<key>UISupportsDocumentBrowser</key>
 	<true/>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>
