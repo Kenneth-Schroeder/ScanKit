@@ -39,7 +39,7 @@ struct ProjectsSUIV: View { // SUIV = SwiftUI View
                 Spacer()
             }
             .navigationTitle("Projects")
-        }.navigationViewStyle(StackNavigationViewStyle()) // https://stackoverflow.com/questions/65316497/swiftui-navigationview-navigationbartitle-layoutconstraints-issue/65316745
+        }.navigationViewStyle(StackNavigationViewStyle()).accentColor(Color("Occa")) // https://stackoverflow.com/questions/65316497/swiftui-navigationview-navigationbartitle-layoutconstraints-issue/65316745
     }
 }
 

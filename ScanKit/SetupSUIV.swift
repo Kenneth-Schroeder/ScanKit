@@ -7,13 +7,12 @@
 
 import SwiftUI
 
+// https://stackoverflow.com/questions/58787180/how-to-change-width-of-divider-in-swiftui
 struct ThickDivider: View {
-    let color: Color = Color("Occa")
-    let height: CGFloat = 3
     var body: some View {
         Rectangle()
-            .fill(color)
-            .frame(height: height)
+            .fill(Color("Occa"))
+            .frame(height: 3)
     }
 }
 
