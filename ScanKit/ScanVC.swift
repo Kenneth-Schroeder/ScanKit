@@ -18,6 +18,7 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
     @IBOutlet weak var torchButton: RoundedButton!
     @IBOutlet weak var recordButton: RecordButton!
     @IBOutlet weak var memoryBar: UIProgressView!
+    @IBOutlet weak var backButton: UIButton!
     var memoryBarTimer = Timer()
     
     var ar_session: ARSession!
@@ -113,10 +114,13 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
             renderer.stopRecording(notify: self)
             showProgressRing()
             recordButton.backgroundColor = UIColor.green
+        } else {
+            if scanStart == nil,
+               let url = ScanConfig.url { // clean up folder if nothing recorded
+                try? FileManager.default.removeItem(at: url)
+            }
         }
         ScanConfig.isRecording = false
-        
-        // TODO clean up folder if nothing recorded
         
         // Pause the view's session
         ar_session.pause()
@@ -224,7 +228,7 @@ extension ScanVC {
     }
     
     func beginRecording() {
-        navigationItem.hidesBackButton = true
+        backButton.isEnabled = false
         scanLocation = locationManager.location
         scanStart = NSDate().timeIntervalSince1970
         recordButton.layer.backgroundColor = UIColor.red.cgColor
@@ -248,7 +252,7 @@ extension ScanVC {
         ar_manager.stopRecording(notify: self)
         renderer.stopRecording(notify: self)
         showProgressRing()
-        navigationItem.hidesBackButton = false
+        backButton.isEnabled = true
         recordButton.layer.backgroundColor = UIColor.green.cgColor
         ScanConfig.isRecording = false
     }

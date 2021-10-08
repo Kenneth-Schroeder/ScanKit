@@ -8,7 +8,7 @@
 import Foundation
 
 class ScanConfig {
-    static var url: URL?
+    static var url: URL? /// path to project folder in documents
     static var underlayIndex: Int = 0
     static var viewIndex: Int = 0
     static var viewshedActive: Bool = true

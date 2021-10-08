@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8tj-Za-mjd">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8tj-Za-mjd" userLabel="BackButton">
                                 <rect key="frame" x="30" y="54" width="40" height="40"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -121,6 +121,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="vxA-Mh-tKi"/>
                     <connections>
+                        <outlet property="backButton" destination="8tj-Za-mjd" id="1lh-RX-qm9"/>
                         <outlet property="memoryBar" destination="3EW-0y-o5R" id="wiN-xQ-rZH"/>
                         <outlet property="recordButton" destination="N9f-Dw-1bl" id="h74-Sf-BoE"/>
                         <outlet property="torchButton" destination="UaX-HX-i6r" id="36y-dR-DNe"/>
