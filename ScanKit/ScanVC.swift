@@ -299,7 +299,7 @@ extension ScanVC {
             Prog.update(value, in: self.view)
         }
         if value >= 1.0 || value.isNaN {
-            // usleep(600_000) // sleep mills to not break Prog
+            usleep(600_000) // sleep mills to not break Prog
             DispatchQueue.main.async {
                 Prog.end(in: self.view)
             }
