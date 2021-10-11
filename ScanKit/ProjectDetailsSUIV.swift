@@ -37,48 +37,6 @@ func getProjectsDirectory(_ projectName: String) -> URL { // returns your applic
     return documentsDirectory.appendingPathComponent(projectName)
 }
 
-func uploadSFPT(host: String, port: Int, user: String, pw: String, projectName: String, projectLocalUrl: URL, deleteLocal: Bool = false) {
-    //let deviceID = UIDevice.current.identifierForVendor!.uuidString
-    let sftpQueue = DispatchQueue(label: "sftp-queue", qos: .utility)
-    do {
-        let projectFiles = try FileManager.default.contentsOfDirectory(at: projectLocalUrl, includingPropertiesForKeys: nil)
-        sftpQueue.async {
-            let session = NMSSHSession.init(host: host, port: port, andUsername: user)
-            session.connect()
-            if session.isConnected {
-                session.authenticate(byPassword: pw)
-                if session.isAuthorized == true {
-                    let sftpsession = NMSFTP(session: session)
-                    
-                    sftpsession.connect()
-                    if sftpsession.isConnected {
-                        for filePath in projectFiles {
-                            let deviceDir = "upload/" + projectName
-                            if !sftpsession.directoryExists(atPath: deviceDir) {
-                                sftpsession.createDirectory(atPath: deviceDir)
-                            }
-                            sftpsession.writeFile(atPath: filePath.relativePath, toFileAtPath: deviceDir + "/" + filePath.lastPathComponent)
-                            
-                            print("Finished copying " + filePath.lastPathComponent + " to sftp server!")
-                            if deleteLocal {
-                                print("Deleting local copy of transfered file")
-                                do { try FileManager.default.removeItem(at: filePath) } catch { print("Error when trying to delete local file: \(error)") }
-                            }
-                        }
-                    }
-                }
-            }
-            else {
-                print("Couldn't connect to sftp server! Files not copied.")
-            }
-            session.disconnect()
-        }
-    } catch {
-        print(error)
-        return
-    }
-}
-
 struct ProjectDetailsSUIV: View {
     var projectName: String
     var metaDataP: ScanMetaDataPrintable
@@ -87,6 +45,10 @@ struct ProjectDetailsSUIV: View {
     @State private var sftpPort: Int?
     @State private var sftpUser: String = ""
     @State private var sftpPassword: String = ""
+    @State private var sftpProgress = 0.0
+    @State private var isUploading = false
+    @State private var isShowingFailure = false
+    
     
     init(projectName: String) {
         self.projectName = projectName
@@ -98,6 +60,65 @@ struct ProjectDetailsSUIV: View {
             self.dirSize = bcf.string(fromByteCount: Int64(size))
         } catch let error {
             print("Failed to calculate project directory size, error \(error)")
+        }
+    }
+    
+    func uploadSFPT(host: String, port: Int?, user: String, pw: String, projectName: String, projectLocalUrl: URL, deleteLocal: Bool = false) {
+        //let deviceID = UIDevice.current.identifierForVendor!.uuidString
+        let sftpQueue = DispatchQueue(label: "sftp-queue", qos: .utility)
+        do {
+            let projectFiles = try FileManager.default.contentsOfDirectory(at: projectLocalUrl, includingPropertiesForKeys: nil)
+            sftpQueue.async {
+                var session: NMSSHSession
+                if let p = port {
+                    session = NMSSHSession.init(host: host, port: p, andUsername: user)
+                } else {
+                    session = NMSSHSession.init(host: host, andUsername: user)
+                }
+                
+                session.connect()
+                if session.isConnected {
+                    session.authenticate(byPassword: pw)
+                    if session.isAuthorized == true {
+                        let sftpsession = NMSFTP(session: session)
+                        
+                        sftpsession.connect()
+                        if sftpsession.isConnected {
+                            self.isUploading = true
+                            for (idx, filePath) in projectFiles.enumerated() {
+                                let deviceDir = projectName
+                                if !sftpsession.directoryExists(atPath: deviceDir) {
+                                    print("trying to create folder")
+                                    sftpsession.createDirectory(atPath: deviceDir)
+                                }
+                                sftpsession.writeFile(atPath: filePath.relativePath, toFileAtPath: deviceDir + "/" + filePath.lastPathComponent)
+                                
+                                print("Finished copying " + filePath.lastPathComponent + " to sftp server!")
+                                if deleteLocal {
+                                    print("Deleting local copy of transfered file")
+                                    do { try FileManager.default.removeItem(at: filePath) } catch { print("Error when trying to delete local file: \(error)") }
+                                }
+                                
+                                self.sftpProgress = Double(idx+1) / Double(projectFiles.count)
+                            }
+                        } else {
+                            self.isShowingFailure = true
+                        }
+                    } else {
+                        self.isShowingFailure = true
+                    }
+                } else {
+                    print("Couldn't connect to sftp server! Files not copied.")
+                    self.isShowingFailure = true
+                }
+                session.disconnect()
+                self.isUploading = false
+            }
+        } catch {
+            print(error)
+            self.isShowingFailure = true
+            self.isUploading = false
+            return
         }
     }
     
@@ -205,8 +226,14 @@ struct ProjectDetailsSUIV: View {
                     }
                     HStack {
                         Spacer()
-                        Button("Upload") {
-                            uploadSFPT(host: sftpServer, port: sftpPort ?? 0, user: sftpUser, pw: sftpPassword, projectName: projectName, projectLocalUrl: getProjectsDirectory(projectName))
+                        if isUploading && !isShowingFailure {
+                            ProgressView(value: sftpProgress, total: 1.0).scaleEffect(x: 1, y: 4, anchor: .center)
+                        } else {
+                            Button("Upload") {
+                                uploadSFPT(host: sftpServer, port: sftpPort, user: sftpUser, pw: sftpPassword, projectName: projectName, projectLocalUrl: getProjectsDirectory(projectName))
+                            }.alert(isPresented: $isShowingFailure) {
+                                Alert(title: Text("Starting Upload failed!"), message: Text("Please check your SFTP configuration."), dismissButton: .default(Text("Got it!")))
+                            }
                         }
                         Spacer()
                     }
