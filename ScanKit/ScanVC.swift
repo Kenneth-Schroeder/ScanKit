@@ -78,8 +78,9 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
             locationManager.startUpdatingLocation()
         }
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScanVC.handleTap(gestureRecognize:)))
-        view.addGestureRecognizer(tapGesture)
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(ScanVC.handleLongPress(gestureRecognizer:)))//UITapGestureRecognizer(target: self, action: #selector(ScanVC.handleTap(gestureRecognizer:)))
+        view.addGestureRecognizer(longPressGesture)
         
         self.memoryBarTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { _ in
             let _ = self.updateMemoryBarAskContinue()
@@ -145,19 +146,16 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
     // MARK: - interaction handling
     
     @objc
-    func handleTap(gestureRecognize: UITapGestureRecognizer) {
+    func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
         // Create anchor using the camera's current position
-        if let currentFrame = ar_session.currentFrame {
-            // TODO create viewpoints on tap?
+        if let currentFrame = ar_session.currentFrame, gestureRecognizer.state == .began {
+            let tapLocation = gestureRecognizer.location(in: gestureRecognizer.view)
+            let capturedCoordinateSys = view.frame.size
+            let norm_point = CGPoint(x: tapLocation.x / capturedCoordinateSys.width, y: tapLocation.y / capturedCoordinateSys.height)
             
-            // Create a transform with a translation of 0.2 meters in front of the camera
-            //var translation = matrix_identity_float4x4
-            //translation.columns.3.z = -0.2
-            //let transform = simd_mul(currentFrame.camera.transform, translation)
-            
-            // Add a new anchor to the session
-            //let anchor = ARAnchor(transform: transform)
-            //ar_session.add(anchor: anchor)
+            if let result = ar_session.raycast(currentFrame.raycastQuery(from: norm_point, allowing: .estimatedPlane, alignment: .any)).first {
+                print(result)
+            }
         }
     }
     

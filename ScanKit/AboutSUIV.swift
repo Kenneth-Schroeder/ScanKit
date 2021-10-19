@@ -97,7 +97,7 @@ struct AboutSUIV: View { // Help, Details
                                 Text(details_menu_description)
                             }.padding()
                         } else {
-                            HStack {
+                            HStack(alignment: .top) {
                                 VStack {
                                     HStack {
                                         Text(main_menu_title).font(.headline).foregroundColor(Color("Occa"))
@@ -105,7 +105,6 @@ struct AboutSUIV: View { // Help, Details
                                     }
                                     Image(main_menu_image).resizable().scaledToFit()
                                     Text(main_menu_description)
-                                    Spacer()
                                 }.padding()
                                 VStack {
                                     HStack {
@@ -114,10 +113,9 @@ struct AboutSUIV: View { // Help, Details
                                     }
                                     Image(scan_view_image).resizable().scaledToFit()
                                     Text(scan_view_description)
-                                    Spacer()
                                 }.padding()
                             }
-                            HStack {
+                            HStack(alignment: .top) {
                                 VStack {
                                     HStack {
                                         Text(projects_menu_title).font(.headline).foregroundColor(Color("Occa"))
@@ -125,7 +123,6 @@ struct AboutSUIV: View { // Help, Details
                                     }
                                     Image(projects_menu_image).resizable().scaledToFit()
                                     Text(projects_menu_description)
-                                    Spacer()
                                 }.padding()
                                 VStack {
                                     HStack {
@@ -134,7 +131,6 @@ struct AboutSUIV: View { // Help, Details
                                     }
                                     Image(details_menu_image).resizable().scaledToFit()
                                     Text(details_menu_description)
-                                    Spacer()
                                 }.padding()
                             }
                         }

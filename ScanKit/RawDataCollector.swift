@@ -112,11 +112,10 @@ class RawDataCollector: CollectionWriterDelegate {
             let codes = qrDetector?.features(in: CIImage(cvPixelBuffer: capturedImage)) as? [CIQRCodeFeature]
             for code in codes ?? [] {
                 let capturedCoordinateSys = CGSize(width: CVPixelBufferGetWidth(capturedImage), height: CVPixelBufferGetHeight(capturedImage))
-                let viewCoordinateSys = CGSize(width: vc.view.bounds.width, height: vc.view.bounds.height)
                 let qr_center = (code.topRight - code.bottomLeft) / 2 + code.bottomLeft
-                let qr_center_converted = qr_center.convertCoordinateSystemReverseXY(from: capturedCoordinateSys, to: viewCoordinateSys)
-
-                if let result = vc.ar_session.raycast(arFrame.raycastQuery(from: qr_center_converted, allowing: .estimatedPlane, alignment: .any)).first {
+                let norm_point = CGPoint(x: qr_center.x / capturedCoordinateSys.width, y: qr_center.y / capturedCoordinateSys.height)
+                let rayQuery = arFrame.raycastQuery(from: norm_point, allowing: .estimatedPlane, alignment: .any)
+                if let result = vc.ar_session.raycast(rayQuery).first {
                     let newQRCode = QRCode(location: result.worldTransform.columns.3, message: code.messageString!)
                     if !codeWasDetected(newQRCode) {
                         detectedCodes.append(newQRCode) // TODO visualize detected QR Codes
