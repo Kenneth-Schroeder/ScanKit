@@ -2,8 +2,6 @@
 
 QuARryKit is a application developed for extracting Apple ARKits tracking and sensor data to facilitate external processing. It is intended as a technical foundation for specialized LiDAR-based scanning apps.
 
-For further information, please check the following [presentation](https://docs.google.com/presentation/d/12xXVY0aZcist4lg4qmSVmAXYAktA_ZX55Quij5qDBjI/edit?usp=sharing).
-
 ## Runtime Requirements
 
 - Apple device with LiDAR sensor
