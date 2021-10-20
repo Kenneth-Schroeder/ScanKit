@@ -1,6 +1,6 @@
 # ScanKit
 
-QuARryKit is a application developed for extracting Apple ARKits tracking and sensor data to facilitate external processing. It is intended as a technical foundation for specialized LiDAR-based scanning apps.
+ScanKit is a application developed for extracting Apple ARKits tracking and sensor data to facilitate external processing. It is intended as a technical foundation for specialized LiDAR-based scanning apps.
 
 ## Runtime Requirements
 
