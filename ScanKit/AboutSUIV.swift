@@ -39,7 +39,8 @@ struct AboutSUIV: View { // Help, Details
     private var projects_menu_title = "Projects Menu"
     private var details_menu_title = "Project Details Screen"
     
-    private var main_menu_description = "The main menu is the app's startup screen. It allows the user to name the project and quickly select the data to be collected before beginning a scanning session. From here, the user can also reach the \"About\" and \"Projects\" pages. Details regarding the data format are available below."
+    //private var development_info =
+    private var main_menu_description = "The app's home screen allows the user to assign a project name before scanning and to select and deselect the relevant data to be captured for the scan. In addition, the \"About\" and \"Projects\" pages are accessible. Details about the data format can be found below."
     private var scan_view_description = "The scanning screen can be used to start and stop recordings using the green button. Additional controls are provided to change between different perspectives and underlay visualizations. The flashlight can be activated using the button on the right to light up dim environments."
     private var projects_menu_description = "The projects menu displays a list of all scanning projects, which are saved in the Documents folder of your device. The default project names contain data and the time of the recording. Clicking on an item reveals the project details."
     private var details_menu_description = "Project details contain the storage size, scan start and end time, location data (if enabled), and the settings that were selected for the scanning session. From here, you can also upload the entire project to a server via SFTP or open the projects folder in the Files app, which lets you share the data directly via AirDrop or external drives."
@@ -55,7 +56,7 @@ struct AboutSUIV: View { // Help, Details
                             Spacer()
                         }
                         Spacer(minLength: 10)
-                        Text("This App was developed by [Kenneth Schröder](https://www.linkedin.com/in/kenneth-schroeder-dev/) at the [Hasso Plattner Institute](https://hpi.de/en/index.html). The Code is Open Source and can be found on [GitHub](https://github.com/Kenneth-Schroeder/ScanKit).")
+                        Text("This [MIT-licensed](https://raw.githubusercontent.com/Kenneth-Schroeder/ScanKit/main/LICENSE) app was developed by [Kenneth Schröder](https://www.linkedin.com/in/kenneth-schroeder-dev/), a student at the [Hasso Plattner Institute](https://hpi.de/en/index.html), and initiated, maintained, and supported by the [Computer Graphics Systems Group](https://hpi.de/en/research/research-groups/computer-graphics-systems.html). It is intended as a technical foundation for specialized LiDAR-based scanning apps, it is freely available and open-source ([GitHub](https://github.com/Kenneth-Schroeder/ScanKit)).\n\nAdditional acknowledgements for support and feedback go to:\n[Daniel Limberger](https://hpi.de/doellner/people/daniel-limberger.html), [Dr. Rico Richter](https://www.linkedin.com/in/ricorichter/), [Dr. Jan Klimke](https://www.linkedin.com/in/janklimke/) and [Rami A. Tamimi](https://www.linkedin.com/in/ramitamimi/).")
                         Spacer(minLength: 10)
                     }
                     VStack {

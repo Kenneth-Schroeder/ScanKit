@@ -497,7 +497,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/LAS/lib/LASlib",
 				);
-				MARKETING_VERSION = 1.04.07;
+				MARKETING_VERSION = 2.00.01;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
@@ -524,7 +524,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/LAS/lib/LASlib",
 				);
-				MARKETING_VERSION = 1.04.07;
+				MARKETING_VERSION = 2.00.01;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
