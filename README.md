@@ -7,6 +7,17 @@ QuARryKit is a application developed for extracting Apple ARKits tracking and se
 - Apple device with LiDAR sensor
 - iOS 15 or later
 
+## Point Cloud Generation
+### Sobel Filters
+
+![Sobel Images](images/sobel.png)
+
+[top-left: Sobel image of the depth map, top-right: Sobel image of the Y component of the RGB image, bottom-left: RGB image of the scene, bottom-right: colored top images combined]
+
+This application uses Sobel filters for efficient pre-selection of recorded points. As already described in [Outlier detection in laser scanner point clouds](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/37220/SOTO_653.pdf), point clouds often contain interpolation outliers at boundaries of occlusions. The same effect can be observed with point clouds recorded on Apple devices. The majority of these outliers can be discarded early using a Sobel filter on the depth map provided with each ARFrame. For each candidate point, its corresponding Sobel value is evaluated and if it crosses a certain threshold, the point is marked as unselected and discarded afterward.
+
+To further reduce the data volume, applying Sobel filters on the RGB image can be used as a heuristic for approximating surfaces. If points lie on neither edge - of the RGB Sobel image or the depth Sobel image, it likely belongs to a surface. Since surfaces can be defined with only a few points, a high percentage of points that fall into this category are discarded.
+
 ## Development Notes
 
 * [Cocoapods](https://cocoapods.org/)
@@ -48,14 +59,3 @@ QuARryKit is a application developed for extracting Apple ARKits tracking and se
          * replace all `system(...)` calls with `run_cmd(...)`
      6. `make install` (usage: see [StackOverflow](https://stackoverflow.com/questions/37804467/include-c-header-file-in-swift) )
      7. in the XCode settings of the project, under "General" -> "Frameworks, Libraries, and Embedded Content" add the `libLASlib.a` file from the newly created `<path_to_xcode_project>/LAS` folder
-
-## Point Cloud Generation
-### Sobel Filters
-
-![Sobel Images](images/sobel.png)
-
-[top-left: Sobel image of the depth map, top-right: Sobel image of the Y component of the RGB image, bottom-left: RGB image of the scene, bottom-right: colored top images combined]
-
-This application uses Sobel filters for efficient pre-selection of recorded points. As already described in [Outlier detection in laser scanner point clouds](https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/37220/SOTO_653.pdf), point clouds often contain interpolation outliers at boundaries of occlusions. The same effect can be observed with point clouds recorded on Apple devices. The majority of these outliers can be discarded early using a Sobel filter on the depth map provided with each ARFrame. For each candidate point, its corresponding Sobel value is evaluated and if it crosses a certain threshold, the point is marked as unselected and discarded afterward.
-
-To further reduce the data volume, applying Sobel filters on the RGB image can be used as a heuristic for approximating surfaces. If points lie on neither edge - of the RGB Sobel image or the depth Sobel image, it likely belongs to a surface. Since surfaces can be defined with only a few points, a high percentage of points that fall into this category are discarded.
