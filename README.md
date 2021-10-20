@@ -52,7 +52,7 @@ QuARryKit is a application developed for extracting Apple ARKits tracking and se
 ## Point Cloud Generation
 ### Sobel Filters
 
-![Screenshot_2021-04-08_at_11.33.53](uploads/bfc7887cffc67cd981b7320ff4726797/Screenshot_2021-04-08_at_11.33.53.png)
+![Sobel Images](images/sobel.png)
 
 [top-left: Sobel image of the depth map, top-right: Sobel image of the Y component of the RGB image, bottom-left: RGB image of the scene, bottom-right: colored top images combined]
 
