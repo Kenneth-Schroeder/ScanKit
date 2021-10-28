@@ -241,7 +241,6 @@ vertex ParticleInOut particleVertex(uint vertexID [[vertex_id]],
     return out;
 }
 
-// https://fu-berlin.webex.com/meet/paula.emily.schweizer
 fragment float4 particleFragment(ParticleInOut in [[stage_in]],
                                  const float2 coords [[point_coord]],
                                  constant LightUniforms &uniforms [[ buffer(kLightUniforms) ]]) {
