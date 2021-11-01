@@ -45,6 +45,7 @@ struct ProjectDetailsSUIV: View {
     @State private var sftpPort: Int?
     @State private var sftpUser: String = ""
     @State private var sftpPassword: String = ""
+    @State private var sftpFolder: String = ""
     @State private var sftpProgress = 0.0
     @State private var isUploading = false
     @State private var isShowingFailure = false
@@ -63,8 +64,12 @@ struct ProjectDetailsSUIV: View {
         }
     }
     
-    func uploadSFPT(host: String, port: Int?, user: String, pw: String, projectName: String, projectLocalUrl: URL, deleteLocal: Bool = false) {
+    func uploadSFPT(host: String, port: Int?, user: String, pw: String, projectName: String, projectLocalUrl: URL, uploadFolder: String? = "", deleteLocal: Bool = false) {
         //let deviceID = UIDevice.current.identifierForVendor!.uuidString
+        let theUploadFolder = (uploadFolder ?? "");
+        
+        
+        
         let sftpQueue = DispatchQueue(label: "sftp-queue", qos: .utility)
         do {
             let projectFiles = try FileManager.default.contentsOfDirectory(at: projectLocalUrl, includingPropertiesForKeys: nil)
@@ -84,14 +89,24 @@ struct ProjectDetailsSUIV: View {
                         
                         sftpsession.connect()
                         if sftpsession.isConnected {
+                            
+                            if !theUploadFolder.isEmpty && !sftpsession.directoryExists(atPath: theUploadFolder) {
+                                NSLog("trying to create upload folder %s", theUploadFolder)
+                                sftpsession.createDirectory(atPath: theUploadFolder)
+                            }
+                            
+                            
+                            
                             self.isUploading = true
                             for (idx, filePath) in projectFiles.enumerated() {
                                 let deviceDir = projectName
-                                if !sftpsession.directoryExists(atPath: deviceDir) {
+                                
+                                let deviceFolder = (theUploadFolder.isEmpty ? "" : theUploadFolder + "/" ) + deviceDir;
+                                if !sftpsession.directoryExists(atPath: deviceFolder) {
                                     print("trying to create folder")
-                                    sftpsession.createDirectory(atPath: deviceDir)
+                                    sftpsession.createDirectory(atPath: deviceFolder)
                                 }
-                                sftpsession.writeFile(atPath: filePath.relativePath, toFileAtPath: deviceDir + "/" + filePath.lastPathComponent)
+                                sftpsession.writeFile(atPath: filePath.relativePath, toFileAtPath: deviceFolder + "/" + filePath.lastPathComponent)
                                 
                                 print("Finished copying " + filePath.lastPathComponent + " to sftp server!")
                                 if deleteLocal {
@@ -225,12 +240,17 @@ struct ProjectDetailsSUIV: View {
                         TextField("Password", text: $sftpPassword)
                     }
                     HStack {
+                        Text("Folder")
+                        Spacer()
+                        TextField("Folder", text: $sftpFolder ,prompt: Text("Subfolder on SFTP"))
+                    }
+                    HStack {
                         Spacer()
                         if isUploading && !isShowingFailure {
                             ProgressView(value: sftpProgress, total: 1.0).scaleEffect(x: 1, y: 4, anchor: .center)
                         } else {
                             Button("Upload") {
-                                uploadSFPT(host: sftpServer, port: sftpPort, user: sftpUser, pw: sftpPassword, projectName: projectName, projectLocalUrl: getProjectsDirectory(projectName))
+                                uploadSFPT(host: sftpServer, port: sftpPort, user: sftpUser, pw: sftpPassword, projectName: projectName, projectLocalUrl: getProjectsDirectory(projectName), uploadFolder: sftpFolder)
                             }.alert(isPresented: $isShowingFailure) {
                                 Alert(title: Text("Starting Upload failed!"), message: Text("Please check your SFTP configuration."), dismissButton: .default(Text("Got it!")))
                             }
