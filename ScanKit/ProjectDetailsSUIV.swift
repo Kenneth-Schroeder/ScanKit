@@ -68,7 +68,11 @@ struct ProjectDetailsSUIV: View {
         //let deviceID = UIDevice.current.identifierForVendor!.uuidString
         let theUploadFolder = (uploadFolder ?? "");
         
-        
+        if theUploadFolder.rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) != nil {
+            NSLog("Upload folder is not allowed to contain special characters!")
+            self.isShowingFailure = true
+            return
+        }
         
         let sftpQueue = DispatchQueue(label: "sftp-queue", qos: .utility)
         do {
@@ -91,11 +95,9 @@ struct ProjectDetailsSUIV: View {
                         if sftpsession.isConnected {
                             
                             if !theUploadFolder.isEmpty && !sftpsession.directoryExists(atPath: theUploadFolder) {
-                                NSLog("trying to create upload folder %s", theUploadFolder)
+                                NSLog("Trying to create upload folder %s ...", theUploadFolder)
                                 sftpsession.createDirectory(atPath: theUploadFolder)
                             }
-                            
-                            
                             
                             self.isUploading = true
                             for (idx, filePath) in projectFiles.enumerated() {
@@ -242,7 +244,7 @@ struct ProjectDetailsSUIV: View {
                     HStack {
                         Text("Folder")
                         Spacer()
-                        TextField("Folder", text: $sftpFolder ,prompt: Text("Subfolder on SFTP"))
+                        TextField("Folder", text: $sftpFolder ,prompt: Text("Subfolder on Server"))
                     }
                     HStack {
                         Spacer()
@@ -252,7 +254,7 @@ struct ProjectDetailsSUIV: View {
                             Button("Upload") {
                                 uploadSFPT(host: sftpServer, port: sftpPort, user: sftpUser, pw: sftpPassword, projectName: projectName, projectLocalUrl: getProjectsDirectory(projectName), uploadFolder: sftpFolder)
                             }.alert(isPresented: $isShowingFailure) {
-                                Alert(title: Text("Starting Upload failed!"), message: Text("Please check your SFTP configuration."), dismissButton: .default(Text("Got it!")))
+                                Alert(title: Text("Starting Upload failed!"), message: Text("Please check your SFTP configuration and make sure not to use special characters in the folder input field."), dismissButton: .default(Text("Got it!")))
                             }
                         }
                         Spacer()
