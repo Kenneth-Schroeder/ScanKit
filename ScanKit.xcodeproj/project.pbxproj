@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9F30F00026F8B937007900C3 /* libLASlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F30EFFF26F8B8FF007900C3 /* libLASlib.a */; };
 		9F30F00326F8BE6B007900C3 /* LASWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9F30F00226F8BE6B007900C3 /* LASWrapper.mm */; };
+		9F3AAFC22737EB9700E5CBC8 /* TransformLearner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3AAFC12737EB9700E5CBC8 /* TransformLearner.swift */; };
 		9F53670B270EFDD5004CA874 /* ipad_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 9F53670A270EFDD5004CA874 /* ipad_back.png */; };
 		9F53670D270F192D004CA874 /* AboutSUIV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F53670C270F192D004CA874 /* AboutSUIV.swift */; };
 		9F53672927105E10004CA874 /* SetupSUIV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F53672827105E10004CA874 /* SetupSUIV.swift */; };
@@ -42,6 +43,7 @@
 		9F30EFFF26F8B8FF007900C3 /* libLASlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLASlib.a; path = LAS/lib/LASlib/libLASlib.a; sourceTree = "<group>"; };
 		9F30F00126F8BE35007900C3 /* LASWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LASWrapper.h; sourceTree = "<group>"; };
 		9F30F00226F8BE6B007900C3 /* LASWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LASWrapper.mm; sourceTree = "<group>"; };
+		9F3AAFC12737EB9700E5CBC8 /* TransformLearner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformLearner.swift; sourceTree = "<group>"; };
 		9F53670A270EFDD5004CA874 /* ipad_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_back.png; sourceTree = "<group>"; };
 		9F53670C270F192D004CA874 /* AboutSUIV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSUIV.swift; sourceTree = "<group>"; };
 		9F53672827105E10004CA874 /* SetupSUIV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupSUIV.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				9FFDF85D26CC32F7001B6016 /* ParticlesManager.swift */,
 				9FD5F6C326D249CA00A45B31 /* RawDataCollector.swift */,
 				9F53670A270EFDD5004CA874 /* ipad_back.png */,
+				9F3AAFC12737EB9700E5CBC8 /* TransformLearner.swift */,
 			);
 			path = ScanKit;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F79BB3926C2E49B00C5654F /* Shaders.metal in Sources */,
+				9F3AAFC22737EB9700E5CBC8 /* TransformLearner.swift in Sources */,
 				9FF915FE2704779C00ECD734 /* ProjectDetailsSUIV.swift in Sources */,
 				9FD5F6C426D249CA00A45B31 /* RawDataCollector.swift in Sources */,
 				9FFDF84F26C3E562001B6016 /* ScanRenderer.swift in Sources */,

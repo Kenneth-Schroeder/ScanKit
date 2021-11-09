@@ -304,6 +304,7 @@ struct ScanMetaData: Codable {
     var longitude: CLLocationDegrees?
     var scanStart: TimeInterval
     var scanEnd: TimeInterval
+    var referencePoints: [Float3]
     
     var savePointCloud: Bool = ScanConfig.savePointCloud
     var saveRGBVideo: Bool = ScanConfig.saveRGBVideo
@@ -313,11 +314,12 @@ struct ScanMetaData: Codable {
     var saveWorldMapInfo: Bool = ScanConfig.saveWorldMapInfo
     var detectQRCodes: Bool = ScanConfig.detectQRCodes
     
-    init(location: CLLocation?, startTime: TimeInterval, endTime: TimeInterval) {
+    init(location: CLLocation?, startTime: TimeInterval, endTime: TimeInterval, referencePoints: [Float3] = []) {
         self.latitude = location?.coordinate.latitude
         self.longitude = location?.coordinate.longitude
         self.scanStart = startTime
         self.scanEnd = endTime
+        self.referencePoints = referencePoints
     }
 }
 
@@ -328,6 +330,7 @@ struct ScanMetaDataPrintable {
     var longitudePrecise: CLLocationDegrees?
     var scanStart: String = "-"
     var scanEnd: String = "-"
+    var referencePoints: [String] = []
     
     var savePointCloud: String = "-"
     var saveRGBVideo: String = "-"
@@ -337,7 +340,11 @@ struct ScanMetaDataPrintable {
     var saveWorldMapInfo: String = "-"
     var detectQRCodes: String = "-"
     
+    var dataSource: ScanMetaData?
+    
     init(fromScanMetaData meta: ScanMetaData?) {
+        dataSource = meta
+        
         if let m = meta {
             longitudePrecise = m.longitude
             latitudePrecise = m.latitude
@@ -358,6 +365,10 @@ struct ScanMetaDataPrintable {
             
             scanStart = dateFormatter.string(from: startDate)
             scanEnd = dateFormatter.string(from: endDate)
+            
+            for refPoint in m.referencePoints {
+                self.referencePoints.append(String(format: "%.2f | %.2f | %.2f", refPoint.x, refPoint.y, refPoint.z))
+            }
             
             savePointCloud = m.savePointCloud ? "Yes" : "No"
             saveRGBVideo = m.saveRGBVideo ? "Yes" : "No"

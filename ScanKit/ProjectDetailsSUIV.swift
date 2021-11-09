@@ -49,11 +49,15 @@ struct ProjectDetailsSUIV: View {
     @State private var sftpProgress = 0.0
     @State private var isUploading = false
     @State private var isShowingFailure = false
+    @State private var referenceCounterparts: [String]
+    @State private var transform: simd_double4x4? = nil
     
     
     init(projectName: String) {
         self.projectName = projectName
         self.metaDataP = getMetaData(projectName)
+        referenceCounterparts = [String](repeating: "", count: metaDataP.referencePoints.count)
+        
         let fm = FileManager()
         do {
             let size = try fm.allocatedSizeOfDirectory(at: getProjectsDirectory(projectName))
@@ -62,6 +66,64 @@ struct ProjectDetailsSUIV: View {
         } catch let error {
             print("Failed to calculate project directory size, error \(error)")
         }
+    }
+    
+    func applyTransform(point: Float3, tranform: simd_double4x4) -> Float3 {
+        let result: simd_double4 = tranform * simd_double4(Double(point[0]), Double(point[1]), Double(point[2]), 1)
+        return Float3(Float(result[0]), Float(result[1]), Float(result[2]))
+    }
+    
+    func createWorldTransformation(pointCloudCoordinates: [Float3], grsCoordinates: [Float3?]) -> simd_double4x4 {
+        // need 4 points for unique 3D transformation -> take as many as possible and do iterative closest point transformation (ICP)
+        var oPs: [Float3] = []
+        var gPs: [Float3] = []
+        
+        for (pcC, grsC) in zip(pointCloudCoordinates, grsCoordinates) {
+            if grsC != nil {
+                oPs.append(pcC)
+                gPs.append(grsC!)
+            }
+        }
+        
+        /*oPs.append(Float3(0,0,0))
+        oPs.append(Float3(1,0,0))
+        oPs.append(Float3(0,1,0))
+        oPs.append(Float3(0,0,1))
+        
+        gPs.append(Float3(0,0,0))
+        gPs.append(Float3(0,2,0))
+        gPs.append(Float3(0,0,3))
+        gPs.append(Float3(1,0,0))*/
+        
+        let learner = TransformLearner(originPoints: oPs, destinationPoints: gPs)
+        learner.learn(iterations: 10000)
+        let transform: simd_double4x4 = learner.getTransform()
+        return transform
+    }
+    
+    func coordinateStringArrayToFloat3(coordinateTextArray: [String]) -> [Float3?] {
+        var result: [Float3?] = []
+        
+        for coordinateText in coordinateTextArray {
+            print(CharacterSet.decimalDigits.description)
+            let charSet = CharacterSet.init(charactersIn: "0123456789,.-") // note: spaces are filtered out
+            let filteredString = String(coordinateText.unicodeScalars.filter { charSet.contains($0) })
+            var stringArr = filteredString.components(separatedBy: ",")
+            stringArr = stringArr.filter { !$0.isEmpty }
+            var floatArr = stringArr.map { Float($0) }
+            floatArr = floatArr.filter { $0 != nil }
+            
+            if floatArr.count != 3 {
+                result.append(nil)
+                continue
+            }
+            
+            result.append(Float3(floatArr[0]!, floatArr[1]!, floatArr[2]!))
+        }
+        
+        print(result)
+        
+        return result
     }
     
     func uploadSFPT(host: String, port: Int?, user: String, pw: String, projectName: String, projectLocalUrl: URL, uploadFolder: String? = "", deleteLocal: Bool = false) {
@@ -218,6 +280,70 @@ struct ProjectDetailsSUIV: View {
                         Text("Detect QR Codes")
                         Spacer()
                         Text(metaDataP.detectQRCodes)
+                    }
+                }
+                Section(header: Text("Reference Points")) {
+                    List(metaDataP.referencePoints.indices, id: \.self) { refPointIdx in
+                        HStack {
+                            Text(metaDataP.referencePoints[refPointIdx])
+                            TextField("X, Y, Z", text: $referenceCounterparts[refPointIdx])
+                        }
+                    }.frame(height: 200)
+                    Button("Transform") {
+                        let grsCoordinates = coordinateStringArrayToFloat3(coordinateTextArray: referenceCounterparts)
+                        if !grsCoordinates.isEmpty && metaDataP.dataSource!.referencePoints.count == grsCoordinates.count {
+                            transform = createWorldTransformation(pointCloudCoordinates: metaDataP.dataSource!.referencePoints, grsCoordinates: grsCoordinates)
+                        }
+                    }
+                    if let t = transform {
+                        Text("Discovered Transformation Matrix:")
+                        HStack(spacing: 10) {
+                            VStack(alignment: .trailing) {
+                                Text(String(format: "%.2f", t.columns.0[0]))
+                                Text(String(format: "%.2f", t.columns.0[1]))
+                                Text(String(format: "%.2f", t.columns.0[2]))
+                                Text(String(format: "%.2f", t.columns.0[3]))
+                            }
+                            VStack(alignment: .trailing) {
+                                Text(String(format: "%.2f", t.columns.1[0]))
+                                Text(String(format: "%.2f", t.columns.1[1]))
+                                Text(String(format: "%.2f", t.columns.1[2]))
+                                Text(String(format: "%.2f", t.columns.1[3]))
+                            }
+                            VStack(alignment: .trailing) {
+                                Text(String(format: "%.2f", t.columns.2[0]))
+                                Text(String(format: "%.2f", t.columns.2[1]))
+                                Text(String(format: "%.2f", t.columns.2[2]))
+                                Text(String(format: "%.2f", t.columns.2[3]))
+                            }
+                            VStack(alignment: .trailing) {
+                                Text(String(format: "%.2f", t.columns.3[0]))
+                                Text(String(format: "%.2f", t.columns.3[1]))
+                                Text(String(format: "%.2f", t.columns.3[2]))
+                                Text(String(format: "%.2f", t.columns.3[3]))
+                            }
+                        }
+                        Text("Transformed Points:")
+                        HStack(spacing: 10) {
+                            VStack(alignment: .trailing) {
+                                ForEach(metaDataP.dataSource!.referencePoints, id: \.self) {point in
+                                    let p = applyTransform(point: point, tranform: transform!)
+                                    Text(String(format: "%.2f", p[0]))
+                                }
+                            }
+                            VStack(alignment: .trailing) {
+                                ForEach(metaDataP.dataSource!.referencePoints, id: \.self) {point in
+                                    let p = applyTransform(point: point, tranform: transform!)
+                                    Text(String(format: "%.2f", p[1]))
+                                }
+                            }
+                            VStack(alignment: .trailing) {
+                                ForEach(metaDataP.dataSource!.referencePoints, id: \.self) {point in
+                                    let p = applyTransform(point: point, tranform: transform!)
+                                    Text(String(format: "%.2f", p[2]))
+                                }
+                            }
+                        }
                     }
                 }
                 Section(header: Text("SFTP Upload")) {

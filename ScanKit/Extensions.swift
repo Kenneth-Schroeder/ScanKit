@@ -47,9 +47,15 @@ extension matrix_float3x3 {
 extension MTKView : RenderDestinationProvider {
 }
 
+extension simd_float4x4 {
+    func getPositionIfTransform() -> Float3 {
+        return Float3(columns.3.x, columns.3.y, columns.3.z)
+    }
+}
+
 extension ARCamera {
     func getPosition() -> Float3 {
-        return Float3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+        return transform.getPositionIfTransform()
     }
 }
 

@@ -32,6 +32,7 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
     var scanLocation: CLLocation?
     var scanStart: TimeInterval!
     var scanEnd: TimeInterval!
+    var referencePoints: [Float3] = []
     
     let jsonEncoder = JSONEncoder()
     
@@ -143,7 +144,7 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
         }
     }
     
-    // MARK: - interaction handling
+    // MARK: - interaction handling - reference points
     
     @objc
     func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
@@ -154,7 +155,7 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
             let norm_point = CGPoint(x: tapLocation.x / capturedCoordinateSys.width, y: tapLocation.y / capturedCoordinateSys.height)
             
             if let result = ar_session.raycast(currentFrame.raycastQuery(from: norm_point, allowing: .estimatedPlane, alignment: .any)).first {
-                print(result)
+                referencePoints.append(result.worldTransform.getPositionIfTransform())
             }
         }
     }
@@ -235,7 +236,7 @@ extension ScanVC {
     
     func finishRecording() {
         scanEnd = NSDate().timeIntervalSince1970
-        let meta = ScanMetaData(location: scanLocation, startTime: scanStart, endTime: scanEnd)
+        let meta = ScanMetaData(location: scanLocation, startTime: scanStart, endTime: scanEnd, referencePoints: referencePoints)
         if let url = ScanConfig.url {
             if let metaData = try? self.jsonEncoder.encode(meta) {
                 do {
