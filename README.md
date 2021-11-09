@@ -59,3 +59,18 @@ To further reduce the data volume, applying Sobel filters on the RGB image can b
          * replace all `system(...)` calls with `run_cmd(...)`
      6. `make install` (usage: see [StackOverflow](https://stackoverflow.com/questions/37804467/include-c-header-file-in-swift) )
      7. in the XCode settings of the project, under "General" -> "Frameworks, Libraries, and Embedded Content" add the `libLASlib.a` file from the newly created `<path_to_xcode_project>/LAS` folder
+
+## Citing ScanKit
+
+If you find ScanKit useful, please cite it in your publications:
+
+```
+@software{scankit2021github,
+  author = {Kenneth Schroeder},
+  title = {ScanKit: An iOS application for LiDAR data extraction},
+  url = {https://github.com/Kenneth-Schroeder/ScanKit},
+  organization = {Hasso Plattner Institute}
+  year = {2021},
+}
+```
+
