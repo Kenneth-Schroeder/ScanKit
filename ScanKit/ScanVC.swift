@@ -152,10 +152,11 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
         if let currentFrame = ar_session.currentFrame, gestureRecognizer.state == .began {
             let tapLocation = gestureRecognizer.location(in: gestureRecognizer.view)
             let capturedCoordinateSys = view.frame.size
-            let norm_point = CGPoint(x: tapLocation.x / capturedCoordinateSys.width, y: tapLocation.y / capturedCoordinateSys.height)
+            let norm_point = CGPoint(x: tapLocation.y / capturedCoordinateSys.height, y: 1 - tapLocation.x / capturedCoordinateSys.width)
             
             if let result = ar_session.raycast(currentFrame.raycastQuery(from: norm_point, allowing: .estimatedPlane, alignment: .any)).first {
                 referencePoints.append(result.worldTransform.getPositionIfTransform())
+                renderer.updateReferencePoints(referencePoints)
             }
         }
     }

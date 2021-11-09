@@ -19,6 +19,7 @@ class ScanConfig {
     
     static let maxPointsPerVisualBuffer: Int = 262_144
     static let maxPointsPerRecordingBuffer: Int = 2_097_152
+    static let maxReferencePoints: Int = 100
     static let viewshedMaxCount: Int = 49_152 /// TODO might need adjustment with better lidar data/newer devices from apple
     static let sobelDepthThreshold:Float = 0.05 /// if the corresponding value of a particle on the depth sobel texture is above this value, it will be marked as unselected and later deleted (because it lies on an edge on the depth image)
     static let sobelYThreshold:Float = 0.5 /// if the corresponding value of a particle on the Y sobel texture is above this value, it will be kept (because it lies on an edge on the Y image and is likely important for details)

@@ -54,6 +54,19 @@ class ScanRenderer {
     var viewshedCloudUniformsBuffers = [MetalBuffer<PointCloudUniforms>]() // metadata for rendering viewshed particles
     var viewshedParticlesBuffers = [MetalBuffer<ParticleUniforms>]() // contains actual point data
     
+    private lazy var referenceCloudUniforms: PointCloudUniforms = {
+        var uniforms = PointCloudUniforms()
+        uniforms.particleSize = 25
+        uniforms.coloringMethod = red
+        uniforms.confidenceThreshold = Int32(0) // always show all reference points
+        // other attributes will be updated continuously
+        return uniforms
+    }()
+    var referenceCloudUniformsBuffers = [MetalBuffer<PointCloudUniforms>]() // metadata for rendering reference points particles
+    var referenceParticlesBuffer: MetalBuffer<ParticleUniforms> // contains actual point data
+    var numReferenceParticles: Int = 0
+    
+    
     private var frustumCornersBuffer: MetalBuffer<simd_float3>
     
     var capturedImagePipelineState: MTLRenderPipelineState!
@@ -103,12 +116,19 @@ class ScanRenderer {
         self.device = device
         self.renderDestination = renderDestination
         self.frustumCornersBuffer = MetalBuffer<simd_float3>(device: device, count: 17, index: kDevicePath.rawValue, options: [])
-        loadMetal()
+        self.referenceParticlesBuffer = MetalBuffer<ParticleUniforms>(device: device, count: ScanConfig.maxReferencePoints, index: kParticleUniforms.rawValue)
+        self.loadMetal()
     }
     
     func drawRectResized(size: CGSize) {
         viewportSize = size
         viewportSizeDidChange = true
+    }
+    
+    func updateReferencePoints(_ points: [Float3]) {
+        let particlePoints = points.map { ParticleUniforms(position: $0, color: simd_float3(0,0,0), confidence: 2, timestamp: 0, type: surfaceSelected, captureDistance: 0) }
+        numReferenceParticles = particlePoints.count
+        referenceParticlesBuffer = MetalBuffer<ParticleUniforms>(device: device, array: particlePoints, index: kParticleUniforms.rawValue)
     }
     
     func stopRecording(notify tracker: ProgressTracker?) {
@@ -164,6 +184,7 @@ class ScanRenderer {
                     drawViewshed(renderEncoder: renderEncoder)
                 }
                 drawVisualParticles(renderEncoder: renderEncoder)
+                drawReferencePoints(renderEncoder: renderEncoder)
                 drawFrustum(renderEncoder: renderEncoder)
                 drawDeviceTexture(renderEncoder: renderEncoder)
                 
@@ -301,12 +322,34 @@ private extension ScanRenderer {
         
         renderEncoder.setDepthStencilState(relaxedDepthState)
         renderEncoder.setRenderPipelineState(floatingTexturePipelineState)
+        
         renderEncoder.setVertexBuffer(sceneUniformsBuffer[inFlightBufferIndex])
         renderEncoder.setVertexBuffer(cornersBuffer)
         renderEncoder.setVertexBytes(&arCoordinates, length: MemoryLayout.size(ofValue: arCoordinates), index: Int(kFreeBufferIndex.rawValue)+0)
         renderEncoder.setFragmentTexture(texture, index: 0)
         renderEncoder.setFragmentBytes(&a, length: MemoryLayout.size(ofValue: a), index: Int(kFreeBufferIndex.rawValue))
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
+        
+        renderEncoder.popDebugGroup()
+    }
+    
+    func drawReferencePoints(renderEncoder: MTLRenderCommandEncoder) {
+        var showByConfidence:Bool = false // show all points
+        var alphaFactor:Float = 1.0
+        
+        renderEncoder.pushDebugGroup("DrawReferencePoints")
+        
+        renderEncoder.setCullMode(.none)
+        renderEncoder.setRenderPipelineState(particleBlendedPipelineState)
+        renderEncoder.setDepthStencilState(fullDepthState)
+        
+        renderEncoder.setVertexBuffer(referenceCloudUniformsBuffers[inFlightBufferIndex])
+        renderEncoder.setVertexBuffer(referenceParticlesBuffer)
+        renderEncoder.setVertexBytes(&showByConfidence, length: MemoryLayout.size(ofValue: showByConfidence), index: Int(kFreeBufferIndex.rawValue)+0)
+        renderEncoder.setVertexBytes(&alphaFactor, length: MemoryLayout.size(ofValue: alphaFactor), index: Int(kFreeBufferIndex.rawValue)+1)
+        renderEncoder.setVertexBytes(&lastFrameTimestamp, length: MemoryLayout.size(ofValue: lastFrameTimestamp), index: Int(kFreeBufferIndex.rawValue)+2)
+        renderEncoder.setFragmentBuffer(lightUniformsBuffer[inFlightBufferIndex])
+        renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: numReferenceParticles)
         
         renderEncoder.popDebugGroup()
     }
@@ -434,6 +477,10 @@ private extension ScanRenderer {
         viewshedCloudUniforms.viewMatrix = viewMatrix
         viewshedCloudUniforms.projectionMatrix = projectionMatrix
         viewshedCloudUniformsBuffers[inFlightBufferIndex][0] = viewshedCloudUniforms
+        
+        referenceCloudUniforms.viewMatrix = viewMatrix
+        referenceCloudUniforms.projectionMatrix = projectionMatrix
+        referenceCloudUniformsBuffers[inFlightBufferIndex][0] = referenceCloudUniforms
         
         visualCloudUniforms.viewMatrix = viewMatrix
         visualCloudUniforms.projectionMatrix = projectionMatrix
@@ -634,6 +681,7 @@ private extension ScanRenderer {
             viewshedParticlesBuffers.append(.init(device: device, count: ScanConfig.viewshedMaxCount, index: kViewshedParticleUniforms.rawValue))
             unprojectUniformsBuffers.append(.init(device: device, count: 1, index: kUnprojectUniforms.rawValue))
             viewshedCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
+            referenceCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
             visualCloudUniformsBuffers.append(.init(device: device, count: 1, index: kPointCloudUniforms.rawValue))
             lightUniformsBuffer.append(.init(device: device, count: 1, index: kLightUniforms.rawValue))
             sceneUniformsBuffer.append(.init(device: device, count: 1, index: kSceneUniforms.rawValue))
