@@ -47,15 +47,6 @@ class TransformLearner {
             currentX = currentX - (myGrads * lr)
             print(loss(currentX))
         }
-        /*print(currentX)
-        print(currentX * originPoints[0])
-        print(destinationPoints[0])
-        print(currentX * originPoints[1])
-        print(destinationPoints[1])
-        print(currentX * originPoints[2])
-        print(destinationPoints[2])
-        print(currentX * originPoints[3])
-        print(destinationPoints[3])*/
     }
     
     // https://stackoverflow.com/questions/31014918/derivative-function-in-swift

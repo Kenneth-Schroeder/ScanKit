@@ -85,20 +85,12 @@ struct ProjectDetailsSUIV: View {
             }
         }
         
-        /*oPs.append(Float3(0,0,0))
-        oPs.append(Float3(1,0,0))
-        oPs.append(Float3(0,1,0))
-        oPs.append(Float3(0,0,1))
+        //let learner = TransformLearner(originPoints: oPs, destinationPoints: gPs)
+        //learner.learn(iterations: 10000)
+        //let transform: simd_double4x4 = learner.getTransform()
         
-        gPs.append(Float3(0,0,0))
-        gPs.append(Float3(0,2,0))
-        gPs.append(Float3(0,0,3))
-        gPs.append(Float3(1,0,0))*/
-        
-        let learner = TransformLearner(originPoints: oPs, destinationPoints: gPs)
-        learner.learn(iterations: 10000)
-        let transform: simd_double4x4 = learner.getTransform()
-        return transform
+        let solver = TransformSolver(originPoints: oPs, destinationPoints: gPs)
+        return solver.getTransform()
     }
     
     func coordinateStringArrayToFloat3(coordinateTextArray: [String]) -> [Float3?] {

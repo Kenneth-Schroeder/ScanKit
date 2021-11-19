@@ -10,6 +10,7 @@
 		9F30F00026F8B937007900C3 /* libLASlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F30EFFF26F8B8FF007900C3 /* libLASlib.a */; };
 		9F30F00326F8BE6B007900C3 /* LASWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9F30F00226F8BE6B007900C3 /* LASWrapper.mm */; };
 		9F3AAFC22737EB9700E5CBC8 /* TransformLearner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3AAFC12737EB9700E5CBC8 /* TransformLearner.swift */; };
+		9F5051742747ADEC0039B73D /* TransformSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F5051732747ADEC0039B73D /* TransformSolver.swift */; };
 		9F53670B270EFDD5004CA874 /* ipad_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 9F53670A270EFDD5004CA874 /* ipad_back.png */; };
 		9F53670D270F192D004CA874 /* AboutSUIV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F53670C270F192D004CA874 /* AboutSUIV.swift */; };
 		9F53672927105E10004CA874 /* SetupSUIV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F53672827105E10004CA874 /* SetupSUIV.swift */; };
@@ -44,6 +45,7 @@
 		9F30F00126F8BE35007900C3 /* LASWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LASWrapper.h; sourceTree = "<group>"; };
 		9F30F00226F8BE6B007900C3 /* LASWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LASWrapper.mm; sourceTree = "<group>"; };
 		9F3AAFC12737EB9700E5CBC8 /* TransformLearner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformLearner.swift; sourceTree = "<group>"; };
+		9F5051732747ADEC0039B73D /* TransformSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformSolver.swift; sourceTree = "<group>"; };
 		9F53670A270EFDD5004CA874 /* ipad_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ipad_back.png; sourceTree = "<group>"; };
 		9F53670C270F192D004CA874 /* AboutSUIV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSUIV.swift; sourceTree = "<group>"; };
 		9F53672827105E10004CA874 /* SetupSUIV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupSUIV.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				9FD5F6C326D249CA00A45B31 /* RawDataCollector.swift */,
 				9F53670A270EFDD5004CA874 /* ipad_back.png */,
 				9F3AAFC12737EB9700E5CBC8 /* TransformLearner.swift */,
+				9F5051732747ADEC0039B73D /* TransformSolver.swift */,
 			);
 			path = ScanKit;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 				9FFDF85E26CC32F7001B6016 /* ParticlesManager.swift in Sources */,
 				9FD5F6CF26D24FA800A45B31 /* Encodables.swift in Sources */,
 				9F53672927105E10004CA874 /* SetupSUIV.swift in Sources */,
+				9F5051742747ADEC0039B73D /* TransformSolver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,7 +505,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/LAS/lib/LASlib",
 				);
-				MARKETING_VERSION = 2.01.01;
+				MARKETING_VERSION = 2.01.02;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
@@ -528,7 +532,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/LAS/lib/LASlib",
 				);
-				MARKETING_VERSION = 2.01.01;
+				MARKETING_VERSION = 2.01.02;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ScanKit/ScanKit-Bridging-Header.h";
