@@ -69,16 +69,6 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
             viewshedButton.backgroundColor = .darkGray
         }
         
-        // Ask for Authorisation from the User.
-        self.locationManager.requestWhenInUseAuthorization()
-
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.startUpdatingLocation()
-        }
-        
-        
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(ScanVC.handleLongPress(gestureRecognizer:)))//UITapGestureRecognizer(target: self, action: #selector(ScanVC.handleTap(gestureRecognizer:)))
         view.addGestureRecognizer(longPressGesture)
         
@@ -105,6 +95,19 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
 
         // Run the view's session
         ar_session.run(configuration)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // ask for location authorisation from the user
+        self.locationManager.requestWhenInUseAuthorization()
+
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -170,6 +173,14 @@ class ScanVC: UIViewController, MTKViewDelegate, ProgressTracker, CLLocationMana
     func draw(in view: MTKView) {
         renderer.update()
     }
+    
+    // MARK: - CLLocationManagerDelegate
+    // -> dont care if location changed, its up to the user whether he wants to use this feature
+    
+    //func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    //
+    //}
+    
 }
 
 // MARK: - UI Methods

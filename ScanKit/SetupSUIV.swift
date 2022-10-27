@@ -258,7 +258,7 @@ struct SetupSUIV: View {
                             }.toggleStyle(SwitchToggleStyle(tint: mainColor))
                         }.listRowBackground(Color.clear)
                     }
-                }
+                }.scrollContentBackground(.hidden)
                 ThickDivider()
                 VStack(spacing: 10) {
                     Text(dataRateText).font(.title3).onAppear() {
