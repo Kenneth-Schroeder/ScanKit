@@ -26,7 +26,9 @@ class FrameCollectionWriter: CollectionWriter {
     func appendInfo(obj: FrameInfo, metaInfo: SequenceMetaInfo) -> Bool {
         guard isWriting == false else { return false }
 
-        frameCollection.appendFrameInfo(obj)
+        if obj.anyFrameSet {
+            frameCollection.appendFrameInfo(obj)
+        }
         return true
     }
 

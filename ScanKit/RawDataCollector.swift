@@ -175,14 +175,21 @@ class RawDataCollector: CollectionWriterDelegate {
         let fCW = frameCollectionWriter!
         
         writesQueued += [ScanConfig.saveRGBVideo, ScanConfig.saveDepthVideo, ScanConfig.saveConfidenceVideo,
-                         ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo || ScanConfig.saveWorldMapInfo].filter{$0}.count
+                         ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo || ScanConfig.saveWorldMapInfo || ScanConfig.detectQRCodes].filter{$0}.count
 
+        if ScanConfig.detectQRCodes {
+            fCW.updateQRCodes(detectedCodes)
+        }
+        
         if ScanConfig.saveWorldMapInfo {
-            vc.ar_session.getCurrentWorldMap { worldMap, _ in
+            vc.ar_session.getCurrentWorldMap { worldMap, error in
                 if let map = worldMap {
                     fCW.setWorldMap(map: map)
                 } else {
                     print("Couldn't save WorldMap!") // TODO warn user?
+                    if let e = error {
+                        print(e.localizedDescription)
+                    }
                 }
                 self.uploadQueue.async {[fCW] in
                     fCW.writeBufferToFile()
@@ -200,7 +207,7 @@ class RawDataCollector: CollectionWriterDelegate {
             if ScanConfig.saveConfidenceVideo {
                 cW.writeBufferToFile()
             }
-            if (!ScanConfig.saveWorldMapInfo) && (ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo) {
+            if (!ScanConfig.saveWorldMapInfo) && (ScanConfig.saveRGBVideo || ScanConfig.saveDepthVideo || ScanConfig.saveConfidenceVideo || ScanConfig.detectQRCodes) {
                 fCW.writeBufferToFile()
             }
         }

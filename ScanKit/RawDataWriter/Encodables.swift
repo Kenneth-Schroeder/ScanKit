@@ -80,6 +80,11 @@ class FrameInfo: Encodable { // Codable for JSON, class instead of struct for le
     var cameraViewMatrix: simd_float4x4
     var cameraProjectionMatrix: simd_float4x4
     var worldMappingStatus: Int
+    var anyFrameSet: Bool = false
+    
+    private enum CodingKeys: String, CodingKey { // which variables should be encoded
+        case rgbVideoFrame, depthVideoFrame, confidenceVideoFrame, timestamp, cameraEulerAngle, cameraIntrinsics, cameraTransform, cameraViewMatrix, cameraProjectionMatrix, worldMappingStatus
+    }
 
     init(ofFrame frame: ARFrame) {
         timestamp = Int(NSDate().timeIntervalSince1970)
@@ -92,15 +97,24 @@ class FrameInfo: Encodable { // Codable for JSON, class instead of struct for le
     }
 
     func setRGBFrame(_ location: FrameLocation) {
-        rgbVideoFrame = location
+        if location.frame > 0 {
+            rgbVideoFrame = location
+            anyFrameSet = true
+        }
     }
 
     func setDepthFrame(_ location: FrameLocation) {
-        depthVideoFrame = location
+        if location.frame > 0 {
+            depthVideoFrame = location
+            anyFrameSet = true
+        }
     }
 
     func setConfidenceFrame(_ location: FrameLocation) {
-        confidenceVideoFrame = location
+        if location.frame > 0 {
+            confidenceVideoFrame = location
+            anyFrameSet = true
+        }
     }
 }
 
