@@ -178,7 +178,7 @@ struct ProjectDetailsSUIV: View {
                         let span = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
                         
                         Map(coordinateRegion: .constant(MKCoordinateRegion(center: location2D, span: span)), showsUserLocation: false, annotationItems: [location2D]) { item in
-                                MapPin(coordinate: item, tint: .red)
+                                MapMarker(coordinate: item, tint: .red)
                         }
                         .frame(height: 300)
                     }

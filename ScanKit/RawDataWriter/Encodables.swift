@@ -234,19 +234,17 @@ extension ARPlaneAnchor: Encodable {
         case alignment
         case geometry
         case center
-        case extent
         case classification
         case transform
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(center, forKey: CodingKeys.center)
-        try container.encode(extent, forKey: CodingKeys.extent)
-        try container.encode(alignment.rawValue, forKey: CodingKeys.alignment)
+        try container.encode(self.center, forKey: CodingKeys.center)
+        try container.encode(self.alignment.rawValue, forKey: CodingKeys.alignment)
         try container.encode(valueOf(planeClassification: classification), forKey: CodingKeys.classification)
-        try container.encode(geometry, forKey: CodingKeys.geometry)
-        try container.encode(transform, forKey: CodingKeys.transform)
+        try container.encode(self.geometry, forKey: CodingKeys.geometry)
+        try container.encode(self.transform, forKey: CodingKeys.transform)
     }
 
 }

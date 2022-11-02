@@ -21,18 +21,18 @@ class ParticlesManager {
     
     lazy var gridPointsBuffer = MetalBuffer<Float2>(device: device, array: updateGridPoints(), index: kGridPoints.rawValue) // MetalBuffer containing the 'numGridPoints'-many point coordinates selected by CPU for GPU
     
-    var visualParticlesBuffer = [MetalBuffer<ParticleUniforms>]()
-    var visualBufferPointCount = [Int]()
+    var visualParticlesBuffer = ThreadSafeArray<MetalBuffer<ParticleUniforms>>()
+    var visualBufferPointCount = ThreadSafeArray<Int>()
     private var visualBufferIndex: Int = 0
-    private var visualBuffersWriteAddress = [Int]()
+    private var visualBuffersWriteAddress = ThreadSafeArray<Int>()
     var visualPointCount: Int { visualBufferPointCount[visualBufferIndex] }
     
-    var recordingParticlesBuffer = [MetalBuffer<ParticleUniforms>]()
-    var recordingBufferPointCount = [Int]()
+    var recordingParticlesBuffer = ThreadSafeArray<MetalBuffer<ParticleUniforms>>()
+    var recordingBufferPointCount = ThreadSafeArray<Int>()
     private var recordingBufferIndex: Int = 0
-    private var recordingBuffersWriteAddress = [Int]()
+    private var recordingBuffersWriteAddress = ThreadSafeArray<Int>()
     var recordingPointCount: Int { recordingBufferPointCount[recordingBufferIndex] }
-    private var recordingBufferStage = [BufferStage]()
+    private var recordingBufferStage = ThreadSafeArray<BufferStage>()
     
     private var writesQueued = 0
     private var writesFinished = 0

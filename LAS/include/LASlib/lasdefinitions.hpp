@@ -546,18 +546,7 @@ public:
     strncpy(vlrs[i].user_id, user_id, 16);
     vlrs[i].record_id = record_id;
     vlrs[i].record_length_after_header = record_length_after_header;
-    if (keep_description && found_description)
-    {
-      // do nothing
-    }
-    else if (description)
-    {
-      sprintf(vlrs[i].description, "%.31s", description);
-    }
-    else
-    {
-      sprintf(vlrs[i].description, "by LAStools of rapidlasso GmbH");
-    }
+    
     if (record_length_after_header)
     {
       offset_to_point_data += record_length_after_header;
@@ -671,18 +660,7 @@ public:
     strncpy(evlrs[i].user_id, user_id, 16);
     evlrs[i].record_id = record_id;
     evlrs[i].record_length_after_header = record_length_after_header;
-    if (keep_description && found_description)
-    {
-      // do nothing
-    }
-    else if (description)
-    {
-      sprintf(evlrs[i].description, "%.31s", description);
-    }
-    else
-    {
-      sprintf(evlrs[i].description, "by LAStools of rapidlasso GmbH");
-    }
+    
     if (record_length_after_header)
     {
       evlrs[i].data = data;

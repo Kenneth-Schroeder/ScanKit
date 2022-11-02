@@ -164,7 +164,9 @@ class ScanRenderer {
                     drawViewshed(renderEncoder: renderEncoder)
                 }
                 drawVisualParticles(renderEncoder: renderEncoder)
-                drawFrustum(renderEncoder: renderEncoder)
+                if ScanConfig.viewIndex > 0 {
+                    drawFrustum(renderEncoder: renderEncoder)
+                }
                 drawDeviceTexture(renderEncoder: renderEncoder)
                 
                 // We're done encoding commands
@@ -334,12 +336,12 @@ private extension ScanRenderer {
     }
     
     func drawVisualParticles(renderEncoder: MTLRenderCommandEncoder) {
+        renderEncoder.pushDebugGroup("DrawVisualCloud")
+            
         for i in 0 ..< kMaxBuffersInFlight {
             if(particlesManager.visualBufferPointCount[i] > 0) {
                 var showByConfidence:Bool = true
                 var alphaFactor:Float = 1.0 // no influence with particlePipelineState, need to use particleBlendedPipelineState
-                
-                renderEncoder.pushDebugGroup("DrawVisualCloud")
                 
                 renderEncoder.setDepthStencilState(fullDepthState)
                 renderEncoder.setRenderPipelineState(particleBlendedPipelineState)
@@ -350,10 +352,9 @@ private extension ScanRenderer {
                 renderEncoder.setVertexBytes(&lastFrameTimestamp, length: MemoryLayout.size(ofValue: lastFrameTimestamp), index: Int(kFreeBufferIndex.rawValue)+2)
                 renderEncoder.setFragmentBuffer(lightUniformsBuffer[inFlightBufferIndex])
                 renderEncoder.drawPrimitives(type: .point, vertexStart: 0, vertexCount: particlesManager.visualBufferPointCount[i])
-                
-                renderEncoder.popDebugGroup()
             }
         }
+        renderEncoder.popDebugGroup()
     }
 }
 
@@ -623,7 +624,6 @@ private extension ScanRenderer {
         // Set the default formats needed to render
         renderDestination.depthStencilPixelFormat = .depth32Float_stencil8
         renderDestination.colorPixelFormat = .bgra8Unorm
-        renderDestination.sampleCount = 1
         
         // Create a vertex buffer with our image plane vertex data.
         let imagePlaneVertexDataCount = kImagePlaneVertexData.count * MemoryLayout<Float>.size
@@ -707,7 +707,6 @@ private extension ScanRenderer {
         // Create a pipeline state for rendering the captured image
         let descriptor = MTLRenderPipelineDescriptor()
         descriptor.label = "MyCapturedImagePipeline"
-        descriptor.sampleCount = renderDestination.sampleCount
         descriptor.vertexFunction = capturedImageVertexFunction
         descriptor.fragmentFunction = capturedImageFragmentFunction
         descriptor.vertexDescriptor = underlayVertexDescriptors()

@@ -58,7 +58,6 @@ protocol RenderDestinationProvider {
     var currentDrawable: CAMetalDrawable? { get }
     var colorPixelFormat: MTLPixelFormat { get set }
     var depthStencilPixelFormat: MTLPixelFormat { get set }
-    var sampleCount: Int { get set }
 }
 
 protocol CollectionWriter: AnyObject {
