@@ -258,12 +258,12 @@ extension ScanVC {
             }
         }
         
+        ScanConfig.isRecording = false
         ar_manager.stopRecording(notify: self)
         renderer.stopRecording(notify: self)
         showProgressRing()
         backButton.isEnabled = true
         recordButton.layer.backgroundColor = UIColor.green.cgColor
-        ScanConfig.isRecording = false
     }
     
     @IBAction func record_button_pressed(_ sender: RoundedButton) {

@@ -492,6 +492,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JXK358SFX2;
 				INFOPLIST_FILE = ScanKit/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScanKit;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -501,7 +503,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/LAS/lib/LASlib",
 				);
-				MARKETING_VERSION = 2.00.08;
+				MARKETING_VERSION = 2.00.09;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -522,6 +524,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JXK358SFX2;
 				INFOPLIST_FILE = ScanKit/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScanKit;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -531,7 +535,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/LAS/lib/LASlib",
 				);
-				MARKETING_VERSION = 2.00.08;
+				MARKETING_VERSION = 2.00.09;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kenneth-schroeder.scankit";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
